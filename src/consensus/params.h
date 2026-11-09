@@ -124,7 +124,7 @@ struct Params {
     int DF22MetachainHeight;
     int DF23Height;
     int DF24Height;
-    /** v3.2 hardfork: Stability Fund (cUSDC<->DUSD) + DUSD Lock Manager, activating together */
+    /** v3.2 hardfork height: overflow-safe transfer sums, one-shot exploit clawback, exploit UTXO freeze */
     int DF25Height;
 
     /** Foundation share after AMK, normalized to COIN = 100% */

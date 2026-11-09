@@ -534,6 +534,8 @@ void SetupServerArgs()
     gArgs.AddArg("-df23height", "DF23 fork activation height (regtest only)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::CHAINPARAMS);
     gArgs.AddArg("-df24height", "DF24 fork activation height (regtest only)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::CHAINPARAMS);
     gArgs.AddArg("-df25height", "DF25 fork activation height (v3.2: overflow fix + exploit clawback; regtest only)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::CHAINPARAMS);
+    gArgs.AddArg("-regtest-exploit-clawback=<address:satoshi>", "Exploit clawback entry for DF25Height (regtest only, repeatable)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::CHAINPARAMS);
+    gArgs.AddArg("-regtest-exploit-freeze=<address>", "Freeze UTXOs of this address from DF25Height (regtest only, repeatable)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::CHAINPARAMS);
     gArgs.AddArg("-jellyfish_regtest", "Configure the regtest network for jellyfish testing", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-regtest-skip-loan-collateral-validation", "Skip loan collateral check for jellyfish testing", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-regtest-minttoken-simulate-mainnet", "Simulate mainnet for minttokens on regtest -  default behavior on regtest is to allow anyone to mint mintable tokens for ease of testing", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::OPTIONS);
