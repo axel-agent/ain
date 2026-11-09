@@ -567,6 +567,16 @@ private:
 
     bool accountsViewDirty;
     bool forceRebuildForReorg;
+    /**
+     * Height the account view was built with.
+     *
+     * The mempool transactions are meant for the next block, so the account
+     * view is replayed with the rules of that height. If the rules change
+     * between this height and the height of the next block, the view has to
+     * be rebuilt: transactions that were accepted under the old rules are
+     * not necessarily valid under the new ones.
+     */
+    int accountsViewHeight;
     std::unique_ptr<CCustomCSView> acview;
 
     static void AddToStaged(setEntries &staged,

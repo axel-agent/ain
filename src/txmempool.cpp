@@ -13,6 +13,7 @@
 #include <dfi/errors.h>
 #include <dfi/govvariables/attributes.h>
 #include <dfi/mn_checks.h>
+#include <limits>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -354,6 +355,7 @@ CTxMemPool::CTxMemPool(CBlockPolicyEstimator *estimator)
     nCheckFrequency = 0;
     accountsViewDirty = false;
     forceRebuildForReorg = false;
+    accountsViewHeight = 0;
 }
 
 bool CTxMemPool::isSpent(const COutPoint &outpoint) const {
@@ -625,6 +627,25 @@ void CTxMemPool::resetAccountsView() {
 }
 
 /**
+ * True if the consensus rules change between the two given heights.
+ *
+ * The height dependent overflow check of the transfer sum
+ * (nBalanceOverflowHeight) is the only rule that depends on the height in
+ * this context. If the account view was built below the activation height
+ * and the next block is at or above it, the view has to be rebuilt:
+ * transactions that were accepted under the legacy rules are not valid
+ * under the strict rules anymore.
+ */
+static bool MempoolRulesChangedBetween(int fromHeight, int toHeight) {
+    const auto activation = Params().GetConsensus().nBalanceOverflowHeight;
+    if (activation == std::numeric_limits<int>::max()) {
+        // The check is disabled, the rules never change.
+        return false;
+    }
+    return fromHeight < activation && activation <= toHeight;
+}
+
+/**
  * Called when a block is connected. Removes from mempool and updates the miner fee estimator.
  */
 void CTxMemPool::removeForBlock(const std::vector<CTransactionRef> &vtx, unsigned int nBlockHeight) {
@@ -652,7 +673,16 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef> &vtx, unsigne
     }
 
     if (pcustomcsview) {
+        // The mempool transactions are meant for the next block, so the
+        // account view is built with the height of that block.
+        const int prospectiveHeight = nBlockHeight + 1;
         accountsViewDirty |= forceRebuildForReorg;
+        if (MempoolRulesChangedBetween(accountsViewHeight, prospectiveHeight)) {
+            // The rules of the next block differ from the rules the view was
+            // built with, so it has to be rebuilt - even if no transaction
+            // was removed from the mempool.
+            accountsViewDirty = true;
+        }
         CTransactionRef ptx{};
 
         CCoinsView dummy;
@@ -661,7 +691,7 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef> &vtx, unsigne
         CCoinsViewMemPool viewMemPool(&coins_cache, *this);
         view.SetBackend(viewMemPool);
 
-        rebuildAccountsView(nBlockHeight, view);
+        rebuildAccountsView(prospectiveHeight, view);
     }
 
     lastRollingFeeUpdate = GetTime();
@@ -680,7 +710,9 @@ void CTxMemPool::rebuildViews() {
     view.SetBackend(viewMemPool);
 
     setAccountViewDirty();
-    rebuildAccountsView(::ChainActive().Tip()->nHeight, view);
+    // The mempool transactions are meant for the next block, so the account
+    // view is built with the height of that block.
+    rebuildAccountsView(::ChainActive().Tip()->nHeight + 1, view);
 }
 
 void CTxMemPool::_clear() {
@@ -697,6 +729,9 @@ void CTxMemPool::_clear() {
     rollingMinimumFeeRate = 0;
     accountsViewDirty = false;
     forceRebuildForReorg = false;
+    // The view is dropped as well, so the height it was built with is
+    // unknown now.
+    accountsViewHeight = 0;
     ++nTransactionsUpdated;
 }
 
@@ -1308,7 +1343,11 @@ void CTxMemPool::rebuildAccountsView(int height, const CCoinsViewCache &coinsCac
         };
         auto res = ApplyCustomTx(blockCtx, txCtx);
 
-        if (!res && (res.code & CustomTxErrCodes::Fatal)) {
+        if (!res && (res.code & (CustomTxErrCodes::Fatal | CustomTxErrCodes::TransferSumOverflow))) {
+            // A transaction with an overflow of the transfer sum was accepted
+            // below the activation height and is not valid anymore. Drop it
+            // instead of keeping it in the mempool, where it would never be
+            // mined.
             removeTxBackToStage(mapTx, staged, vtx, tx);
         }
     }
@@ -1323,6 +1362,9 @@ void CTxMemPool::rebuildAccountsView(int height, const CCoinsViewCache &coinsCac
     viewDuplicate.Flush();
     accountsViewDirty = false;
     forceRebuildForReorg = false;
+    // Remember the height the view was built with, so that a change of the
+    // consensus rules can be detected.
+    accountsViewHeight = height;
 }
 
 void CTxMemPool::AddToStaged(setEntries &staged,

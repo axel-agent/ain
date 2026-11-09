@@ -239,7 +239,15 @@ ResVal<CBalances> CCustomTxVisitor::SumTransfers(const CAccounts &to) const {
     if (height < static_cast<uint32_t>(consensus.nBalanceOverflowHeight)) {
         return {SumAllTransfersLegacy(to), Res::Ok()};
     }
-    return SumAllTransfers(to);
+    auto sum = SumAllTransfers(to);
+    if (!sum) {
+        // Tag the error so that the mempool is able to tell an overflow of the
+        // transfer sum apart from other errors. The error code does not
+        // change the consensus behaviour, it is only used for the policy
+        // decisions in the mempool.
+        return Res::ErrCode(CustomTxErrCodes::TransferSumOverflow, "%s", sum.msg);
+    }
+    return sum;
 }
 
 Res CCustomTxVisitor::TransferTokenBalance(DCT_ID id, CAmount amount, const CScript &from, const CScript &to) const {
