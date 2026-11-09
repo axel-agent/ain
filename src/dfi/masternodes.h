@@ -549,7 +549,10 @@ protected:
 
 public:
     // Increase version when underlaying tables are changed
-    static constexpr const int DbVersion = 1;
+    // v3.2: 2 = states built before the DF25Height exploit clawback are not accepted (the clawback only runs when
+    // block DF25Height is connected, so a node past that height with an old DB would never apply it). Operators
+    // upgrading from DbVersion 1 must start once with -reindex-chainstate.
+    static constexpr const int DbVersion = 2;
 
     // Normal constructors
     CCustomCSView();
