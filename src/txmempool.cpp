@@ -671,8 +671,17 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef> &vtx, unsigne
         }
     }
 
+    // At the activation boundary the pooled txs must be re-validated with the rules of the NEXT block
+    // (Tip+1 == DF25Height): the overflow gate and the UTXO freeze change there, but the account view is
+    // normally only rebuilt at the tip height, so stale txs would survive into block DF25Height.
+    const int nextHeight = static_cast<int>(nBlockHeight) + 1;
+    const bool activationBoundary = nextHeight == Params().GetConsensus().DF25Height;
+
     if (pcustomcsview) {
         accountsViewDirty |= forceRebuildForReorg;
+        if (activationBoundary) {
+            accountsViewDirty = true;
+        }
         CTransactionRef ptx{};
 
         CCoinsView dummy;
@@ -681,7 +690,7 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef> &vtx, unsigne
         CCoinsViewMemPool viewMemPool(&coins_cache, *this);
         view.SetBackend(viewMemPool);
 
-        rebuildAccountsView(nBlockHeight, view);
+        rebuildAccountsView(activationBoundary ? nextHeight : static_cast<int>(nBlockHeight), view, activationBoundary);
     }
 
     lastRollingFeeUpdate = GetTime();
@@ -1280,7 +1289,7 @@ bool CTxMemPool::checkAddressNonceAndFee(const CTxMemPoolEntry &pendingEntry,
     return result;
 }
 
-void CTxMemPool::rebuildAccountsView(int height, const CCoinsViewCache &coinsCache) {
+void CTxMemPool::rebuildAccountsView(int height, const CCoinsViewCache &coinsCache, bool dropAllFailures) {
     if (!pcustomcsview || !accountsViewDirty) {
         return;
     }
@@ -1328,7 +1337,7 @@ void CTxMemPool::rebuildAccountsView(int height, const CCoinsViewCache &coinsCac
         };
         auto res = ApplyCustomTx(blockCtx, txCtx);
 
-        if (!res && (res.code & CustomTxErrCodes::Fatal)) {
+        if (!res && ((res.code & CustomTxErrCodes::Fatal) || dropAllFailures)) {
             removeTxBackToStage(mapTx, staged, vtx, tx);
         }
     }

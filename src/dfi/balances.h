@@ -262,7 +262,9 @@ struct CStatsTokenBalances {
     }
 };
 
-inline CBalances SumAllTransfers(const CAccounts &to) {
+// LEGACY, consensus-frozen: discards AddBalances() errors (int64 overflow silently keeps the partial sum).
+// Only for replaying blocks below DF25Height. New code must use SumAllTransfersChecked().
+inline CBalances SumAllTransfersLegacy(const CAccounts &to) {
     CBalances sum;
     for (const auto &kv : to) {
         sum.AddBalances(kv.second.balances);
@@ -272,7 +274,7 @@ inline CBalances SumAllTransfers(const CAccounts &to) {
 
 // Overflow-safe variant (see PR DeFiCh/ain#3135): propagates the first AddBalances() error instead of
 // discarding it. Consensus code must only use it from DF25Height on (see consensus/accounts.cpp).
-inline ResVal<CBalances> SumAllTransfersChecked(const CAccounts &to) {
+[[nodiscard]] inline ResVal<CBalances> SumAllTransfersChecked(const CAccounts &to) {
     CBalances sum;
     for (const auto &kv : to) {
         if (auto res = sum.AddBalances(kv.second.balances); !res) {

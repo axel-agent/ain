@@ -190,7 +190,7 @@ Res CPoolPairsConsensus::operator()(const CPoolSwapMessageV2 &obj) const {
 // shared SumAllTransfersChecked() from dfi/balances.h.
 static ResVal<CBalances> SumTransfersChecked(const CAccounts &from, const bool enforceChecked) {
     if (!enforceChecked) {
-        return {SumAllTransfers(from), Res::Ok()};
+        return {SumAllTransfersLegacy(from), Res::Ok()};
     }
     return SumAllTransfersChecked(from);
 }

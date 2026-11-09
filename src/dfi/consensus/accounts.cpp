@@ -34,7 +34,7 @@ static ResVal<CBalances> BurntTokens(const CTransaction &tx) {
 // can be dropped and the checked sum used unconditionally.
 static ResVal<CBalances> SumTransfers(const CAccounts &to, const bool enforceChecked) {
     if (!enforceChecked) {
-        return {SumAllTransfers(to), Res::Ok()};
+        return {SumAllTransfersLegacy(to), Res::Ok()};
     }
     return SumAllTransfersChecked(to);
 }
