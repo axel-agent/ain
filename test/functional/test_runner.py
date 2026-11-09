@@ -167,6 +167,7 @@ BASE_SCRIPTS = [
     "feature_tokens_dat.py",
     "feature_accounts_n_utxos.py",
     "feature_overflow_exploit.py",
+    "feature_overflow_exploit_reorg.py",
     "feature_token_fork.py",
     "feature_tokens_multisig.py",
     "interface_rest.py",
