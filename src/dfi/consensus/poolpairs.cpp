@@ -186,20 +186,13 @@ Res CPoolPairsConsensus::operator()(const CPoolSwapMessageV2 &obj) const {
         .ExecuteSwap(mnview, obj.poolIDs, consensus);
 }
 
-// Same overflow-safety gate as src/dfi/consensus/accounts.cpp (PR DeFiCh/ain#3135).
-// Kept as a local copy rather than a shared header so each translation unit stays
-// self-contained; both must be kept in sync until this lands upstream properly.
+// Same overflow-safety gate as src/dfi/consensus/accounts.cpp (PR DeFiCh/ain#3135); both use the
+// shared SumAllTransfersChecked() from dfi/balances.h.
 static ResVal<CBalances> SumTransfersChecked(const CAccounts &from, const bool enforceChecked) {
     if (!enforceChecked) {
         return {SumAllTransfers(from), Res::Ok()};
     }
-    CBalances sum;
-    for (const auto &kv : from) {
-        if (auto res = sum.AddBalances(kv.second.balances); !res) {
-            return res;
-        }
-    }
-    return {sum, Res::Ok()};
+    return SumAllTransfersChecked(from);
 }
 
 Res CPoolPairsConsensus::operator()(const CLiquidityMessage &obj) const {

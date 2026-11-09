@@ -270,6 +270,18 @@ inline CBalances SumAllTransfers(const CAccounts &to) {
     return sum;
 }
 
+// Overflow-safe variant (see PR DeFiCh/ain#3135): propagates the first AddBalances() error instead of
+// discarding it. Consensus code must only use it from DF25Height on (see consensus/accounts.cpp).
+inline ResVal<CBalances> SumAllTransfersChecked(const CAccounts &to) {
+    CBalances sum;
+    for (const auto &kv : to) {
+        if (auto res = sum.AddBalances(kv.second.balances); !res) {
+            return res;
+        }
+    }
+    return {sum, Res::Ok()};
+}
+
 struct BalanceKey {
     CScript owner;
     DCT_ID tokenID;

@@ -36,13 +36,7 @@ static ResVal<CBalances> SumTransfers(const CAccounts &to, const bool enforceChe
     if (!enforceChecked) {
         return {SumAllTransfers(to), Res::Ok()};
     }
-    CBalances sum;
-    for (const auto &kv : to) {
-        if (auto res = sum.AddBalances(kv.second.balances); !res) {
-            return res;
-        }
-    }
-    return {sum, Res::Ok()};
+    return SumAllTransfersChecked(to);
 }
 
 Res CAccountsConsensus::operator()(const CUtxosToAccountMessage &obj) const {
