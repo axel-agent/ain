@@ -651,6 +651,26 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef> &vtx, unsigne
         ClearPrioritisation(tx->GetHash());
     }
 
+    // The next block activates the exploit UTXO freeze (DF25Height). Pooled txs that spend frozen UTXOs were valid
+    // at Tip+1 < DF25Height but would make every block template fail in TestBlockValidity, so drop them once.
+    if (static_cast<int>(nBlockHeight) + 1 == Params().GetConsensus().DF25Height) {
+        CCoinsViewMemPool freezeViewMemPool(&::ChainstateActive().CoinsTip(), *this);
+        std::vector<CTransactionRef> frozenSpends;
+        for (const auto &e : mapTx) {
+            for (const auto &in : e.GetTx().vin) {
+                Coin coin;
+                if (freezeViewMemPool.GetCoin(in.prevout, coin) && !coin.IsSpent() &&
+                    Consensus::IsExploitUtxoFrozen(Params().GetConsensus(), coin.out.scriptPubKey, static_cast<int>(nBlockHeight) + 1)) {
+                    frozenSpends.push_back(e.GetSharedTx());
+                    break;
+                }
+            }
+        }
+        for (const auto &tx : frozenSpends) {
+            removeRecursive(*tx, MemPoolRemovalReason::REORG);
+        }
+    }
+
     if (pcustomcsview) {
         accountsViewDirty |= forceRebuildForReorg;
         CTransactionRef ptx{};
