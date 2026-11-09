@@ -1231,7 +1231,8 @@ public:
 
         bech32_hrp = "bcrt";
 
-        // (!) after prefixes set
+        // (!) after prefixes set (addresses must be decodable)
+        ApplyRegtestExploitArgs();
         consensus.foundationShareScript = GetScriptForDestination(DecodeDestination("2NCWAKfEehP3qibkLKYQjXaWMK23k4EDMVS", *this)); // cMv1JaaZ9Mbb3M3oNmcFvko8p7EcHJ8XD7RCQjzNaMs7BWRVZTyR
         consensus.foundationShare = 0; // old style - just percents // stil zero here to not broke old tests
         consensus.foundationShareDFIP1 = 19 * COIN / 10 / 50; // 1.9 DFI @ 50 per block (rate normalized to (COIN == 100%)
@@ -1345,6 +1346,31 @@ public:
     {
         consensus.vDeployments[d].nStartTime = nStartTime;
         consensus.vDeployments[d].nTimeout = nTimeout;
+    }
+    void ApplyRegtestExploitArgs() {
+    // Regtest only: let functional tests exercise the exploit clawback and the UTXO freeze,
+    // whose real lists exist on mainnet only.
+    //   -regtest-exploit-clawback=<address>:<max satoshi>   (repeatable)
+    //   -regtest-exploit-freeze=<address>                   (repeatable)
+    for (const std::string& arg : gArgs.GetArgs("-regtest-exploit-clawback")) {
+        const auto pos = arg.rfind(':');
+        CAmount maxAmount{};
+        if (pos == std::string::npos || !ParseInt64(arg.substr(pos + 1), &maxAmount) || maxAmount <= 0) {
+            throw std::runtime_error(strprintf("Invalid -regtest-exploit-clawback (expected address:satoshi): %s", arg));
+        }
+        const CTxDestination dest = DecodeDestination(arg.substr(0, pos), *this);
+        if (!IsValidDestination(dest)) {
+            throw std::runtime_error(strprintf("Invalid address in -regtest-exploit-clawback: %s", arg));
+        }
+        consensus.exploitClawback.push_back({GetScriptForDestination(dest), maxAmount});
+    }
+    for (const std::string& arg : gArgs.GetArgs("-regtest-exploit-freeze")) {
+        const CTxDestination dest = DecodeDestination(arg, *this);
+        if (!IsValidDestination(dest)) {
+            throw std::runtime_error(strprintf("Invalid address in -regtest-exploit-freeze: %s", arg));
+        }
+        consensus.exploitFrozenUtxoScripts.insert(GetScriptForDestination(dest));
+    }
     }
     void UpdateActivationParametersFromArgs();
 };
@@ -1474,22 +1500,6 @@ void CDevNetParams::UpdateActivationParametersFromArgs() {
 void CRegTestParams::UpdateActivationParametersFromArgs()
 {
     SetupCommonArgActivationParams(consensus);
-
-    // Regtest only: let functional tests exercise the exploit clawback and the UTXO freeze,
-    // whose real lists exist on mainnet only.
-    //   -regtest-exploit-clawback=<address>:<max satoshi>   (repeatable)
-    //   -regtest-exploit-freeze=<address>                   (repeatable)
-    for (const std::string& arg : gArgs.GetArgs("-regtest-exploit-clawback")) {
-        const auto pos = arg.rfind(':');
-        CAmount maxAmount{};
-        if (pos == std::string::npos || !ParseInt64(arg.substr(pos + 1), &maxAmount) || maxAmount <= 0) {
-            throw std::runtime_error(strprintf("Invalid -regtest-exploit-clawback (expected address:satoshi): %s", arg));
-        }
-        consensus.exploitClawback.push_back({GetScriptForDestination(DecodeDestination(arg.substr(0, pos), *this)), maxAmount});
-    }
-    for (const std::string& arg : gArgs.GetArgs("-regtest-exploit-freeze")) {
-        consensus.exploitFrozenUtxoScripts.insert(GetScriptForDestination(DecodeDestination(arg, *this)));
-    }
 
     if (!gArgs.IsArgSet("-vbparams")) return;
 
