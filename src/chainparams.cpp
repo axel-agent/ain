@@ -144,6 +144,7 @@ public:
         consensus.DF22MetachainHeight = 3462000; // Nov 15th, 2023.
         consensus.DF23Height = 4006000; // May 23th, 2024.
         consensus.DF24Height = 4463000; // Oct 29th, 2024.
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 //        consensus.pos.nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
@@ -271,6 +272,20 @@ public:
         consensus.accountDestruction.clear();
         consensus.accountDestruction.insert(GetScriptForDestination(DecodeDestination("dJEbxbfufyPF14SC93yxiquECEfq4YSd9L", *this)));
         consensus.accountDestruction.insert(GetScriptForDestination(DecodeDestination("8UAhRuUFCyFUHEPD7qvtj8Zy2HxF5HH5nb", *this)));
+
+        // v3.2 exploit clawback (applied once at DF25Height, see ProcessExploitClawback).
+        // Amounts in satoshi (1 DFI = 100000000). Removed amount = min(balance, maxAmount).
+        //  1) tx c0248c396a0be9fe6122cab0c4f0c1ab4f8160bdde85893a9afd592732cfef0e, block 6564035:
+        //     92233720368.54775807 DFI (= INT64_MAX sat) minted to a fresh wallet.
+        //  2) tx bc2e5a684592cc2f504268d23a418ca66cbb9900bf4dcb1b5c2eb3ec58b2e8ac, block 6566081:
+        //     92233720360.54775807 DFI (= INT64_MAX - 8 DFI) minted to a long-established, ordinary
+        //     account (probably unintended). Only the minted amount is removed; the account's own
+        //     small balance, vaults and loans are not touched.
+        consensus.exploitClawback.clear();
+        consensus.exploitClawback.push_back({GetScriptForDestination(DecodeDestination("df1qel8g4g4f66qxr7cw0t03jkz08cj095vup2jhuy", *this)),
+                                             CAmount{9223372036854775807LL}});
+        consensus.exploitClawback.push_back({GetScriptForDestination(DecodeDestination("df1qqtlz4uw9w5s4pupwgucv4shl6atqw7xlz2wn07", *this)),
+                                             CAmount{9223372036054775807LL}});
 
         consensus.smartContracts.clear();
         consensus.smartContracts[SMART_CONTRACT_DFIP_2201] = GetScriptForDestination(CTxDestination(WitnessV0KeyHash(std::vector<unsigned char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0})));
@@ -436,6 +451,7 @@ public:
         consensus.DF22MetachainHeight = 1150040;
         consensus.DF23Height = 1507200;
         consensus.DF24Height = 1810800;
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 //        consensus.pos.nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
@@ -660,6 +676,7 @@ public:
         consensus.DF22MetachainHeight = 1586750;
         consensus.DF23Height = 1985600;
         consensus.DF24Height = 2241000;
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks
@@ -878,6 +895,7 @@ public:
         consensus.DF22MetachainHeight = 1586750;
         consensus.DF23Height = std::numeric_limits<int>::max();
         consensus.DF24Height = std::numeric_limits<int>::max();
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks
@@ -1100,6 +1118,7 @@ public:
         consensus.DF22MetachainHeight = 10000000;
         consensus.DF23Height = 10000000;
         consensus.DF24Height = 10000000;
+        consensus.DF25Height = 10000000; // v3.2: regtest uses a far-future sentinel like other DFxxHeights
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.pos.nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
@@ -1371,6 +1390,7 @@ void SetupCommonArgActivationParams(Consensus::Params &consensus) {
     UpdateHeightValidation("Metachain", "-metachainheight", consensus.DF22MetachainHeight);
     UpdateHeightValidation("DF23 Upgrade Height", "-df23height", consensus.DF23Height);
     UpdateHeightValidation("DF24 Upgrade Height", "-df24height", consensus.DF24Height);
+    UpdateHeightValidation("DF25 Height (v3.2: overflow fix + exploit clawback)", "-df25height", consensus.DF25Height);
 
     if (gArgs.GetBoolArg("-simulatemainnet", false)) {
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks

@@ -451,6 +451,54 @@ Res AddNonTxToBurnIndex(const CScript &from, const CBalances &amounts) {
     return mapBurnAmounts[from].AddBalances(amounts.balances);
 }
 
+// ---------------------------------------------------------------------------
+// v3.2 exploit clawback.
+//
+// Removes the DFI that was minted out of thin air by the SumAllTransfers()
+// int64 overflow (two known AccountToAccount txs, see chainparams.cpp). The
+// overflow itself is closed by the DF25Height-gated checks in consensus/accounts.cpp
+// and consensus/poolpairs.cpp; this step cleans up the already-minted balances.
+//
+// For every entry the amount removed is min(current DFI balance, maxAmount):
+//   * never more than the exploit-minted amount (an ordinary holder keeps
+//     everything above it, including vaults and loans, which are not account balances),
+//   * never fails on an emptied account.
+//
+// Deliberately NOT written to the burn index: the DFI never existed, so listing
+// ~184 billion DFI as "burned" would corrupt the burn statistics. This mirrors
+// the forced zeroing of consensus.accountDestruction in ProcessEunosEvents.
+//
+// All-or-nothing: runs on a copy of the view and is flushed only if every entry succeeds.
+// ---------------------------------------------------------------------------
+Res ApplyExploitClawback(CCustomCSView &view, const std::vector<Consensus::ExploitClawbackEntry> &entries) {
+    for (const auto &entry : entries) {
+        const CTokenAmount balance = view.GetBalance(entry.owner, DCT_ID{0});
+        const CAmount take = std::min(balance.nValue, entry.maxAmount);
+        if (take <= 0) {
+            LogPrintf("ExploitClawback: nothing to remove from %s\n", ScriptToString(entry.owner));
+            continue;
+        }
+        if (auto res = view.SubBalance(entry.owner, CTokenAmount{DCT_ID{0}, take}); !res) {
+            return res;
+        }
+        LogPrintf("ExploitClawback: removed %s DFI from %s\n", GetDecimalString(take), ScriptToString(entry.owner));
+    }
+    return Res::Ok();
+}
+
+static void ProcessExploitClawback(const CBlockIndex *pindex, CCustomCSView &cache, const Consensus::Params &consensus) {
+    if (pindex->nHeight != consensus.DF25Height || consensus.exploitClawback.empty()) {
+        return;
+    }
+
+    auto view(cache);
+    if (auto res = ApplyExploitClawback(view, consensus.exploitClawback); !res) {
+        LogPrintf("ExploitClawback: failed, nothing removed: %s\n", res.msg);
+        return;
+    }
+    view.Flush();
+}
+
 static void ProcessEunosEvents(const CBlockIndex *pindex, CCustomCSView &cache, const Consensus::Params &consensus) {
     if (pindex->nHeight != consensus.DF8EunosHeight) {
         return;
@@ -4703,6 +4751,9 @@ void ProcessDeFiEvent(const CBlock &block,
 
     // burn DFI on Eunos height
     ProcessEunosEvents(pindex, cache, consensus);
+
+    // v3.2: one-shot removal of the DFI minted by the SumAllTransfers() overflow (DF25Height)
+    ProcessExploitClawback(pindex, cache, consensus);
 
     // set oracle prices
     ProcessOracleEvents(pindex, cache, consensus);

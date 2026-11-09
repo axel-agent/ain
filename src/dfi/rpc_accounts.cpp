@@ -812,7 +812,14 @@ UniValue utxostoaccount(const JSONRPCRequest &request) {
     scriptBurn << OP_RETURN;
 
     // burn
-    const auto toBurn = SumAllTransfers(msg.to);
+    // Overflow-safety: see PR DeFiCh/ain#3135. RPC path, not consensus — fail
+    // closed with a clear error instead of accepting a truncated sum.
+    CBalances toBurn;
+    for (const auto &kv : msg.to) {
+        if (auto res = toBurn.AddBalances(kv.second.balances); !res) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, res.msg);
+        }
+    }
     if (toBurn.balances.empty()) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "zero amounts");
     }
@@ -986,8 +993,17 @@ UniValue accounttoaccount(const JSONRPCRequest &request) {
     auto ownershipCheck = gArgs.GetBoolArg("-dvmownerskipcheck", DEFAULT_DVM_OWNERSHIP_CHECK);
     msg.to = DecodeRecipientsDefaultInternal(pwallet, request.params[1].get_obj(), ownershipCheck);
 
-    if (SumAllTransfers(msg.to).balances.empty()) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "zero amounts");
+    // Overflow-safety: see PR DeFiCh/ain#3135.
+    {
+        CBalances checkSum;
+        for (const auto &kv : msg.to) {
+            if (auto res = checkSum.AddBalances(kv.second.balances); !res) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, res.msg);
+            }
+        }
+        if (checkSum.balances.empty()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "zero amounts");
+        }
     }
 
     msg.from = DecodeScript(request.params[0].get_str());
@@ -1099,7 +1115,12 @@ UniValue accounttoutxos(const JSONRPCRequest &request) {
     msg.from = DecodeScript(request.params[0].get_str());
     RejectErc55Address(msg.from);
     const auto to = DecodeRecipients(pwallet->chain(), request.params[1]);
-    msg.balances = SumAllTransfers(to);
+    // Overflow-safety: see PR DeFiCh/ain#3135.
+    for (const auto &kv : to) {
+        if (auto res = msg.balances.AddBalances(kv.second.balances); !res) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, res.msg);
+        }
+    }
     if (msg.balances.balances.empty()) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "zero amounts");
     }
@@ -2126,7 +2147,13 @@ UniValue sendtokenstoaddress(const JSONRPCRequest &request) {
     auto ownershipCheck = gArgs.GetBoolArg("-dvmownerskipcheck", DEFAULT_DVM_OWNERSHIP_CHECK);
     msg.to = DecodeRecipientsDefaultInternal(pwallet, request.params[1].get_obj(), ownershipCheck);
 
-    const CBalances sumTransfersTo = SumAllTransfers(msg.to);
+    // Overflow-safety: see PR DeFiCh/ain#3135.
+    CBalances sumTransfersTo;
+    for (const auto &kv : msg.to) {
+        if (auto res = sumTransfersTo.AddBalances(kv.second.balances); !res) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, res.msg);
+        }
+    }
     if (sumTransfersTo.balances.empty()) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "zero amounts in \"to\" param");
     }
