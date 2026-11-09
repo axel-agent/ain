@@ -162,6 +162,11 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     return nSigOps;
 }
 
+bool Consensus::IsExploitUtxoFrozen(const Consensus::Params& params, const CScript& script, int nSpendHeight)
+{
+    return nSpendHeight >= params.DF25Height && params.exploitFrozenUtxoScripts.count(script) > 0;
+}
+
 bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, CCustomCSView& mnview, int nSpendHeight, CAmount& txfee, const CChainParams& chainparams)
 {
     if (IsEVMTx(tx)) {
@@ -212,6 +217,11 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
         if (coin.IsCoinBase() && nSpendHeight - coin.nHeight < COINBASE_MATURITY) {
             return state.Invalid(ValidationInvalidReason::TX_PREMATURE_SPEND, false, "bad-txns-premature-spend-of-coinbase",
                 strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
+        }
+
+        if (Consensus::IsExploitUtxoFrozen(chainparams.GetConsensus(), coin.out.scriptPubKey, nSpendHeight)) {
+            return state.Invalid(ValidationInvalidReason::CONSENSUS, false, "bad-txns-exploit-utxo-frozen",
+                strprintf("tried to spend frozen exploit UTXO %s", prevout.ToString()));
         }
 
         // Check for negative or overflow input values

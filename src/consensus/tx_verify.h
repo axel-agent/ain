@@ -6,6 +6,8 @@
 #define DEFI_CONSENSUS_TX_VERIFY_H
 
 #include <amount.h>
+#include <consensus/params.h>
+#include <script/script.h>
 
 #include <stdint.h>
 #include <vector>
@@ -26,6 +28,8 @@ namespace Consensus {
  * @param[out] txfee Set to the transaction fee if successful.
  * Preconditions: tx.IsCoinBase() is false.
  */
+/** True if spending a UTXO locked to `script` at `nSpendHeight` is forbidden (exploit UTXO freeze). */
+bool IsExploitUtxoFrozen(const Params& params, const CScript& script, int nSpendHeight);
 bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, CCustomCSView& mnview, int nSpendHeight, CAmount& txfee, const CChainParams& chainparams);
 } // namespace Consensus
 

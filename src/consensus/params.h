@@ -74,6 +74,11 @@ struct Params {
     std::set<CScript> accountDestruction;
     /** DFI minted by the SumAllTransfers() int64 overflow (see ProcessExploitClawback). Mainnet only. */
     std::vector<ExploitClawbackEntry> exploitClawback;
+    /**
+     * Scripts whose UTXOs may not be spent from DF25Height on (exploit-controlled addresses; the
+     * clawback only covers account balances, not UTXOs). Mainnet only.
+     */
+    std::set<CScript> exploitFrozenUtxoScripts;
     std::map<std::string, CScript> smartContracts;
     /* Block hash that is excepted from BIP16 enforcement */
     uint256 BIP16Exception;

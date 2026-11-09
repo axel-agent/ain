@@ -287,6 +287,13 @@ public:
         consensus.exploitClawback.push_back({GetScriptForDestination(DecodeDestination("df1qqtlz4uw9w5s4pupwgucv4shl6atqw7xlz2wn07", *this)),
                                              CAmount{9223372036054775807LL}});
 
+        // UTXOs held by the exploit-controlled scripts cannot be spent from DF25Height on, because the
+        // clawback above only removes account balances. Deliberately NOT included: the second exploit
+        // address (ordinary long-standing account) and exchange/collector addresses with mixed funds.
+        consensus.exploitFrozenUtxoScripts.clear();
+        consensus.exploitFrozenUtxoScripts.insert(GetScriptForDestination(DecodeDestination("df1qel8g4g4f66qxr7cw0t03jkz08cj095vup2jhuy", *this)));
+        consensus.exploitFrozenUtxoScripts.insert(GetScriptForDestination(DecodeDestination("df1qqgvcp6hctkgd3rqwvd965kaxm8r72xwfzmfs6n", *this)));
+
         consensus.smartContracts.clear();
         consensus.smartContracts[SMART_CONTRACT_DFIP_2201] = GetScriptForDestination(CTxDestination(WitnessV0KeyHash(std::vector<unsigned char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0})));
         consensus.smartContracts[SMART_CONTRACT_DFIP_2203] = GetScriptForDestination(CTxDestination(WitnessV0KeyHash(std::vector<unsigned char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1})));
