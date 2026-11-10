@@ -1300,71 +1300,110 @@ void CTxMemPool::rebuildAccountsView(int height, const CCoinsViewCache &coinsCac
         return;
     }
 
-    CAmount txfee{};
-    resetAccountsView();
-    CCustomCSView viewDuplicate(accountsView());
+    // A transaction that is dropped can have descendants in the mempool: a
+    // descendant spends an output of the dropped transaction and can never be
+    // mined without it. Such an orphan is dropped together with its parent,
+    // otherwise it stays in the mempool forever.
+    //
+    // A descendant can be applied to the account view before its parent is
+    // dropped - the view is then built a second time, over the remaining
+    // transactions only. The second pass is the last one: the rules do not
+    // change between the passes.
+    for (int attempt = 0; attempt < 2; ++attempt) {
+        CAmount txfee{};
+        resetAccountsView();
+        CCustomCSView viewDuplicate(accountsView());
 
-    setEntries staged;
-    std::vector<CTransactionRef> vtx;
+        setEntries staged;
+        setEntries descendants;
+        std::vector<CTransactionRef> vtx;
 
-    const auto isEvmEnabledForBlock = IsEVMEnabled(viewDuplicate);
+        const auto isEVMEnabledForBlock = IsEVMEnabled(viewDuplicate);
 
-    // Check custom TX consensus types are now not in conflict with account layer
-    auto &txsByEntryTime = mapTx.get<entry_time>();
-    for (auto it = txsByEntryTime.begin(); it != txsByEntryTime.end(); ++it) {
-        CValidationState state;
-        const auto &tx = it->GetTx();
-        const auto removeTxBackToStage = [&it](const indexed_transaction_set &mapTx,
-                                               CTxMemPool::setEntries &staged,
-                                               std::vector<CTransactionRef> &vtx,
-                                               const CTransaction &tx) {
-            LogPrint(BCLog::MEMPOOL, "re-stage/remove TX: %s (cause: accountsView)\n", tx.GetHash().GetHex());
-            staged.insert(mapTx.project<0>(it));
-            vtx.push_back(it->GetSharedTx());
-        };
+        // Check custom TX consensus types are now not in conflict with account layer
+        auto &txsByEntryTime = mapTx.get<entry_time>();
+        for (auto it = txsByEntryTime.begin(); it != txsByEntryTime.end(); ++it) {
+            CValidationState state;
+            const auto &tx = it->GetTx();
+            const auto removeTxBackToStage = [&it, this, &descendants](const indexed_transaction_set &mapTx,
+                                                                       CTxMemPool::setEntries &staged,
+                                                                       std::vector<CTransactionRef> &vtx,
+                                                                       const CTransaction &tx) {
+                LogPrint(BCLog::MEMPOOL, "re-stage/remove TX: %s (cause: accountsView)\n", tx.GetHash().GetHex());
+                staged.insert(mapTx.project<0>(it));
+                vtx.push_back(it->GetSharedTx());
+                // Take the descendants along: they spend an output of the
+                // dropped transaction and can never be mined without it.
+                CalculateDescendants(mapTx.project<0>(it), descendants);
+                descendants.erase(mapTx.project<0>(it));
+            };
 
-        if (!Consensus::CheckTxInputs(tx, state, coinsCache, viewDuplicate, height, txfee, Params())) {
-            removeTxBackToStage(mapTx, staged, vtx, tx);
-            continue;
+            if (!Consensus::CheckTxInputs(tx, state, coinsCache, viewDuplicate, height, txfee, Params())) {
+                removeTxBackToStage(mapTx, staged, vtx, tx);
+                continue;
+            }
+            auto blockCtx = BlockContext{
+                static_cast<uint32_t>(height),
+                static_cast<uint64_t>(it->GetTime()),
+                Params().GetConsensus(),
+                &viewDuplicate,
+                isEVMEnabledForBlock,
+                {},
+                true,
+            };
+            auto txCtx = TransactionContext{
+                coinsCache,
+                tx,
+                blockCtx,
+            };
+            auto res = ApplyCustomTx(blockCtx, txCtx);
+
+            if (!res && (res.code & (CustomTxErrCodes::Fatal | CustomTxErrCodes::TransferSumOverflow))) {
+                // A transaction with an overflow of the transfer sum was accepted
+                // below the activation height and is not valid anymore. Drop it
+                // instead of keeping it in the mempool, where it would never be
+                // mined.
+                removeTxBackToStage(mapTx, staged, vtx, tx);
+            }
         }
-        auto blockCtx = BlockContext{
-            static_cast<uint32_t>(height),
-            static_cast<uint64_t>(it->GetTime()),
-            Params().GetConsensus(),
-            &viewDuplicate,
-            isEvmEnabledForBlock,
-            {},
-            true,
-        };
-        auto txCtx = TransactionContext{
-            coinsCache,
-            tx,
-            blockCtx,
-        };
-        auto res = ApplyCustomTx(blockCtx, txCtx);
 
-        if (!res && (res.code & (CustomTxErrCodes::Fatal | CustomTxErrCodes::TransferSumOverflow))) {
-            // A transaction with an overflow of the transfer sum was accepted
-            // below the activation height and is not valid anymore. Drop it
-            // instead of keeping it in the mempool, where it would never be
-            // mined.
-            removeTxBackToStage(mapTx, staged, vtx, tx);
+        // The descendants are dropped together with the transaction they
+        // depend on.
+        for (const auto &descendant : descendants) {
+            vtx.push_back(descendant->GetSharedTx());
         }
+        staged.insert(descendants.begin(), descendants.end());
+
+        RemoveStaged(staged, true, MemPoolRemovalReason::BLOCK);
+
+        for (const auto &tx : vtx) {
+            removeConflicts(*tx);
+            ClearPrioritisation(tx->GetHash());
+        }
+
+        if (!descendants.empty()) {
+            if (attempt == 0) {
+                // The account view can contain the effects of descendants that
+                // were applied before their parent was dropped. Build it again,
+                // over the remaining transactions only.
+                continue;
+            }
+            // The view would contain the effects of transactions that are no
+            // longer in the mempool. It is discarded and built again on the
+            // next call.
+            resetAccountsView();
+            accountsViewDirty = true;
+            return;
+        }
+
+        viewDuplicate.Flush();
+        accountsViewDirty = false;
+        forceRebuildForReorg = false;
+        // Remember the height the view was built with, so that a change of the
+        // consensus rules can be detected.
+        accountsViewHeight = height;
+        return;
     }
-
-    RemoveStaged(staged, true, MemPoolRemovalReason::BLOCK);
-
-    for (const auto &tx : vtx) {
-        removeConflicts(*tx);
-        ClearPrioritisation(tx->GetHash());
-    }
-
-    viewDuplicate.Flush();
-    accountsViewDirty = false;
-    forceRebuildForReorg = false;
-    // Remember the height the view was built with, so that a change of the
-    // consensus rules can be detected.
-    accountsViewHeight = height;
 }
 
 void CTxMemPool::AddToStaged(setEntries &staged,
