@@ -55,7 +55,9 @@ class V426PosPauseTest(DefiTestFramework):
         hashes = []
         for _ in range(count):
             node = self.nodes[idx]
-            self.set_all_times(node.getblockheader(node.getbestblockhash())["time"] + 1)
+            # never turn the clock back (the pause is a jump of all clocks ahead of the tip)
+            tip_time = node.getblockheader(node.getbestblockhash())["time"]
+            self.set_all_times(max(TestNode.Mocktime or 0, tip_time + 1))
             hashes.extend(node.generate(1))
             self.sync_blocks()
         return hashes

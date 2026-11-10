@@ -21,7 +21,7 @@ import time
 from test_framework.test_framework import DefiTestFramework
 from test_framework.util import assert_equal, wait_until
 
-GATE = 150
+GATE = 400  # set per parameter; the funding below stays well below it
 DEPTH = 2100  # blocks above G-1, each with a custom tx
 SIGNAL_BIT = 1 << 24
 
@@ -59,11 +59,16 @@ class V426DeepInvalidateTest(DefiTestFramework):
         n = self.nodes[0]
         owner = n.get_genesis_keys().ownerAuthAddress
         n.generate(110)
-        n.utxostoaccount({owner: "1000@DFI"})
+        while n.getbalance() < 120 and n.getblockcount() < GATE - 40:
+            n.generate(10)
+        self.log.info("funding: height %d, wallet balance %s" % (n.getblockcount(), n.getbalance()))
+        fund = min(60, int(n.getbalance() / 2))
+        assert fund >= 5, "not enough coins to fund the account"
+        n.utxostoaccount({owner: "%d@DFI" % fund})
         n.generate(1)
         recipients = [n.getnewaddress("", "legacy") for _ in range(5)]
         for i in range(10):
-            n.accounttoaccount(owner, {recipients[i % 5]: "1@DFI"})
+            n.accounttoaccount(owner, {recipients[i % 5]: "0.1@DFI"})
             n.generate(1)
         n.generate(GATE - 1 - n.getblockcount())
         assert_equal(n.getblockcount(), GATE - 1)
@@ -78,8 +83,8 @@ class V426DeepInvalidateTest(DefiTestFramework):
         custom_blocks = 0
         for i in range(DEPTH):
             if i % 50 == 0:
-                n.utxostoaccount({owner: "1@DFI"})
-            n.accounttoaccount(owner, {recipients[i % 5]: "0.01@DFI"})
+                n.utxostoaccount({owner: "0.1@DFI"})
+            n.accounttoaccount(owner, {recipients[i % 5]: "0.001@DFI"})
             h = n.generate(1)[0]
             if n.getblock(h)["nTx"] >= 2:
                 custom_blocks += 1
