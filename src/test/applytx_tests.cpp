@@ -81,6 +81,20 @@ CScript CreateMetaA2A(CAccountToAccountMessage const & msg) {
     return scriptMeta;
 }
 
+CScript CreateRawMetaA2ADuplicateKey(const CScript &from, const CScript &toScript, CAmount amount1, CAmount amount2, DCT_ID tokenId) {
+    CDataStream markedMetadata(DfTxMarker, SER_NETWORK, PROTOCOL_VERSION);
+    markedMetadata << static_cast<unsigned char>(CustomTxType::AccountToAccount);
+    markedMetadata << from;
+    WriteCompactSize(markedMetadata, 2);
+    markedMetadata << toScript;
+    markedMetadata << CBalances{{{tokenId, amount1}}};
+    markedMetadata << toScript;
+    markedMetadata << CBalances{{{tokenId, amount2}}};
+    CScript scriptMeta;
+    scriptMeta << OP_RETURN << ToByteVector(markedMetadata);
+    return scriptMeta;
+}
+
 // redundant due to 'neg_token_amounts'
 BOOST_AUTO_TEST_CASE(apply_a2a_neg)
 {
@@ -521,6 +535,49 @@ BOOST_AUTO_TEST_CASE(apply_a2a_activation_boundary)
             }
         }
     }
+}
+
+// Documents the failed exploit attempt of block 6,565,374:
+// The attacker supplied the same destination script twice, with 1 sat and INT64_MAX.
+// Because CAccounts is a std::map, deserialization (m.insert) keeps only the first entry.
+// The node debited 1 sat, credited 1 sat, and discarded the INT64_MAX amount completely.
+BOOST_AUTO_TEST_CASE(apply_a2a_duplicate_recipient_script)
+{
+    Consensus::Params consensus = Params().GetConsensus();
+    consensus.DF1AMKHeight = 0;
+    consensus.nBalanceOverflowHeight = 0;
+
+    LOCK(cs_main);
+    BlockContext blockCtx{{}, {}, consensus};
+    auto &view = blockCtx.GetView();
+    CCoinsViewCache coinview(&::ChainstateActive().CoinsTip());
+
+    CScript owner;
+    CScript recipient;
+    owner << OP_3;
+    recipient << OP_1;
+
+    const DCT_ID dfi{};
+    const CTokenAmount initial{dfi, 100};
+    const auto authOut = COutPoint(uint256S("0xbaba"), 0);
+    coinview.AddCoin(authOut, Coin({1, owner, dfi}, 1, false), false);
+    BOOST_REQUIRE(view.AddBalance(owner, initial).ok);
+
+    const auto maxAmount = std::numeric_limits<CAmount>::max();
+    CMutableTransaction rawTx;
+    rawTx.vin = {CTxIn(authOut)};
+    rawTx.vout = {CTxOut(0, CreateRawMetaA2ADuplicateKey(owner, recipient, 1, maxAmount, dfi))};
+    const CTransaction tx(rawTx);
+    auto txCtx = TransactionContext{coinview, tx, blockCtx};
+
+    // The transaction should succeed because the duplicate key is dropped during deserialization:
+    // only 1 satoshi is transferred.
+    const auto result = ApplyCustomTx(blockCtx, txCtx);
+    BOOST_REQUIRE_MESSAGE(result.ok, result.msg);
+
+    // Verify balances: sender debited by 1 sat, recipient credited by 1 sat, NO inflation.
+    BOOST_CHECK_EQUAL(view.GetBalance(owner, dfi).nValue, 99);
+    BOOST_CHECK_EQUAL(view.GetBalance(recipient, dfi).nValue, 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
