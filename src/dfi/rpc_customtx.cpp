@@ -193,7 +193,16 @@ public:
     }
 
     void operator()(const CLiquidityMessage &obj) const {
-        CBalances sumTx = SumAllTransfers(obj.from);
+        // Overflow-safety: see PR DeFiCh/ain#3135. This path only decodes a tx for
+        // display (decodecustomtx), so fail soft: report the error field instead
+        // of throwing, and show nothing further for this entry.
+        CBalances sumTx;
+        for (const auto &kv : obj.from) {
+            if (auto res = sumTx.AddBalances(kv.second.balances); !res) {
+                rpcInfo.pushKV("error", res.msg);
+                return;
+            }
+        }
         if (sumTx.balances.size() == 2) {
             auto amountA = *sumTx.balances.begin();
             auto amountB = *(std::next(sumTx.balances.begin(), 1));

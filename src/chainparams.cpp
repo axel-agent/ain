@@ -144,6 +144,7 @@ public:
         consensus.DF22MetachainHeight = 3462000; // Nov 15th, 2023.
         consensus.DF23Height = 4006000; // May 23th, 2024.
         consensus.DF24Height = 4463000; // Oct 29th, 2024.
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 //        consensus.pos.nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
@@ -436,6 +437,7 @@ public:
         consensus.DF22MetachainHeight = 1150040;
         consensus.DF23Height = 1507200;
         consensus.DF24Height = 1810800;
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 //        consensus.pos.nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
@@ -660,6 +662,7 @@ public:
         consensus.DF22MetachainHeight = 1586750;
         consensus.DF23Height = 1985600;
         consensus.DF24Height = 2241000;
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks
@@ -878,6 +881,7 @@ public:
         consensus.DF22MetachainHeight = 1586750;
         consensus.DF23Height = std::numeric_limits<int>::max();
         consensus.DF24Height = std::numeric_limits<int>::max();
+        consensus.DF25Height = std::numeric_limits<int>::max(); // v3.2: pending activation
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks
@@ -1100,6 +1104,7 @@ public:
         consensus.DF22MetachainHeight = 10000000;
         consensus.DF23Height = 10000000;
         consensus.DF24Height = 10000000;
+        consensus.DF25Height = 10000000; // v3.2: regtest uses a far-future sentinel like other DFxxHeights
 
         consensus.pos.diffLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.pos.nTargetTimespan = 14 * 24 * 60 * 60; // two weeks
@@ -1371,6 +1376,7 @@ void SetupCommonArgActivationParams(Consensus::Params &consensus) {
     UpdateHeightValidation("Metachain", "-metachainheight", consensus.DF22MetachainHeight);
     UpdateHeightValidation("DF23 Upgrade Height", "-df23height", consensus.DF23Height);
     UpdateHeightValidation("DF24 Upgrade Height", "-df24height", consensus.DF24Height);
+    UpdateHeightValidation("DF25 Height (v3.2: overflow-safe transfer sums)", "-df25height", consensus.DF25Height);
 
     if (gArgs.GetBoolArg("-simulatemainnet", false)) {
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks

@@ -106,9 +106,20 @@ CAccounts SelectAccountsByTargetBalances(const CAccounts &accounts,
         }
     }
 
-    const auto selectedBalancesSum = SumAllTransfers(selectedAccountsBalances);
-    if (selectedBalancesSum != targetBalances) {
-        // we have not enough tokens balance to transfer
+    // Wallet-local coin selection, not a consensus path: on overflow (should not
+    // happen with realistic wallet balances) fail closed exactly like "not enough
+    // balance", instead of silently using a truncated sum (PR DeFiCh/ain#3135).
+    CBalances selectedBalancesSum;
+    bool overflow = false;
+    for (const auto &kv : selectedAccountsBalances) {
+        if (auto res = selectedBalancesSum.AddBalances(kv.second.balances); !res) {
+            overflow = true;
+            break;
+        }
+    }
+    if (overflow || selectedBalancesSum != targetBalances) {
+        // we have not enough tokens balance to transfer (or overflowed, which is
+        // never "enough" in any meaningful sense)
         return {};
     }
     return selectedAccountsBalances;

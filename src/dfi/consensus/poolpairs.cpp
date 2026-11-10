@@ -186,8 +186,22 @@ Res CPoolPairsConsensus::operator()(const CPoolSwapMessageV2 &obj) const {
         .ExecuteSwap(mnview, obj.poolIDs, consensus);
 }
 
+// Same overflow-safety gate as src/dfi/consensus/accounts.cpp (PR DeFiCh/ain#3135); both use the
+// shared SumAllTransfersChecked() from dfi/balances.h.
+static ResVal<CBalances> SumTransfersChecked(const CAccounts &from, const bool enforceChecked) {
+    if (!enforceChecked) {
+        return {SumAllTransfersLegacy(from), Res::Ok()};
+    }
+    return SumAllTransfersChecked(from);
+}
+
 Res CPoolPairsConsensus::operator()(const CLiquidityMessage &obj) const {
-    CBalances sumTx = SumAllTransfers(obj.from);
+    const bool checked = txCtx.GetHeight() >= txCtx.GetConsensus().DF25Height;
+    const auto sumTxRes = SumTransfersChecked(obj.from, checked);
+    if (!sumTxRes) {
+        return sumTxRes;
+    }
+    CBalances sumTx = *sumTxRes.val;
     if (sumTx.balances.size() != 2) {
         return Res::Err("the pool pair requires two tokens");
     }

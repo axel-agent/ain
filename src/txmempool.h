@@ -746,7 +746,8 @@ public:
 
     CCustomCSView &accountsView();
     void rebuildViews();
-    void rebuildAccountsView(int height, const CCoinsViewCache &coinsCache);
+    // dropAllFailures: also drop txs whose custom tx fails non-fatally (one-time use at the DF25Height boundary)
+    void rebuildAccountsView(int height, const CCoinsViewCache &coinsCache, bool dropAllFailures = false);
     void resetAccountsView();
     void setAccountViewDirty();
     bool getAccountViewDirty() const;

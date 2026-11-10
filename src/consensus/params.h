@@ -104,6 +104,8 @@ struct Params {
     int DF22MetachainHeight;
     int DF23Height;
     int DF24Height;
+    /** v3.2 hardfork height: overflow-safe transfer sums (SumAllTransfersChecked, see dfi/balances.h) */
+    int DF25Height;
 
     /** Foundation share after AMK, normalized to COIN = 100% */
     CAmount foundationShareDFIP1;

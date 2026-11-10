@@ -21,8 +21,27 @@ static ResVal<CBalances> BurntTokens(const CTransaction &tx) {
     return {balances, Res::Ok()};
 }
 
+// Overflow-safe sum of all transfer destinations.
+//
+// Security fix (see PR DeFiCh/ain#3135): the legacy SumAllTransfers() discards the
+// error of AddBalances(). On int64 overflow the sum silently stays at the first
+// amount, so the source is debited too little while destinations get the full amounts.
+//
+// ACTIVATION: consensus-critical. Blocks before DF25Height must keep validating
+// exactly as before (legacy sum), otherwise already-confirmed history becomes
+// invalid. From DF25Height on, any overflow rejects the transaction.
+// If the community instead rolls back to before the first exploit tx, the guard
+// can be dropped and the checked sum used unconditionally.
+static ResVal<CBalances> SumTransfers(const CAccounts &to, const bool enforceChecked) {
+    if (!enforceChecked) {
+        return {SumAllTransfersLegacy(to), Res::Ok()};
+    }
+    return SumAllTransfersChecked(to);
+}
+
 Res CAccountsConsensus::operator()(const CUtxosToAccountMessage &obj) const {
     const auto &tx = txCtx.GetTransaction();
+    const bool checked = txCtx.GetHeight() >= txCtx.GetConsensus().DF25Height;
 
     // check enough tokens are "burnt"
     auto burnt = BurntTokens(tx);
@@ -30,10 +49,14 @@ Res CAccountsConsensus::operator()(const CUtxosToAccountMessage &obj) const {
         return burnt;
     }
 
-    const auto mustBeBurnt = SumAllTransfers(obj.to);
-    if (*burnt.val != mustBeBurnt) {
-        return Res::Err(
-            "transfer tokens mismatch burnt tokens: (%s) != (%s)", mustBeBurnt.ToString(), burnt.val->ToString());
+    const auto mustBeBurnt = SumTransfers(obj.to, checked);
+    if (!mustBeBurnt) {
+        return mustBeBurnt;
+    }
+    if (*burnt.val != *mustBeBurnt.val) {
+        return Res::Err("transfer tokens mismatch burnt tokens: (%s) != (%s)",
+                        mustBeBurnt.val->ToString(),
+                        burnt.val->ToString());
     }
 
     // transfer
@@ -77,7 +100,12 @@ Res CAccountsConsensus::operator()(const CAccountToAccountMessage &obj) const {
     }
 
     // transfer
-    if (auto res = SubBalanceDelShares(obj.from, SumAllTransfers(obj.to)); !res) {
+    const bool checked = txCtx.GetHeight() >= txCtx.GetConsensus().DF25Height;
+    const auto mustTransfer = SumTransfers(obj.to, checked);
+    if (!mustTransfer) {
+        return mustTransfer;
+    }
+    if (auto res = SubBalanceDelShares(obj.from, *mustTransfer.val); !res) {
         return res;
     }
 
@@ -93,10 +121,17 @@ Res CAccountsConsensus::operator()(const CAnyAccountsToAccountsMessage &obj) con
     }
 
     // compare
-    const auto sumFrom = SumAllTransfers(obj.from);
-    const auto sumTo = SumAllTransfers(obj.to);
+    const bool checked = txCtx.GetHeight() >= txCtx.GetConsensus().DF25Height;
+    const auto sumFrom = SumTransfers(obj.from, checked);
+    if (!sumFrom) {
+        return sumFrom;
+    }
+    const auto sumTo = SumTransfers(obj.to, checked);
+    if (!sumTo) {
+        return sumTo;
+    }
 
-    if (sumFrom != sumTo) {
+    if (*sumFrom.val != *sumTo.val) {
         return Res::Err("sum of inputs (from) != sum of outputs (to)");
     }
 
