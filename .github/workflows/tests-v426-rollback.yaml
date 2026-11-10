@@ -1,0 +1,133 @@
+name: Tests-v426-Rollback
+
+# Regtest questions for the rollback via v4.2.6 (no release, nothing published):
+#  (a) old node restarted with v4.2.6 on the same data dir (no reindex / -reindex / invalidateblock)
+#  (b) invalidateblock over more than 2,000 blocks with custom txs
+#  (c) masternodes mint again after a pause of 8 days (setmocktime)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v426-rollback-regtest
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  TARGET: x86_64-pc-linux-gnu
+  MAKE_DEBUG: 0
+
+jobs:
+  rollback-regtest:
+    runs-on: ubuntu-latest
+    container:
+      image: defi/ain-builder:latest
+      options: --privileged --sysctl net.ipv6.conf.all.disable_ipv6=0 --sysctl net.ipv6.conf.default.disable_ipv6=0
+    env:
+      TESTS_FAILFAST: 0
+      TESTS_COMBINED_LOGS: 2000
+      CARGO_INCREMENTAL: 0
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Populate environment
+      run: ./make.sh ci-export-vars
+
+    - name: Install dependencies
+      run: ./make.sh ci-setup-deps
+
+    - name: Setup user dependencies
+      run: ./make.sh ci-setup-user-deps
+
+    - name: Restore cpp build cache
+      id: cpp-cache-restore
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ./build/depends
+          ./build/src
+          ~/.ccache
+        key: cpp-${{ env.TARGET }}-${{ env.BUILD_TYPE }}
+
+    - name: Rust build cache
+      uses: Swatinem/rust-cache@v2
+      id: rust-cache-restore
+      with:
+        workspaces: lib -> ../build/lib/target
+        save-if: false
+        shared-key: ${{ env.TARGET }}
+
+    - name: Build binaries (v4.2.6 + tests)
+      run: |
+        ./make.sh build
+        git rev-parse HEAD
+        build/src/defid -version | head -n 1
+
+    - name: Unit tests (mainnet difficulty and stake weight after 8 days)
+      run: |
+        set -e
+        BIN=$(find build -type f -name test_defi 2>/dev/null | head -1)
+        if [ -z "$BIN" ]; then
+          make -C build/src -j"$(nproc)" test/test_defi
+          BIN=$(find build -type f -name test_defi | head -1)
+        fi
+        "$BIN" --run_test=v426_pos_pause_tests --log_level=message --report_level=detailed
+
+    - name: Cleanup cargo deps
+      if: always()
+      run: rm -rf build/lib/target/debug/deps
+
+    - name: Python test dependencies (without solc)
+      if: always()
+      run: |
+        python3 -m venv build/pyenv
+        . build/pyenv/bin/activate
+        python3 -m pip install wheel
+        python3 -m pip install -r test/requirements.txt
+
+    - name: (c) PoS after a pause of 8 days
+      if: always()
+      run: bash ./.github/scripts/v426-run-test.sh feature_v426_pos_pause.py
+
+    - name: (b) invalidateblock over 2,100 blocks with custom txs
+      if: always()
+      timeout-minutes: 90
+      run: bash ./.github/scripts/v426-run-test.sh feature_v426_deep_invalidate.py
+
+    # Old node built here from the merge base sources (no downloaded binaries). Only the consensus
+    # sources are taken from the merge base; src/ffi and consensus/params.h stay (the Rust bridge of
+    # v4.2.6 links against the two new getters, which the old code never calls).
+    - name: Build old node from merge-base sources
+      if: always()
+      run: |
+        set -e
+        OLD_SHA=bd09486bb03e3524a622004cfeb5946d24d61959
+        cp build/src/defid build/defid-new
+        git config --global --add safe.directory "$PWD"
+        git fetch --depth=1 origin "$OLD_SHA"
+        FILES=$(git diff --diff-filter=M --name-only "$OLD_SHA" HEAD -- src ':!src/test' ':!src/Makefile*' ':!src/ffi' ':!src/consensus/params.h')
+        echo "pre-fix versions of:"; echo "$FILES"
+        git checkout "$OLD_SHA" -- $FILES
+        make -C build/src -j"$(nproc)" defid || make -C build -j"$(nproc)"
+        cp build/src/defid build/defid-old
+        git checkout HEAD -- src
+        build/defid-old -version | head -n 1
+        sha256sum build/defid-new build/defid-old
+
+    - name: (a) old node restarted with v4.2.6 (no reindex, -reindex, invalidateblock)
+      if: always()
+      run: DEFID="$PWD/build/defid-new" OLD_DEFID="$PWD/build/defid-old" bash ./.github/scripts/v426-run-test.sh feature_v426_upgrade_oldnode.py
+
+    - name: Upload test logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: v426-rollback-test-logs
+        path: |
+          build/v426-logs
+        if-no-files-found: ignore
+        retention-days: 7
