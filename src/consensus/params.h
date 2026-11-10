@@ -127,6 +127,32 @@ struct Params {
     /** v3.2 hardfork height: overflow-safe transfer sums, one-shot exploit clawback, exploit UTXO freeze */
     int DF25Height;
 
+    /**
+     * Header signal for the v3.2 rules. Every block from DF25Height on has to carry this nVersion bit
+     * (ContextualCheckBlockHeader rejects it with bad-version otherwise) and ComputeBlockVersion sets it
+     * from that height on. Blocks of producers still running the old code therefore fail on the header,
+     * before any transaction is looked at, and nodes that stopped at the old code see only an unknown
+     * version-bits signal (a warning, not a rejection).
+     *
+     * Bit 24 is inside the BIP9 range (bits 0..28) and taken by no deployment of this chain; the top
+     * three bits (001) stay untouched, so old nodes keep treating the header as a version-bits header.
+     */
+    static constexpr int DF25_SIGNAL_BIT = 24;
+    static constexpr int32_t DF25_SIGNAL_MASK = int32_t{1} << DF25_SIGNAL_BIT;
+
+    /** True when the header signals the v3.2 rules. */
+    static bool SignalsDF25(int32_t nVersion) { return (nVersion & DF25_SIGNAL_MASK) != 0; }
+
+    /** Adds the DF25 signal to a computed block version once nHeight is at or past DF25Height. */
+    int32_t WithDF25Signal(int32_t nVersion, int nHeight) const {
+        return nHeight >= DF25Height ? (nVersion | DF25_SIGNAL_MASK) : nVersion;
+    }
+
+    /** Header rule: a block at nHeight is only acceptable when it signals DF25 from DF25Height on. */
+    bool HeaderSignalAcceptable(int32_t nVersion, int nHeight) const {
+        return nHeight < DF25Height || SignalsDF25(nVersion);
+    }
+
     /** Foundation share after AMK, normalized to COIN = 100% */
     CAmount foundationShareDFIP1;
     /** Trackable burn address */

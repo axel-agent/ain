@@ -377,6 +377,7 @@ ResVal<std::unique_ptr<CBlockTemplate>> BlockAssembler::CreateNewBlock(const CSc
     }
 
     auto consensus = chainparams.GetConsensus();
+    // ComputeBlockVersion carries the v3.2 header signal from DF25Height on (see Consensus::Params).
     pblock->nVersion = ComputeBlockVersion(pindexPrev, consensus);
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
