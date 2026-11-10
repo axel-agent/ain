@@ -141,10 +141,18 @@ CBalances DecodeAmounts(interfaces::Chain const & chain, UniValue const& amounts
     CBalances amounts;
     if (amountsUni.isArray()) { // * amounts
         for (const auto& amountUni : amountsUni.get_array().getValues()) {
-            amounts.Add(DecodeAmount(chain, amountUni, name));
+            // The return value of Add must be checked: on overflow it aborts
+            // before mutating the balances, so the amount would silently stay
+            // at the value of the first entry and the caller would build a
+            // transaction with a truncated amount.
+            if (auto res = amounts.Add(DecodeAmount(chain, amountUni, name)); !res) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, name + ": " + res.msg);
+            }
         }
     } else {
-        amounts.Add(DecodeAmount(chain, amountsUni, name));
+        if (auto res = amounts.Add(DecodeAmount(chain, amountsUni, name)); !res) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, name + ": " + res.msg);
+        }
     }
     return amounts;
 }
