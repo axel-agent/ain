@@ -1,0 +1,179 @@
+name: V426-Verify
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v426-ci
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: false
+
+env:
+  MAKE_DEBUG: 0
+  GIT_VERSION: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, x86_64-apple-darwin]
+        include:
+        - container: defi/ain-builder:latest
+        - target: x86_64-w64-mingw32
+          container: defi/ain-win-builder:latest
+    container:
+      image: ${{ matrix.container }}
+    env:
+      TARGET: ${{matrix.target}}
+
+    steps:
+    - uses: actions/checkout@v4
+    - run: git config --global --add safe.directory '*'
+
+    - name: Source commit
+      run: git rev-parse HEAD
+
+    - name: Populate environment
+      run: ./make.sh ci-export-vars
+
+    - name: Setup dependencies
+      run: ./make.sh ci-setup-deps
+
+    - name: Setup user dependencies
+      run: ./make.sh ci-setup-user-deps
+
+    - name: Restore cpp build cache
+      id: cpp-cache-restore
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ./build/depends
+          ./build/src
+          ~/.ccache
+        key: cpp-${{ env.TARGET }}-${{ env.BUILD_TYPE }}
+
+    - name: Rust build cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: lib -> ../build/lib/target
+        save-if: false
+        shared-key: ${{ env.TARGET }}
+
+    - name: Build and package
+      run: ./make.sh release
+
+    - name: sha256 of artifacts
+      run: |
+        ls -l build/defichain-* || true
+        sha256sum build/defichain-*.tar.gz build/defichain-*.zip 2>/dev/null | tee build/SHA256-ci.txt
+        echo "## sha256 ${{ matrix.target }}" >> "$GITHUB_STEP_SUMMARY"
+        cat build/SHA256-ci.txt >> "$GITHUB_STEP_SUMMARY"
+        git rev-parse HEAD >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Publish artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: defichain-v426-${{ env.TARGET }}
+        path: |
+          ./build/defichain-*.tar.gz
+          ./build/defichain-*.zip
+          ./build/SHA256-ci.txt
+
+  tests:
+    runs-on: ubuntu-latest
+    container:
+      image: defi/ain-builder:latest
+      options: --privileged --sysctl net.ipv6.conf.all.disable_ipv6=0 --sysctl net.ipv6.conf.default.disable_ipv6=0
+    env:
+      TARGET: x86_64-pc-linux-gnu
+      GITHUB_PULL_REQUEST: ""
+      TESTS_FAILFAST: 0
+      TESTS_COMBINED_LOGS: 500
+      CARGO_INCREMENTAL: 0
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Populate environment
+      run: ./make.sh ci-export-vars
+
+    - name: Install dependencies
+      run: ./make.sh ci-setup-deps
+
+    - name: Setup user dependencies
+      run: ./make.sh ci-setup-user-deps
+
+    - name: Restore cpp build cache
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ./build/depends
+          ./build/src
+          ~/.ccache
+        key: cpp-${{ env.TARGET }}-${{ env.BUILD_TYPE }}
+
+    - name: Rust build cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: lib -> ../build/lib/target
+        save-if: false
+        shared-key: ${{ env.TARGET }}
+
+    - name: Build binaries
+      run: ./make.sh build
+
+    - name: Unit tests amount_tests
+      run: |
+        set -e
+        BIN=$(find build -type f -name test_defi 2>/dev/null | head -1)
+        if [ -z "$BIN" ]; then
+          make -C build/src -j"$(nproc)" test/test_defi
+          BIN=$(find build -type f -name test_defi | head -1)
+        fi
+        "$BIN" --run_test=amount_tests --log_level=test_suite --report_level=detailed
+
+    - name: Unit tests applytx_tests
+      if: always()
+      run: |
+        BIN=$(find build -type f -name test_defi | head -1)
+        "$BIN" --run_test=applytx_tests --log_level=test_suite --report_level=detailed
+
+    - name: Cleanup cargo deps
+      if: always()
+      run: rm -rf build/lib/target/debug/deps
+
+    - name: Python test dependencies (without solc)
+      if: always()
+      run: |
+        python3 -m venv build/pyenv
+        . build/pyenv/bin/activate
+        python3 -m pip install wheel
+        python3 -m pip install -r test/requirements.txt
+
+    - name: feature_account_overflow
+      if: always()
+      run: ./make.sh test-py feature_account_overflow.py
+
+    - name: feature_balance_overflow_height
+      if: always()
+      run: ./make.sh test-py feature_balance_overflow_height.py
+
+    - name: feature_balance_overflow_mempool
+      if: always()
+      run: ./make.sh test-py feature_balance_overflow_mempool.py
+
+    - name: feature_balance_overflow_reorg
+      if: always()
+      run: ./make.sh test-py feature_balance_overflow_reorg.py
+
+    - name: feature_balance_overflow_rpc
+      if: always()
+      run: ./make.sh test-py feature_balance_overflow_rpc.py
+
+    - name: feature_mn_version_gate
+      if: always()
+      run: ./make.sh test-py feature_mn_version_gate.py
