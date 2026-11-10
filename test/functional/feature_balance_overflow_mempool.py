@@ -26,6 +26,10 @@ Scenarios:
       submission
   S5  a transaction without an overflow survives the same transition and is
       mined
+  S6  a child of the dropped transaction leaves the mempool as well: it
+      spends an output of the dropped transaction and can never be mined
+      without it
+  S7  a child of a surviving transaction stays in the mempool
 """
 
 import struct
@@ -231,6 +235,27 @@ class BalanceOverflowMempoolTest(DefiTestFramework):
         assert signed.get("complete"), f"signing failed: {signed}"
         return signed["hex"]
 
+    def build_child(self, node, to_address, parent_txid):
+        """Build, sign and submit a transaction that spends the change output
+        of another transaction in the mempool.
+
+        The change output of a crafted transaction is the second output, the
+        first one carries the metadata.
+        """
+        utxo = node.gettxout(parent_txid, 1)
+        assert utxo is not None, f"the parent {parent_txid} has no change output"
+        in_amount = int(round(float(utxo["value"]) * COIN))
+
+        raw = build_raw_tx(
+            [(bytes.fromhex(parent_txid), 1, 0xFFFFFFFF)],
+            [
+                (in_amount - CHANGE, self.p2wpkh_script(node, to_address)),
+            ],
+        )
+        signed = node.signrawtransactionwithwallet(raw.hex())
+        assert signed.get("complete"), f"signing failed: {signed}"
+        return node.sendrawtransaction(signed["hex"])
+
     def run_test(self):
         holder, producer = self.nodes
 
@@ -297,6 +322,12 @@ class BalanceOverflowMempoolTest(DefiTestFramework):
         pending_txid = holder.sendrawtransaction(pending_overflow)
         assert pending_txid in holder.getrawmempool()
 
+        # A child of the pending transaction: it spends the change output of
+        # its parent. Without the parent it can never be mined, so it has to
+        # leave the mempool together with the parent.
+        pending_child_txid = self.build_child(holder, attacker, pending_txid)
+        assert pending_child_txid in holder.getrawmempool()
+
         # A control transaction without an overflow, spending another utxo.
         control_receiver = holder.getnewaddress("", "bech32")
         control_tx = self.build_transfer(
@@ -307,6 +338,11 @@ class BalanceOverflowMempoolTest(DefiTestFramework):
         )
         control_txid = holder.sendrawtransaction(control_tx)
         assert control_txid in holder.getrawmempool()
+
+        # A child of the control transaction: it stays in the mempool together
+        # with its parent.
+        control_child_txid = self.build_child(holder, attacker, control_txid)
+        assert control_child_txid in holder.getrawmempool()
 
         # ------------------------------------------------------------------
         # S2/S3: the revalidation at the activation height.
@@ -331,9 +367,17 @@ class BalanceOverflowMempoolTest(DefiTestFramework):
         assert pending_txid not in holder.getrawmempool(), (
             "the overflowing transaction must be dropped from the mempool"
         )
+        self.log.info("S6: the child of the dropped transaction is dropped as well")
+        assert pending_child_txid not in holder.getrawmempool(), (
+            "the child of the dropped transaction must be dropped from the mempool"
+        )
         self.log.info("S5: the transaction without an overflow survives")
         assert control_txid in holder.getrawmempool(), (
             "the control transaction must stay in the mempool"
+        )
+        self.log.info("S7: the child of the surviving transaction survives as well")
+        assert control_child_txid in holder.getrawmempool(), (
+            "the child of the surviving transaction must stay in the mempool"
         )
 
         # ------------------------------------------------------------------
