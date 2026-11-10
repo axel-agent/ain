@@ -215,9 +215,68 @@ class BalanceOverflowActivationTest(DefiTestFramework):
             "big_addr": big_addr,
         }
 
+    def prepare_duplicate_key_tx(self, node):
+        """
+        Builds a raw transaction mirroring the failed attempt in block 6,565,374:
+        the destination script is repeated twice with 1 satoshi and INT64_MAX.
+        """
+        sender = node.getnewaddress("", "bech32")
+        recv = node.getnewaddress("", "bech32")
+
+        script_sender = self.p2wpkh_script(node, sender)
+        script_recv = self.p2wpkh_script(node, recv)
+
+        node.utxostoaccount({sender: "1.00000000"})
+        node.generate(1)
+        node.sendtoaddress(sender, 5)
+        node.generate(1)
+
+        utxo = None
+        for u in node.listunspent():
+            if u.get("address") == sender:
+                utxo = u
+                break
+        assert utxo is not None, "no utxo for sender"
+        in_amount = int(round(float(utxo["amount"]) * COIN))
+
+        # Two destination entries with the exact same script
+        payload = build_dftx_payload(
+            script_sender,
+            [
+                (script_recv, [(0, 1)]),
+                (script_recv, [(0, INT64_MAX)]),
+            ],
+        )
+        op_return = b"\x6a\x4c" + bytes([len(payload)]) + payload
+
+        raw = build_raw_tx(
+            [(bytes.fromhex(utxo["txid"]), utxo["vout"], 0xFFFFFFFF)],
+            [
+                (0, op_return),
+                (in_amount - 10000, script_sender),
+            ],
+        )
+        signed = node.signrawtransactionwithwallet(raw.hex())
+        assert signed.get("complete"), f"signing failed: {signed}"
+
+        return {
+            "signed": signed["hex"],
+            "sender": sender,
+            "recv": recv,
+        }
+
     def run_test(self):
         strict = self.nodes[0]
         legacy = self.nodes[1]
+
+        # --- duplicate-key scenario (failed attempt, block 6,565,374) -------
+        # Deserialization keeps only the first entry (1 sat) and drops INT64_MAX.
+        # Both before and after activation, this succeeds without creating money.
+        dup_info = self.prepare_duplicate_key_tx(strict)
+        dup_txid = strict.sendrawtransaction(dup_info["signed"])
+        assert dup_txid, "duplicate key tx should be accepted as 1-sat transfer"
+        strict.generate(1)
+        assert_equal(self.account_balance(strict, dup_info["recv"]), Decimal("0.00000001"))
 
         # --- the strict rule (activation height 1) --------------------------
         info = self.prepare_attacker(strict)

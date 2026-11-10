@@ -250,4 +250,37 @@ BOOST_AUTO_TEST_CASE(SumAllTransfers_LegacyPartialMutation)
                         "The checked sum must not return a partial total");
 }
 
+// If a recipient has multiple tokens and the addition of an earlier token overflows,
+// CBalances::AddBalances aborts immediately. In legacy mode, this caused any
+// subsequent tokens of that recipient to vanish from the debit sum entirely,
+// even though the recipient was credited in full.
+BOOST_AUTO_TEST_CASE(SumAllTransfers_MultiTokenIntraAccountOverflow)
+{
+    CScript a, b;
+    a << OP_1;
+    b << OP_2;
+    const auto maxAmount = std::numeric_limits<CAmount>::max();
+
+    // Destination 'a' receives 1 satoshi of token 0.
+    // Destination 'b' receives maxAmount of token 0 (which overflows when added
+    // to destination 'a''s 1 satoshi) and 100 COIN of token 1.
+    const CAccounts accounts{
+        {a, CBalances{{{DCT_ID{0}, 1}}}},
+        {b, CBalances{{{DCT_ID{0}, maxAmount}, {DCT_ID{1}, 100 * COIN}}}},
+    };
+
+    // In legacy mode, adding token 0 for 'b' overflows, so AddBalances aborts:
+    // 1) Token 0 sum remains 1 (the overflowing addition is dropped).
+    // 2) Token 1 of account 'b' is never added to the sum at all.
+    const auto legacy = SumAllTransfersLegacy(accounts);
+    BOOST_REQUIRE_EQUAL(legacy.balances.at(DCT_ID{0}), 1);
+    BOOST_CHECK(legacy.balances.find(DCT_ID{1}) == legacy.balances.end());
+
+    // In strict mode, the entire aggregation is rejected with an error.
+    const auto strict = SumAllTransfers(accounts);
+    BOOST_CHECK_MESSAGE(!strict.ok, "The checked sum must reject the overflow");
+    BOOST_CHECK_MESSAGE(!strict.val.has_value(),
+                        "The checked sum must not return a partial total");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
