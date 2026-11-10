@@ -9,6 +9,7 @@ on:
       - master
       - v3.2-overflow-clawback
       - v3.2-split
+      - v3.2-version-gate
   pull_request:
     branches:
       - master
