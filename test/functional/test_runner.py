@@ -172,6 +172,7 @@ BASE_SCRIPTS = [
     "feature_overflow_exploit_blockpath.py",
     "feature_overflow_exploit_mempool.py",
     "feature_overflow_exploit_reindex.py",
+    "feature_overflow_exploit_oldnode.py",
     "feature_token_fork.py",
     "feature_tokens_multisig.py",
     "interface_rest.py",
