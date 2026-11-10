@@ -273,6 +273,33 @@ public:
         consensus.accountDestruction.insert(GetScriptForDestination(DecodeDestination("dJEbxbfufyPF14SC93yxiquECEfq4YSd9L", *this)));
         consensus.accountDestruction.insert(GetScriptForDestination(DecodeDestination("8UAhRuUFCyFUHEPD7qvtj8Zy2HxF5HH5nb", *this)));
 
+        // v3.2 exploit clawback (applied once at DF25Height, see ProcessExploitClawback).
+        // Amounts in satoshi (1 DFI = 100000000). Removed amount = min(balance, maxAmount).
+        //  1) tx c0248c396a0be9fe6122cab0c4f0c1ab4f8160bdde85893a9afd592732cfef0e, block 6564035:
+        //     92233720368.54775807 DFI (= INT64_MAX sat) minted to a fresh wallet.
+        //  2) tx bc2e5a684592cc2f504268d23a418ca66cbb9900bf4dcb1b5c2eb3ec58b2e8ac, block 6566081:
+        //     92233720360.54775807 DFI (= INT64_MAX - 8 DFI) minted to a long-established, ordinary
+        //     account (probably unintended). Only the minted amount is removed; the account's own
+        //     small balance, vaults and loans are not touched.
+        // A typo must not silently become an empty script: refuse to start instead.
+        const auto exploitScript = [this](const char *addr) {
+            const CTxDestination dest = DecodeDestination(addr, *this);
+            assert(IsValidDestination(dest));
+            return GetScriptForDestination(dest);
+        };
+        consensus.exploitClawback.clear();
+        consensus.exploitClawback.push_back({exploitScript("df1qel8g4g4f66qxr7cw0t03jkz08cj095vup2jhuy"),
+                                             CAmount{9223372036854775807LL}});
+        consensus.exploitClawback.push_back({exploitScript("df1qqtlz4uw9w5s4pupwgucv4shl6atqw7xlz2wn07"),
+                                             CAmount{9223372036054775807LL}});
+
+        // UTXOs held by the exploit-controlled scripts cannot be spent from DF25Height on, because the
+        // clawback above only removes account balances. Deliberately NOT included: the second exploit
+        // address (ordinary long-standing account) and exchange/collector addresses with mixed funds.
+        consensus.exploitFrozenUtxoScripts.clear();
+        consensus.exploitFrozenUtxoScripts.insert(exploitScript("df1qel8g4g4f66qxr7cw0t03jkz08cj095vup2jhuy"));
+        consensus.exploitFrozenUtxoScripts.insert(exploitScript("df1qqgvcp6hctkgd3rqwvd965kaxm8r72xwfzmfs6n"));
+
         consensus.smartContracts.clear();
         consensus.smartContracts[SMART_CONTRACT_DFIP_2201] = GetScriptForDestination(CTxDestination(WitnessV0KeyHash(std::vector<unsigned char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0})));
         consensus.smartContracts[SMART_CONTRACT_DFIP_2203] = GetScriptForDestination(CTxDestination(WitnessV0KeyHash(std::vector<unsigned char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1})));
@@ -1210,7 +1237,8 @@ public:
 
         bech32_hrp = "bcrt";
 
-        // (!) after prefixes set
+        // (!) after prefixes set (addresses must be decodable)
+        ApplyRegtestExploitArgs();
         consensus.foundationShareScript = GetScriptForDestination(DecodeDestination("2NCWAKfEehP3qibkLKYQjXaWMK23k4EDMVS", *this)); // cMv1JaaZ9Mbb3M3oNmcFvko8p7EcHJ8XD7RCQjzNaMs7BWRVZTyR
         consensus.foundationShare = 0; // old style - just percents // stil zero here to not broke old tests
         consensus.foundationShareDFIP1 = 19 * COIN / 10 / 50; // 1.9 DFI @ 50 per block (rate normalized to (COIN == 100%)
@@ -1325,6 +1353,31 @@ public:
         consensus.vDeployments[d].nStartTime = nStartTime;
         consensus.vDeployments[d].nTimeout = nTimeout;
     }
+    void ApplyRegtestExploitArgs() {
+    // Regtest only: let functional tests exercise the exploit clawback and the UTXO freeze,
+    // whose real lists exist on mainnet only.
+    //   -regtest-exploit-clawback=<address>:<max satoshi>   (repeatable)
+    //   -regtest-exploit-freeze=<address>                   (repeatable)
+    for (const std::string& arg : gArgs.GetArgs("-regtest-exploit-clawback")) {
+        const auto pos = arg.rfind(':');
+        CAmount maxAmount{};
+        if (pos == std::string::npos || !ParseInt64(arg.substr(pos + 1), &maxAmount) || maxAmount <= 0) {
+            throw std::runtime_error(strprintf("Invalid -regtest-exploit-clawback (expected address:satoshi): %s", arg));
+        }
+        const CTxDestination dest = DecodeDestination(arg.substr(0, pos), *this);
+        if (!IsValidDestination(dest)) {
+            throw std::runtime_error(strprintf("Invalid address in -regtest-exploit-clawback: %s", arg));
+        }
+        consensus.exploitClawback.push_back({GetScriptForDestination(dest), maxAmount});
+    }
+    for (const std::string& arg : gArgs.GetArgs("-regtest-exploit-freeze")) {
+        const CTxDestination dest = DecodeDestination(arg, *this);
+        if (!IsValidDestination(dest)) {
+            throw std::runtime_error(strprintf("Invalid address in -regtest-exploit-freeze: %s", arg));
+        }
+        consensus.exploitFrozenUtxoScripts.insert(GetScriptForDestination(dest));
+    }
+    }
     void UpdateActivationParametersFromArgs();
 };
 
@@ -1376,7 +1429,7 @@ void SetupCommonArgActivationParams(Consensus::Params &consensus) {
     UpdateHeightValidation("Metachain", "-metachainheight", consensus.DF22MetachainHeight);
     UpdateHeightValidation("DF23 Upgrade Height", "-df23height", consensus.DF23Height);
     UpdateHeightValidation("DF24 Upgrade Height", "-df24height", consensus.DF24Height);
-    UpdateHeightValidation("DF25 Height (v3.2: overflow-safe transfer sums)", "-df25height", consensus.DF25Height);
+    UpdateHeightValidation("DF25 Height (v3.2: overflow fix + exploit clawback)", "-df25height", consensus.DF25Height);
 
     if (gArgs.GetBoolArg("-simulatemainnet", false)) {
         consensus.pos.nTargetTimespan = 5 * 60; // 5 min == 10 blocks
@@ -1453,6 +1506,7 @@ void CDevNetParams::UpdateActivationParametersFromArgs() {
 void CRegTestParams::UpdateActivationParametersFromArgs()
 {
     SetupCommonArgActivationParams(consensus);
+
     if (!gArgs.IsArgSet("-vbparams")) return;
 
     for (const std::string& strDeployment : gArgs.GetArgs("-vbparams")) {

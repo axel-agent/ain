@@ -6,6 +6,7 @@
 #define DEFI_DFI_VALIDATION_H
 
 #include <amount.h>
+#include <consensus/params.h>
 
 struct CAuctionBatch;
 class CBlock;
@@ -34,6 +35,9 @@ Res ProcessDeFiEventFallible(const CBlock &block,
                              const CChainParams &chainparams,
                              const CreationTxs &creationTxs,
                              BlockContext &blockCtx);
+
+// v3.2: removes min(DFI balance, maxAmount) per entry (exploit clawback). Exposed for unit tests.
+Res ApplyExploitClawback(CCustomCSView &view, const std::vector<Consensus::ExploitClawbackEntry> &entries);
 
 std::vector<CAuctionBatch> CollectAuctionBatches(const CVaultAssets &vaultAssets,
                                                  const TAmounts &collBalances,

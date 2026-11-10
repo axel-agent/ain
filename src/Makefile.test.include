@@ -85,6 +85,7 @@ DEFI_TESTS =\
   test/allocator_tests.cpp \
   test/anchor_tests.cpp \
   test/applytx_tests.cpp \
+  test/exploit_clawback_tests.cpp \
   test/overflow_sum_tests.cpp \
   test/base32_tests.cpp \
   test/base58_tests.cpp \

@@ -13,6 +13,7 @@
 #include <limits>
 #include <map>
 #include <string>
+#include <vector>
 #include <arith_uint256.h>
 
 namespace Consensus {
@@ -46,6 +47,18 @@ struct BIP9Deployment {
 };
 
 /**
+ * One entry of the one-shot exploit clawback (see ProcessExploitClawback in
+ * dfi/validation.cpp). At DF25Height, up to `maxAmount` of DFI (token 0) is
+ * removed from `owner`'s account balance. The amount actually removed is
+ * min(current DFI balance, maxAmount), so the rule can never take more than
+ * the exploit-minted amount and can never fail on an emptied account.
+ */
+struct ExploitClawbackEntry {
+    CScript owner;
+    CAmount maxAmount;
+};
+
+/**
  * Parameters that influence chain consensus.
  */
 struct Params {
@@ -59,6 +72,13 @@ struct Params {
     uint32_t foundationShare;
     std::set<CScript> foundationMembers;
     std::set<CScript> accountDestruction;
+    /** DFI minted by the SumAllTransfers() int64 overflow (see ProcessExploitClawback). Mainnet only. */
+    std::vector<ExploitClawbackEntry> exploitClawback;
+    /**
+     * Scripts whose UTXOs may not be spent from DF25Height on (exploit-controlled addresses; the
+     * clawback only covers account balances, not UTXOs). Mainnet only.
+     */
+    std::set<CScript> exploitFrozenUtxoScripts;
     std::map<std::string, CScript> smartContracts;
     /* Block hash that is excepted from BIP16 enforcement */
     uint256 BIP16Exception;
@@ -104,7 +124,7 @@ struct Params {
     int DF22MetachainHeight;
     int DF23Height;
     int DF24Height;
-    /** v3.2 hardfork height: overflow-safe transfer sums (SumAllTransfersChecked, see dfi/balances.h) */
+    /** v3.2 hardfork height: overflow-safe transfer sums, one-shot exploit clawback, exploit UTXO freeze */
     int DF25Height;
 
     /** Foundation share after AMK, normalized to COIN = 100% */
