@@ -102,6 +102,8 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     needs: [build]
+    # Needs the Docker Hub secrets, which only the upstream repository has.
+    if: github.repository == 'DeFiCh/ain'
     env:
       TARGET: x86_64-pc-linux-gnu
 
