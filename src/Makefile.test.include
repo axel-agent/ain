@@ -87,6 +87,7 @@ DEFI_TESTS =\
   test/applytx_tests.cpp \
   test/exploit_clawback_tests.cpp \
   test/overflow_sum_tests.cpp \
+  test/df25_version_gate_tests.cpp \
   test/base32_tests.cpp \
   test/base58_tests.cpp \
   test/base64_tests.cpp \

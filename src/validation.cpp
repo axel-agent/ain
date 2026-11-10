@@ -2254,6 +2254,12 @@ int32_t ComputeBlockVersion(const CBlockIndex *pindexPrev, const Consensus::Para
         }
     }
 
+    // v3.2: the header signal is part of the expected version from DF25Height on. Setting it here (and
+    // not only in the miner) keeps the "unexpected version" warnings of upgraded nodes quiet, because they
+    // compare against this function.
+    const int nHeight = pindexPrev ? pindexPrev->nHeight + 1 : 0;
+    nVersion = params.WithDF25Signal(nVersion, nHeight);
+
     return nVersion;
 }
 
@@ -5143,6 +5149,20 @@ static bool ContextualCheckBlockHeader(const CBlockHeader &block,
                              false,
                              strprintf("bad-version(0x%08x)", block.nVersion),
                              strprintf("rejected nVersion=0x%08x block", block.nVersion));
+    }
+
+    // v3.2 header signal (Consensus::Params::DF25_SIGNAL_BIT): from DF25Height on a block has to announce
+    // the new rules in nVersion. A producer that still runs the old code cannot set the bit, so its blocks
+    // are refused here, deterministically and independent of their content. Old nodes do not know this
+    // rule and accept headers carrying the bit (unknown version bits only raise a warning there).
+    if (!consensusParams.HeaderSignalAcceptable(block.nVersion, nHeight)) {
+        const int signalBit = Consensus::Params::DF25_SIGNAL_BIT;
+        return state.Invalid(ValidationInvalidReason::BLOCK_INVALID_HEADER,
+                             false,
+                             strprintf("bad-version(0x%08x)", block.nVersion),
+                             strprintf("block at height %d does not signal the DF25 rules (nVersion bit %d missing)",
+                                       nHeight,
+                                       signalBit));
     }
 
     return true;
