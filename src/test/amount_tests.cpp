@@ -3,6 +3,8 @@
 // file LICENSE or http://www.opensource.org/licenses/mit-license.php.
 
 #include <amount.h>
+#include <dfi/balances.h>
+#include <limits>
 #include <policy/feerate.h>
 #include <test/setup_common.h>
 
@@ -152,6 +154,100 @@ BOOST_AUTO_TEST_CASE(CAmount_Float_Test)
     CAmount amount1 = 16765189, amount2 = 237824;
     // https://en.wikipedia.org/wiki/Floating-point_arithmetic
     BOOST_CHECK_EQUAL(CAmount(amount1 + float(amount2)), amount1 + amount2 - 1);
+}
+
+namespace {
+
+CAccounts MakeTransferSumInputs(CAmount first, CAmount second)
+{
+    CAccounts accounts;
+    CScript firstOwner;
+    CScript secondOwner;
+    firstOwner << OP_1;
+    secondOwner << OP_2;
+
+    accounts[firstOwner].balances.emplace(DCT_ID{0}, first);
+    accounts[secondOwner].balances.emplace(DCT_ID{0}, second);
+    return accounts;
+}
+
+} // namespace
+
+// The sum of the transfer amounts is the basis of the account consensus: the
+// source account is debited with the sum while every destination is credited
+// with its full amount. An overflow that is not reported therefore creates
+// money out of thin air.
+BOOST_AUTO_TEST_CASE(SumAllTransfers_Normal)
+{
+    const auto accounts = MakeTransferSumInputs(2 * COIN, 3 * COIN);
+    const auto result = SumAllTransfers(accounts);
+
+    BOOST_REQUIRE(result.ok);
+    BOOST_REQUIRE(result.val.has_value());
+    BOOST_REQUIRE_EQUAL(result->balances.size(), 1U);
+    BOOST_CHECK_EQUAL(result->balances.at(DCT_ID{0}), 5 * COIN);
+}
+
+BOOST_AUTO_TEST_CASE(SumAllTransfers_Maximum)
+{
+    const auto maximum = std::numeric_limits<CAmount>::max();
+    const auto accounts = MakeTransferSumInputs(maximum - 1, 1);
+    const auto result = SumAllTransfers(accounts);
+
+    BOOST_REQUIRE(result.ok);
+    BOOST_REQUIRE(result.val.has_value());
+    BOOST_REQUIRE_EQUAL(result->balances.size(), 1U);
+    BOOST_CHECK_EQUAL(result->balances.at(DCT_ID{0}), maximum);
+}
+
+BOOST_AUTO_TEST_CASE(SumAllTransfers_Overflow)
+{
+    const auto accounts =
+        MakeTransferSumInputs(1, std::numeric_limits<CAmount>::max());
+    const auto result = SumAllTransfers(accounts);
+
+    BOOST_CHECK_MESSAGE(!result.ok, "Overflow must return an error");
+    BOOST_CHECK_MESSAGE(!result.val.has_value(),
+                        "Overflow must not return a partial total");
+}
+
+BOOST_AUTO_TEST_CASE(SumAllTransfers_Negative)
+{
+    const auto accounts = MakeTransferSumInputs(1, -1);
+    const auto result = SumAllTransfers(accounts);
+
+    BOOST_CHECK_MESSAGE(!result.ok, "Negative amounts must return an error");
+    BOOST_CHECK_MESSAGE(!result.val.has_value(),
+                        "Invalid input must not return a partial total");
+}
+
+// Below the activation height the historical behaviour has to be reproduced
+// bit-exactly: the overflow error is swallowed, the sum stays truncated at the
+// amount before the overflowing entry and the loop continues with the next
+// account. Breaking out of the loop would change the sum and invalidate
+// already mined blocks.
+BOOST_AUTO_TEST_CASE(SumAllTransfers_LegacyPartialMutation)
+{
+    CScript a, b, c;
+    a << OP_1;
+    b << OP_2;
+    c << OP_3;
+    const CAccounts accounts{
+        {a, CBalances{{{DCT_ID{0}, 1}, {DCT_ID{1}, 5}}}},
+        {b, CBalances{{{DCT_ID{0}, 2}, {DCT_ID{1}, std::numeric_limits<CAmount>::max()}}}},
+        {c, CBalances{{{DCT_ID{0}, 4}, {DCT_ID{1}, 7}}}},
+    };
+    // The old loop retained token 0's mutation before token 1 failed in b,
+    // and then continued with c. An early return would change historical state.
+    const auto legacy = SumAllTransfersLegacy(accounts);
+    BOOST_REQUIRE_EQUAL(legacy.balances.at(DCT_ID{0}), 7);
+    BOOST_REQUIRE_EQUAL(legacy.balances.at(DCT_ID{1}), 12);
+
+    // The checked path rejects the same input instead of truncating it.
+    const auto strict = SumAllTransfers(accounts);
+    BOOST_CHECK_MESSAGE(!strict.ok, "The checked sum must reject the overflow");
+    BOOST_CHECK_MESSAGE(!strict.val.has_value(),
+                        "The checked sum must not return a partial total");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
