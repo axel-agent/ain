@@ -38,9 +38,9 @@ class V426DeepInvalidateTest(DefiTestFramework):
         accounts = n.listaccounts({"limit": 1000000}, False, True)
         utxo = n.gettxoutsetinfo()
         return {
-            "accounts": json.dumps(sorted(accounts, key=lambda a: json.dumps(a, sort_keys=True)), sort_keys=True),
-            "recipients": json.dumps([n.getaccount(r) for r in recipients]),
-            "tokens": json.dumps(n.listtokens(), sort_keys=True),
+            "accounts": json.dumps(sorted(accounts, key=lambda a: json.dumps(a, sort_keys=True, default=str)), sort_keys=True, default=str),
+            "recipients": json.dumps([n.getaccount(r) for r in recipients], default=str),
+            "tokens": json.dumps(n.listtokens(), sort_keys=True, default=str),
             "utxo_hash": utxo["hash_serialized_2"],
             "utxo_txouts": utxo["txouts"],
             "utxo_total": str(utxo["total_amount"]),
@@ -51,7 +51,7 @@ class V426DeepInvalidateTest(DefiTestFramework):
         for k in a:
             if a[k] != b[k]:
                 same = False
-                self.log.info("%s: DIFFERENT %s:\n  before %s\n  after  %s" % (label, k, a[k][:400], b[k][:400]))
+                self.log.info("%s: DIFFERENT %s:\n  before %s\n  after  %s" % (label, k, str(a[k])[:400], str(b[k])[:400]))
         self.log.info("%s: %s" % (label, "IDENTICAL" if same else "DIFFERENT"))
         return same
 
