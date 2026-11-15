@@ -16,23 +16,23 @@ Alle Titel im **mittleren Sicherheitsbereich** (oben 250 px / unten 340 px frei 
 
 ---
 
-## 1. Zielgruppe – saubere Betriebe, operativ beim Kunden
+## 1. Zielgruppe & Slogan
 
-Wir sprechen Firmen an, die **Lager + Büro** brauchen, deren **Arbeit draußen stattfindet** – keine Werkstätten, die in der Halle Schmutz machen.
+**Offen für alle Unternehmen und Gewerbetreibenden**, die **Lager + Büro** brauchen – Gewerbe, Handel, Dienstleister, Handwerk, Versand, Lagerung von Ware, Material und Arbeitsmaschinen. **Keine einzelnen Branchen im Film nennen** (schließt sonst andere aus). Im Bild: aufgeräumt, sauber, hochwertig – keine Werkstatt-Optik.
 
-**Haupt-Zielgruppen (werden im Film namentlich genannt):**
-- **Elektriker** · **Installateure / Haustechnik** · **Photovoltaik-Monteure**
-- **Hausbetreuung** · **Gebäudereinigung** · **Facility-Management**
-- **Versandhandel / Online-Shops** · **Logistik & Kurierdienste**
+### Slogan
+**Hauptslogan:** **„Unten Lager. Oben Büro.“**
+**Claim / Abbinder:** **„Platz für dein Business.“**
+→ Zusammen auf der Endcard: *Unten Lager. Oben Büro. Platz für dein Business.*
 
-**Weitere passende Branchen (für Anzeigen-Targeting & Texte):**
-Klima-/Kältetechnik · Alarm-, Sicherheits- & Netzwerktechnik · IT-Dienstleister mit Hardwarelager · Maler & Bodenleger (Materiallager) · Fenster-, Türen- & Küchenmonteure · Garten- und Grünflächenpflege (Gerätelager) · Event-, Licht- & Veranstaltungstechnik · Messebau · Handelsvertretungen mit Musterlager · Großhandel/Fachhandel-Außenlager · Medizin- & Pflegebedarf · Hausverwaltungen · Tischler (optional, nicht im Fokus).
+Alternativen: „Raum zum Wachsen.“ · „Dein Business. Dein Platz.“ · „Lagern. Arbeiten. Wachsen.“ · „Hier hat dein Unternehmen Platz.“
 
-**Nicht** zeigen/ansprechen: Kfz-Werkstätten, Mechaniker, Lackierer, schmutzintensive Fertigung.
+*(Branchen wie Elektriker, Installateure, Hausbetreuung, Versandhandel, Logistik nur fürs Anzeigen-Targeting in Meta Ads verwenden – nicht im Film.)*
 
-**Kernbotschaft:** *„Dein Team ist draußen. Dein Material und dein Büro sind hier.“*
-
----
+### Innenausbau je Einheit (Stand Bauherr)
+- Hallenseite (Durchfahrt): **Gehtür links neben dem Tor** (von außen), Sektionaltor rechts, Codetaster.
+- **Treppe** zur Lagerbühne auf der **Türseite**.
+- Auf der Lagerbühne (Holzpodium) steht ein **Kubus = Büro**; darin **WC rechts im Eck**, daneben Anschlüsse für eine **Küche (optional)**. Fensterband nach vorne.
 
 ## 2. Faktenbasis (Plan, Baubeschreibung, Bauherr)
 
@@ -79,8 +79,8 @@ Stil-Suffix für alle Higgsfield-Prompts:
 > **(1)** Dein Team ist draußen. Beim Kunden. Auf der Baustelle. Unterwegs.
 > **(2)** Aber dein Material, deine Fahrzeuge und dein Büro brauchen einen festen Platz.
 > **(3)** Der Mietpark Schmacher in Zell bei Ebenthal: sieben moderne Hallen mit Büro. Unten sauberes Lager bis sieben Meter Raumhöhe – mit dem Transporter direkt durchs Tor. Oben dein Büro mit WC und Blick ins Grüne.
-> **(4)** Ideal für Elektriker, Installateure, Hausbetreuung, Versandhandel und Logistik. Nur sieben Einheiten.
-> **(5)** Schmacher Solutions. Jetzt anfragen: null-sechs-sechs-vier, eins-zwei-null-null, sieben-vier-fünf.
+> **(4)** Platz für Ware, Material und Arbeitsmaschinen – für jedes Unternehmen, das Lager und Büro braucht. Nur sieben Einheiten.
+> **(5)** Unten Lager. Oben Büro. Platz für dein Business. Schmacher Solutions – jetzt anfragen: null-sechs-sechs-vier, eins-zwei-null-null, sieben-vier-fünf.
 
 **30-s-Version (A/B):** (1) gekürzt „Dein Team ist draußen beim Kunden.“ → (3) → (4) → (5).
 **15-s-Teaser (D):** „Lager unten. Büro oben. Parkplatz vor der Tür. Sieben Hallen in Zell bei Ebenthal – jetzt anfragen.“

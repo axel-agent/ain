@@ -320,18 +320,18 @@ function buildB1() {
   for (let i = 0; i < 7; i++) {
     const u0 = i * UW; R.band(u0, u0 + 0.55, i === 0 ? M.anth : M.wood);
     const n = 7 - i; // Einheit-Nummer (Front-Nummern laufen gegenläufig)
-    const h = R.hole(u0 + 1.25, u0 + 1.25 + 4.0, 0, 4.5, 'tor');
-    R.hole(u0 + 5.55, u0 + 6.55, 0, 2.25, 'door', { hingeLeft: true });
+    R.hole(u0 + 0.75, u0 + 1.75, 0, 2.25, 'door', { hingeLeft: false });
+    const h = R.hole(u0 + 2.3, u0 + 2.3 + 4.0, 0, 4.5, 'tor');
     if (n === HERO) R.heroHole = h;
   }
   R.hole(0.0, 0.0001, 0, 0.0001, 'none');
   R.build();
   heroTor = R.heroHole.door;
   for (let i = 0; i < 7; i++) {
-    const u0 = i * UW; wallLamp(R, u0 + 5.3, 5.0);
+    const u0 = i * UW; wallLamp(R, u0 + 1.25, 3.0); wallLamp(R, u0 + 4.3, 5.1);
     if (i > 0) { fbox(R, u0 + 0.58, u0 + 0.68, 0.25, B1.h - 0.1, 0.02, 0.12, M.flash); } // Fallrohr
     // Codetaster neben dem Tor
-    const ku = u0 + 5.38; const kp = fbox(R, ku - 0.055, ku + 0.055, 1.25, 1.43, 0, 0.032, M.inox);
+    const ku = u0 + 6.62; const kp = fbox(R, ku - 0.055, ku + 0.055, 1.25, 1.43, 0, 0.032, M.inox);
     for (let a = 0; a < 3; a++) for (let b = 0; b < 4; b++) fbox(R, ku - 0.032 + a * 0.032, ku - 0.032 + a * 0.032 + 0.022, 1.27 + b * 0.031, 1.27 + b * 0.031 + 0.022, 0.03, 0.038, M.frame);
     const led = new THREE.Mesh(new THREE.SphereGeometry(0.006, 12, 8), new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff2a1a, emissiveIntensity: 3 }));
     led.position.copy(R.point(ku, 1.415, 0.035)); scene.add(led);
@@ -420,7 +420,7 @@ function buildInterior() {
   const u0 = 0, wood = 2.75; Fi.hole(u0 + 0.85, u0 + 1.95, 0, 2.25, 'door'); Fi.hole(u0 + wood + 0.55, u0 + wood + 3.05, 0.95, 2.25, 'window'); Fi.hole(u0 + 1.75, u0 + 5.75, 4.15, 5.2, 'window');
   Fi.build(interior, true);
   const Ri = new Facade(new THREE.Vector3(heroX0, 0, B1.z1), new THREE.Vector3(1, 0, 0), UW, ceil);
-  Ri.hole(1.25, 5.25, 0, 4.5, 'tor'); Ri.hole(5.55, 6.55, 0, 2.25, 'door'); Ri.build(interior, true);
+  Ri.hole(2.3, 6.3, 0, 4.5, 'tor'); Ri.hole(0.75, 1.75, 0, 2.25, 'door'); Ri.build(interior, true);
   // Decke
   const cg = new THREE.PlaneGeometry(w, d); const cuv = cg.attributes.uv; for (let i = 0; i < cuv.count; i++) cuv.setXY(i, cuv.getX(i) * w * .5, cuv.getY(i) * d * .5);
   const c = new THREE.Mesh(cg, M.panelWhite); c.rotation.x = Math.PI / 2; c.position.set(xc, ceil, (z0 + z1) / 2); interior.add(c);
@@ -445,39 +445,40 @@ function buildInterior() {
   for (let x = x0 + 0.05; x <= x1; x += (w - 0.1) / 4) box(0.09, rh, 0.09, M.glulam, x, ry + rh / 2, gz1 - 0.05, interior);
   [0.35, 0.68, 1.0].forEach(hh => box(w, 0.1, 0.05, M.glulam, xc, ry + hh - 0.05, gz1 - 0.02, interior));
   // Treppe entlang linker Wand (x1-Seite) von Hallenboden zur Galerie
-  const sw = 1.0, steps = 15, rise = (gy + gt) / steps, run = 0.27, sx = x1 - sw / 2 - 0.05;
+  const sw = 1.0, steps = 15, rise = (gy + gt) / steps, run = 0.27, sx = x0 + sw / 2 + 0.05;
   for (let i = 0; i < steps; i++) box(sw, 0.05, run + 0.03, M.plank, sx, rise * (i + 1) - 0.025, gz1 + steps * run - i * run - run / 2, interior);
   const sl = Math.hypot(steps * run, gy + gt);
-  const st = box(0.06, 0.3, sl, M.glulam, sx - sw / 2, (gy + gt) / 2, gz1 + steps * run / 2, interior); st.rotation.x = Math.atan2(gy + gt, steps * run);
-  const hr = box(0.05, 0.05, sl, M.glulam, sx - sw / 2, (gy + gt) / 2 + 0.95, gz1 + steps * run / 2, interior); hr.rotation.x = st.rotation.x;
-  // Büro (verglast, zur Halle hin) + WC auf der Galerie
-  const oy = ry, oh = 2.5, od = 3.6, ox0 = x1 - 3.9, ox1 = x1, oz1 = z0 + od;
-  const glassWall = (ax, az, bx, bz) => { const len = Math.hypot(bx - ax, bz - az); const m = new THREE.Mesh(new THREE.PlaneGeometry(len, oh), M.glassClear); m.position.set((ax + bx) / 2, oy + oh / 2, (az + bz) / 2); m.rotation.y = Math.atan2(-(bz - az), bx - ax); interior.add(m); };
-  glassWall(ox0, oz1, ox1, oz1); glassWall(ox0, z0, ox0, oz1);
-  for (let x = ox0; x <= ox1 + 0.01; x += (ox1 - ox0) / 3) box(0.06, oh, 0.06, M.frame, x, oy + oh / 2, oz1, interior);
-  box(ox1 - ox0, 0.08, 0.08, M.frame, (ox0 + ox1) / 2, oy + oh, oz1, interior); box(0.06, oh, 0.06, M.frame, ox0, oy + oh / 2, z0 + 0.03, interior);
-  box(ox1 - ox0 + 0.06, 0.08, od, M.white, (ox0 + ox1) / 2, oy + oh + 0.04, z0 + od / 2, interior); // Bürodecke
-  // Glastür
-  box(0.9, 2.1, 0.03, M.glassClear, ox0 + 0.6, oy + 1.05, oz1 + 0.01, interior);
-  // WC-Box daneben, dahinter Küchen-Anschlussnische
-  const wx1 = ox0 - 0.1, wx0 = wx1 - 1.9, wz1 = z0 + 2.1;
-  box(wx1 - wx0, oh, 0.1, M.white, (wx0 + wx1) / 2, oy + oh / 2, wz1, interior);
+  const st = box(0.06, 0.3, sl, M.glulam, sx + sw / 2, (gy + gt) / 2, gz1 + steps * run / 2, interior); st.rotation.x = Math.atan2(gy + gt, steps * run);
+  const hr = box(0.05, 0.05, sl, M.glulam, sx + sw / 2, (gy + gt) / 2 + 0.95, gz1 + steps * run / 2, interior); hr.rotation.x = st.rotation.x;
+  // Büro-Kubus auf der Lagerbühne – WC innen rechts im Eck, daneben Anschlüsse für Küche
+  const oy = ry, oh = 2.55, cd = 4.0, zc = z0 + cd;
+  const cubeF = new Facade(new THREE.Vector3(x0, oy, zc), new THREE.Vector3(1, 0, 0), w, oh); // Vorderwand zur Halle (außen = +z)
+  cubeF.band(0, w, M.white);
+  cubeF.hole(0.35, 1.3, 0, 2.1, 'door'); cubeF.hole(2.1, 5.2, 0.95, 2.15, 'window', { panes: 3, clear: true });
+  cubeF.build(interior);
+  const cubeI = new Facade(new THREE.Vector3(x1, oy, zc), new THREE.Vector3(-1, 0, 0), w, oh); cubeI.inMat = M.white;
+  cubeI.hole(w - 1.3, w - 0.35, 0, 2.1, 'door'); cubeI.hole(w - 5.2, w - 2.1, 0.95, 2.15, 'window'); cubeI.build(interior, true);
+  box(w, 0.1, cd, M.white, xc, oy + oh + 0.05, z0 + cd / 2, interior); // Decke Kubus
+  box(w - 0.02, 0.02, cd - 0.02, M.plank, xc, oy + 0.01, z0 + cd / 2, interior); // Bodenbelag
+  // WC-Raum rechts hinten im Eck
+  const wx0 = x1 - 1.65, wz1 = z0 + 2.0;
   box(0.1, oh, wz1 - z0, M.white, wx0, oy + oh / 2, (z0 + wz1) / 2, interior);
-  box(wx1 - wx0, 0.08, wz1 - z0, M.white, (wx0 + wx1) / 2, oy + oh, (z0 + wz1) / 2, interior);
-  box(0.82, 2.05, 0.04, M.frame, (wx0 + wx1) / 2, oy + 1.025, wz1 + 0.05, interior); // WC-Tür
-  const sign = box(0.14, 0.14, 0.01, M.white, (wx0 + wx1) / 2, oy + 1.6, wz1 + 0.075, interior);
-  // Küchenzeile (optional) an der Seitenwand hinter dem WC
-  box(0.62, 0.9, 1.8, M.white, x0 + 0.33, oy + 0.45, wz1 + 1.3, interior); box(0.64, 0.04, 1.82, M.black, x0 + 0.33, oy + 0.92, wz1 + 1.3, interior);
-  box(0.36, 0.6, 1.8, M.white, x0 + 0.2, oy + 1.9, wz1 + 1.3, interior);
-  // Büromöbel: Schreibtisch am Fensterband, Stuhl, Monitor, Pflanze, Regal
-  const dz = z0 + 0.55, dx = (ox0 + ox1) / 2 + 0.3;
+  box(x1 - wx0, oh, 0.1, M.white, (wx0 + x1) / 2, oy + oh / 2, wz1, interior);
+  box(0.8, 2.05, 0.04, M.frame, (wx0 + x1) / 2, oy + 1.025, wz1 + 0.06, interior);
+  box(0.14, 0.14, 0.01, M.inox, (wx0 + x1) / 2, oy + 1.6, wz1 + 0.085, interior);
+  // Küchenanschluss/Küchenzeile (optional) an der rechten Wand vor dem WC
+  box(0.62, 0.9, 1.5, M.white, x1 - 0.33, oy + 0.45, wz1 + 0.85, interior); box(0.64, 0.04, 1.52, M.black, x1 - 0.33, oy + 0.92, wz1 + 0.85, interior);
+  box(0.36, 0.6, 1.5, M.white, x1 - 0.2, oy + 1.9, wz1 + 0.85, interior);
+  // Möbel: Schreibtisch unter dem Fensterband, Stuhl, Monitor, Regal, Pflanze
+  const winC = heroX1 - 3.75, dz = z0 + 0.55, dx = winC;
   box(1.8, 0.04, 0.8, M.plank, dx, oy + 0.74, dz, interior); box(0.04, 0.72, 0.7, M.black, dx - 0.86, oy + 0.36, dz, interior); box(0.04, 0.72, 0.7, M.black, dx + 0.86, oy + 0.36, dz, interior);
   box(0.6, 0.36, 0.03, M.black, dx - 0.3, oy + 1.0, dz - 0.15, interior); box(0.06, 0.2, 0.06, M.black, dx - 0.3, oy + 0.84, dz - 0.15, interior);
-  const lap = box(0.34, 0.012, 0.24, M.steel, dx + 0.35, oy + 0.77, dz + 0.05, interior);
+  box(0.34, 0.012, 0.24, M.steel, dx + 0.35, oy + 0.77, dz + 0.05, interior);
   box(0.5, 0.06, 0.5, M.black, dx, oy + 0.48, dz + 0.65, interior); box(0.5, 0.55, 0.06, M.black, dx, oy + 0.8, dz + 0.9, interior); box(0.05, 0.45, 0.05, M.steel, dx, oy + 0.23, dz + 0.65, interior);
-  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(ox1 - 0.35, oy + 0.21, oz1 - 0.4); interior.add(pot);
-  const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(ox1 - 0.35, oy + 0.85, oz1 - 0.4); pl.scale.set(1, 1.3, 1); interior.add(pl);
-  box(0.4, 1.8, 1.2, M.plank, ox1 - 0.25, oy + 0.9, z0 + 2.2, interior);
+  box(0.4, 1.9, 1.4, M.plank, x0 + 0.25, oy + 0.95, z0 + 1.3, interior);
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(x0 + 0.4, oy + 0.21, zc - 0.5); interior.add(pot);
+  const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(x0 + 0.4, oy + 0.85, zc - 0.5); pl.scale.set(1, 1.3, 1); interior.add(pl);
+  const ox0 = x0, ox1 = x1, oz1 = zc;
   // LED-Lichtbänder
   for (let z = z0 + 1.6; z < z1; z += 2.1) box(w * 0.7, 0.04, 0.12, M.ledOn, xc, ceil - 0.45, z + 1.05, interior, false);
   // Innenlicht
@@ -550,9 +551,9 @@ function buildSite() {
   plane(50, 22, M.grass, 24.5, 19.5, 0.025, 0.5);
   [[8, 16], [14, 22], [22, 17], [31, 23], [40, 18], [45, 25]].forEach(([x, z]) => tree(x, z, rr(5.5, 7), rr(1.8, 2.3), true));
   // Laternen entlang der Zufahrt
-  [[52.5, -14], [52.5, 4], [52.5, 30], [12, -22.5], [36, -22.5]].forEach(([x, z]) => lightPole(x, z));
+  [[52.5, -14], [52.5, 4], [-1.2, -21.2], [-1.2, 4]].forEach(([x, z]) => lightPole(x, z));
   // Wärmepumpen-Außengeräte (lt. Lageplan zwischen den Bauteilen)
-  box(1.1, 1.3, 0.5, M.white, 24.0, 0.65, 0.6);
+  box(1.1, 1.3, 0.5, M.white, 47.2, 0.65, 0.6); // Wärmepumpe am Gebäudeende
   // Firmenschild an der Ost-Stirnseite B1
   logoSign(B1.E2, 12.2, 4.4, 4.6);
   // Nachbar-Gewerbehallen
@@ -593,7 +594,7 @@ function logoSign(F, u, v, w) {
 
 // ---------------------------------------------------------------- Licht, Himmel
 const sky = new Sky(); sky.scale.setScalar(12000); scene.add(sky);
-const sun = new THREE.DirectionalLight(0xffffff, 3); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096);
+const sun = new THREE.DirectionalLight(0xffffff, 3); sun.castShadow = true; sun.shadow.mapSize.set(3072, 3072);
 sun.shadow.bias = -0.0002; sun.shadow.normalBias = 0.03; scene.add(sun); scene.add(sun.target);
 const hemi = new THREE.HemisphereLight(0xbcd3ff, 0x5a5040, 0.5); scene.add(hemi);
 scene.fog = new THREE.FogExp2(0xc8cfd6, 0.00022);
