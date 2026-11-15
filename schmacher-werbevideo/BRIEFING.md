@@ -20,3 +20,6 @@ Story: Man f채hrt/geht in den Garagenpark hinein und erlebt eine Einheit von au�
 
 ## Offen
 - Pl채ne (folgen), Logo/Farben, Kontakt/CTA, L채nge, Formate (16:9 / 9:16), Zielgruppe.
+
+## Plan채nderung (Info Bauherr)
+Bauteil 1: EG ist **nur Lagerfl채che/Halle**. **B체ro und WC liegen oben auf der Lagerb체hne.** Einreichplan zeigt noch den alten Stand (B체ro/WC im EG).

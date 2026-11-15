@@ -13,7 +13,7 @@
 |---|---|
 | Standort | Zell bei Ebenthal, Kärnten – Gewerbegebiet, Felder, Bergkulisse (Karawanken-/Sattnitz-Panorama) |
 | Grundstück | 3.000 m², 2 parallele Baukörper, 8 m breite Durchfahrt, Überdachung am Ende der Durchfahrt (Gemeinschaftsfläche) |
-| **Bauteil 1** | 48,5 × 15 m · **7 Einheiten** mit Hausnummern 1–7 · je **Büro 12,87 m²**, Kochecke, WC/Dusche, Lager ~27 m², **Halle ~50 m²** mit Sektionaltor + **Lagerbühne/Galerie ~50 m²** im OG · Raumhöhe bis ~7 m |
+| **Bauteil 1** | 48,5 × 15 m · **7 Einheiten** mit Hausnummern 1–7 · **EG: reine Lager-/Hallenfläche** mit Sektionaltor, Raumhöhe bis ~7 m · **OG (auf der Lagerbühne): Büro + WC** (Planänderung ggü. Einreichplan, dort noch Büro/WC im EG) |
 | **Bauteil 2** | 49 × 20 m · **14 Lager-/Garagenboxen** (je ~40 m² + ~27 m², je 2 Lagerbühnen à 13,6 m²) · Sektionaltore entlang der Längsseite |
 | Konstruktion | Leimholz-Tragwerk (sichtbare Holzträger innen!), gedämmte Sandwichpaneele, Pultdach 3° mit Attika, geglättete Betonbodenplatte |
 | Tore | Industrie-Sektionaltore, 42 mm PU-gedämmt, **Codetaster**, EPDM-Dichtungen, Notentriegelung, TÜV-abgenommen (lt. Baubeschreibung RAL 9006 Weißaluminium) |
@@ -76,15 +76,15 @@ Globaler Stil-Suffix für alle [H]-Prompts:
 ### AKT 3 – Möglichkeiten
 
 **07 · 0:28–0:33 · Innenraum Reveal** (Ref: Foto 04, Schnitt)
-- [H] Interior of a finished unit, 7 m high, bright white sandwich panel walls, exposed light glulam beams and diagonal bracing, wooden mezzanine gallery with timber railing at 2.6 m height, polished concrete floor, LED light bars, window into small office at back, absolutely clean and empty, sunlight streaming in.
-- [S] Slow crane-up from floor level to the gallery railing, reveal the full height and timber structure. 5s.
+- [H] Interior of a finished unit, 7 m high, bright white sandwich panel walls, exposed light glulam beams and diagonal bracing, completely open ground-floor storage hall with polished concrete floor, LED light bars; above at 2.6 m a wooden mezzanine gallery with timber railing carrying a small glazed office box (office + WC) with warm light behind the glass, a timber staircase leading up, absolutely clean and empty, sunlight streaming in.
+- [S] Slow crane-up from floor level up the staircase to the gallery railing, revealing the full height, the timber structure and the office on the gallery. 5s.
 - **Drop:** Musik setzt voll ein.
 
 **08–11 · 0:33–0:46 · Montage „Ein Raum. Viele Möglichkeiten.“** (je ~3 s, Match-Cut über Tor/Kamera-Position)
 - 08 [H] Same unit as a craftsman workshop: workbench, tools on wall, woodworking machines, warm light. [S] slow lateral slide.
 - 09 [H] Same unit with a polished classic car (no brand logos) and a motorcycle, gallery used for storage boxes. [S] slow orbit around the car.
 - 10 [H] Same unit as e-commerce storage: neat shelves with cardboard boxes on the gallery, packing table below, laptop. [S] push-in.
-- 11 [H] Small modern office 12.87 m² with desk, large window, kitchenette, bright and calm. [S] gentle dolly through the doorway.
+- 11 [H] Small modern office on the mezzanine gallery, desk at the ribbon window with view over fields and mountains, glass partition looking down into the storage hall below, bright and calm. [S] gentle dolly from the gallery railing into the office, revealing the view down into the hall.
 - SFX: kurze Whooshes je Schnitt, dezente Raum-Atmos (Werkzeug, Motor-Tick, Tape-Abroller, Kaffeemaschine).
 
 **12 · 0:46–0:48 · Detail Qualität**
@@ -111,7 +111,7 @@ Globaler Stil-Suffix für alle [H]-Prompts:
 > (04) Platz zum Anpacken. Zum Wachsen. Zum Durchstarten.
 > (06) Willkommen im **Mietpark Schmacher** in Zell bei Ebenthal.
 > (07) Bis zu sieben Meter Raumhöhe. Sichtbares Holztragwerk. Eigene Galerie. Und ein Tor, das sich mit einem Code öffnet – rund um die Uhr.
-> (08–11) Für deine Werkstatt. Dein Lager. Deinen Oldtimer. Oder dein erstes eigenes Büro – mit Küche, Dusche und Parkplatz vor der Tür.
+> (08–11) Unten: volle Fläche für deine Werkstatt, dein Lager, deinen Oldtimer. Oben: dein eigenes Büro – mit WC und Blick über das Tal.
 > (13) Modern gebaut. Wärmepumpe. Gedämmt. Bereit für alles, was du vorhast.
 > (14) **Schmacher Solutions.** Dein Raum wartet schon.
 
