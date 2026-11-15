@@ -1,11 +1,20 @@
-// Rendert jede Titelkarte aus titlesV.html als transparentes 1080x1920-PNG nach titlesV/<id>.png
-const { chromium } = require('playwright'); const path = require('path');
+// Rendert Titelkarten als transparente PNGs: node make_titles.cjs [V|16]
+// V: titlesV.html -> titlesV/*.png (1080x1920) · 16: titles16.html -> titles16/*.png (1920x1080)
+const { chromium } = require('playwright'); const path = require('path'), fs = require('fs');
+const CFG = { V: ['titlesV.html', 'titlesV', 1080, 1920, ['cover', 'hook', 'slogan', 'code', 'lager', 'hoehe', 'buero', 'hallen', 'end', 'endcta']],
+              16: ['titles16.html', 'titles16', 1920, 1080, ['cover', 'hook', 'slogan', 'code', 'units', 'tech', 'end', 'endcta']] };
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
-  await p.goto('file://' + path.join(__dirname, 'titlesV.html')); await p.waitForTimeout(400);
-  for (const id of ['hook', 'slogan', 'code', 'lager', 'hoehe', 'buero', 'hallen', 'end']) {
-    await p.evaluate(id => { document.querySelectorAll('.on').forEach(e => e.classList.remove('on')); document.getElementById(id).classList.add('on'); }, id);
-    await p.screenshot({ path: path.join(__dirname, 'titlesV', id + '.png'), omitBackground: true });
+  const b = await chromium.launch();
+  for (const k of process.argv.length > 2 ? process.argv.slice(2) : ['V', '16']) {
+    const [file, dir, w, h, ids] = CFG[k]; fs.mkdirSync(path.join(__dirname, dir), { recursive: true });
+    const p = await b.newPage({ viewport: { width: w, height: h } });
+    await p.goto('file://' + path.join(__dirname, file)); await p.waitForTimeout(500);
+    for (const id of ids) {
+      await p.evaluate(id => { document.body.className = id === 'end' ? 'nocta' : id === 'endcta' ? 'ctaonly' : '';
+        document.querySelectorAll('.on').forEach(e => e.classList.remove('on')); document.getElementById(id === 'endcta' ? 'end' : id).classList.add('on'); }, id);
+      await p.screenshot({ path: path.join(__dirname, dir, id + '.png'), omitBackground: true });
+    }
+    await p.close();
   }
   await b.close();
 })();

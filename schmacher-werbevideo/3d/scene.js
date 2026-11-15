@@ -757,7 +757,7 @@ window.renderAt = function (t) {
   heroKeypadLED.material.emissive.set(s.ledGreenAt !== undefined && lt > s.ledGreenAt ? 0x22ff55 : (s.doorOpen ? 0x22ff55 : 0xff2a1a));
   interior.visible = s.interior !== false;
   grade.uniforms.time.value = t * 13.7;
-  grade.uniforms.fade.value = (t < 0.6 ? 1 - t / 0.6 : 0);
+  grade.uniforms.fade.value = 0; // kein Schwarz am Anfang: erstes Bild = Vorschaubild (Facebook)
   if (gtao) gtao.blendIntensity = s.ao ?? 0.85;
   composer.render();
   applyTitles(t);

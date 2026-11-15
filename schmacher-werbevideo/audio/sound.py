@@ -94,7 +94,7 @@ def shimmer(dur=3.0):
 
 # ------------------------------------------------------------- Musik
 CH = [(57, [69, 72, 76, 79]), (53, [69, 72, 77, 81]), (48, [67, 72, 76, 79]), (55, [67, 71, 74, 79])]  # Am9 · Fmaj7 · C · G
-def music(L, t_pulse, t_drop, t_break, t_logo, bar=2.5):
+def music(L, t_pulse, t_drop, t_break, t_logo, bar=2.5, t_cta=None):
     beat = bar / 4; mus = buf(L + 3); drums = buf(L + 3); bs = buf(L + 3)
     nb = int(np.ceil(L / bar)) + 1
     for b in range(nb):
@@ -141,6 +141,11 @@ def music(L, t_pulse, t_drop, t_break, t_logo, bar=2.5):
     add(mix, reverb(np.stack([shimmer(4), shimmer(4)], 1), 3, wet=0.5), t_logo, 1.0)
     # Endakkord
     add(mix, reverb(pad([45, 57, 64, 69, 72, 76], L - t_logo + 0.5, 0.8), 3, wet=0.4), t_logo, 0.7)
+    # lange Endcard: ruhiges Arpeggio läuft weiter, Akzent wenn Kontakt/„Jetzt anrufen“ erscheint
+    tt = t_logo + bar; arp = [57, 64, 69, 72, 76, 72, 69, 64]; i = 0
+    while tt < L - 1.6:
+        m = arp[i % 8]; add(mix, reverb(np.stack([pluck(m), pluck(m)], 1), 2.2, wet=0.35), tt, 0.16); tt += beat / 2; i += 1
+    if t_cta is not None: add(mix, reverb(np.stack([shimmer(3), shimmer(3)], 1), 3, wet=0.5), t_cta, 0.6)
     mix = mix[:T(L)]
     fo = T(1.2); mix[-fo:] *= np.linspace(1, 0, fo)[:, None] ** 1.5
     return mix
