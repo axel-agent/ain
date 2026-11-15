@@ -24,3 +24,9 @@ Story: Man fährt/geht in den Garagenpark hinein und erlebt eine Einheit von au�
 ## Planänderung (Info Bauherr)
 Bauteil 1: EG ist **nur Lagerfläche/Halle**. **Büro und WC liegen oben auf der Lagerbühne.** Einreichplan zeigt noch den alten Stand (Büro/WC im EG).
 Büro oben hat das Fensterband (OG-Fenster vorne). Hinter dem WC: Anschlüsse für eine optionale Kochecke.
+
+## Neue Vorgaben Bauherr (Stand jetzt)
+- Video **nur für Bauteil 1 – die 7 Hallen (Ost)**. Bauteil 2 (Lagerboxen) wird vorerst nicht gebaut → im Video weglassen.
+- Kanäle: WhatsApp, Instagram, Facebook → 9:16, 4:5, 16:9.
+- Zielgruppe: saubere Betriebe mit Lager + Büro, operative Arbeit draußen beim Kunden (Elektriker, Installateur, Hausbetreuung, Versandhandel, Logistik …). **Keine** Mechaniker/Schmutz. Tischler optional.
+- Torfarbe Anthrazit. Kontakt: 0664 1200745 · www.gewerbepark-klagenfurt.at · office@gewerbepark-klagenfurt.at. Logo in `logo/`.

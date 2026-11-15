@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Mietpark Schmacher 3D</title>
+<style>
+  html,body{margin:0;background:#000;overflow:hidden}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden}
+  canvas{display:block}
+  #ov{position:absolute;inset:0;pointer-events:none;font-family:Inter,sans-serif;color:#fff}
+  .t{position:absolute;opacity:0;will-change:opacity,transform}
+  .kicker{font-weight:600;letter-spacing:.32em;text-transform:uppercase;font-size:22px;color:#e2a066}
+  .big{font-family:'Inter Display',Inter,sans-serif;font-weight:300;font-size:92px;letter-spacing:-.02em;line-height:1.02;text-shadow:0 4px 40px rgba(0,0,0,.35)}
+  .big b{font-weight:700}
+  .sub{font-weight:400;font-size:32px;letter-spacing:.01em;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+  .rule{display:inline-block;width:64px;height:3px;background:#c27a3e;margin-bottom:22px}
+  #end{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+       background:radial-gradient(ellipse at 50% 40%,#fbfbfc 0%,#eef0f3 70%,#e3e6ea 100%);color:#0f182a}
+  #end .logo{width:620px;margin-bottom:26px}
+  #end .claim{font-weight:300;font-size:38px;margin-top:6px;color:#2a3242}
+  #end .claim b{font-weight:600}
+  #end .line{width:110px;height:3px;background:#c27a3e;margin:34px 0 28px}
+  #end .contact{font-weight:500;font-size:32px;letter-spacing:.02em;text-align:center;line-height:1.55;color:#2a3242}
+  #end .contact .ph{font-weight:700;font-size:50px;color:#0f182a;letter-spacing:.03em}
+  #end .contact .muted{color:#808185;font-weight:400}
+</style>
+<script type="importmap">
+{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div id="stage">
+  <div id="ov">
+    <div class="t" id="t-loc" style="left:96px;bottom:92px">
+      <div class="kicker">Zell bei Ebenthal · Kärnten</div>
+    </div>
+    <div class="t" id="t-platz" style="left:110px;top:150px">
+      <div class="rule"></div>
+      <div class="big">Manche Ideen<br>brauchen nur eines:<br><b>Platz.</b></div>
+    </div>
+    <div class="t" id="t-hoehe" style="left:110px;bottom:120px">
+      <div class="kicker">Halle</div>
+      <div class="big" style="font-size:78px">Bis zu <b>7 m</b> Raumhöhe.</div>
+      <div class="sub">Sichtbares Holztragwerk · stützenfreie Lagerfläche</div>
+    </div>
+    <div class="t" id="t-buero" style="right:110px;bottom:120px;text-align:right">
+      <div class="kicker">Galerie</div>
+      <div class="big" style="font-size:78px">Oben: <b>dein Büro.</b></div>
+      <div class="sub">Mit WC · Anschluss für Küche optional · Blick ins Tal</div>
+    </div>
+    <div class="t" id="t-code" style="left:110px;top:140px">
+      <div class="kicker">Zugang</div>
+      <div class="big" style="font-size:72px">Per Code.<br><b>Rund um die Uhr.</b></div>
+    </div>
+    <div class="t" id="t-tech" style="left:0;right:0;bottom:110px;text-align:center">
+      <div class="sub" style="font-size:30px;letter-spacing:.14em;text-transform:uppercase;font-weight:500">
+        Luft-Wärmepumpe &nbsp;·&nbsp; 3-fach-Verglasung &nbsp;·&nbsp; Sektionaltore &nbsp;·&nbsp; Parkplatz vor der Tür</div>
+    </div>
+    <div class="t" id="t-units" style="left:0;right:0;top:120px;text-align:center">
+      <div class="big" style="font-size:80px">Hallen · Büros · <b>Lager</b></div>
+      <div class="sub">7 Hallen-Einheiten mit Büro &nbsp;·&nbsp; 14 Lager- & Garagenboxen</div>
+    </div>
+    <div id="end">
+      <img class="logo" id="logo" src="logo.png" alt="Schmacher Solutions">
+      <div class="claim"><b>Mietpark Zell bei Ebenthal</b> — dein Raum wartet schon.</div>
+      <div class="line"></div>
+      <div class="contact">
+        <div class="ph">0664 1200745</div>
+        <div>www.gewerbepark-klagenfurt.at</div>
+        <div class="muted">office@gewerbepark-klagenfurt.at</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module" src="./scene.js"></script>
+</body>
+</html>
