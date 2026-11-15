@@ -30,10 +30,10 @@ Alternativen: „Raum zum Wachsen.“ · „Dein Business. Dein Platz.“ · „
 *(Branchen wie Elektriker, Installateure, Hausbetreuung, Versandhandel, Logistik nur fürs Anzeigen-Targeting in Meta Ads verwenden – nicht im Film.)*
 
 ### Innenausbau je Einheit (Stand Bauherr)
-- Hallenseite (Durchfahrt): **Gehtür links neben dem Tor** (von außen), Sektionaltor rechts, Codetaster.
+- Hallenseite (Durchfahrt): **Gehtür links neben dem Tor** (von außen), Sektionaltor rechts, **elektrisches Tor** (kein Codetaster).
 - **Treppe** zur Lagerbühne auf der **Türseite**.
 - **Lagerbühne (Holzpodium) = offenes Büro** mit dem Fensterband nach vorne. Kein geschlossener Büro-Kubus, keine Bürotür.
-- **WC = kleiner Kubus** ganz vorne am Geländer: wer über die Stiege raufkommt, hat ihn **rechts**, vor dem Eck beim Geländer.
+- **WC = länglicher Kubus (ca. 1,5 × 2,6 m) ganz rechts in der Ecke am Geländer**, dahinter eine **kleine Küchenzeile**. Galerie als richtiges Büro eingerichtet (Schreibtische, Monitore, Aktenschränke, Drucker, Besprechungstisch).
 - **Kochecke (optional)** an der Rückseite des WC-Kubus → steht damit **hinter dem Schreibtisch** am Fensterband.
 - Ansprache durchgehend **Du**.
 
@@ -43,7 +43,7 @@ Alternativen: „Raum zum Wachsen.“ · „Dein Business. Dein Platz.“ · „
 |---|---|
 | Standort | Zell bei Ebenthal, Kärnten – Gewerbegebiet am Stadtrand von Klagenfurt, Bergpanorama |
 | Gebäude | 48,5 × 15 m, Flachdach/Pultdach 3°, **7 Einheiten**, Hausnummern 1–7 |
-| Je Einheit | **EG:** Halle/Lager ~50 m², Raumhöhe bis ~7 m, geglätteter Betonboden · **Sektionaltor 4,0 × 4,5 m in Anthrazit mit Codetaster** (Transporter fährt direkt hinein) · Gehtür · **OG auf der Lagerbühne:** **Büro mit Fensterband + WC**, dahinter **Anschlüsse für eine Küche (optional)** |
+| Je Einheit | **EG:** Halle/Lager ~50 m², Raumhöhe bis ~7 m, geglätteter Betonboden · **elektrisches Sektionaltor 4,0 × 4,5 m in Anthrazit · Fußbodenheizung** (Transporter fährt direkt hinein) · Gehtür · **OG auf der Lagerbühne:** **Büro mit Fensterband + WC**, dahinter **Anschlüsse für eine Küche (optional)** |
 | Bau | Leimholz-Tragwerk (sichtbar), gedämmte Sandwichpaneele, 3-fach-Verglasung, Luft-Wärmepumpe, LED |
 | Außen | Asphalt-Zufahrt, **eigener Stellplatz vor jeder Einheit**, Grünflächen |
 | Fassade | Rillenpaneele Holzdekor (Kupfer-Teak) / Anthrazit, große schwarze Hausnummern |
@@ -80,7 +80,7 @@ Gebäude-Referenzen bei jedem Außen-/Innen-Shot mitgeben: `referenz-fotos/07…
 | **01** | 0–3 | **Vorher:** enge Privatgarage, Kartons bis zur Decke, Markus quetscht sich mit Paket am Familienauto vorbei | cramped private home garage full of stacked cardboard boxes and shelves, family car, man (Markus) carrying a parcel, slightly frustrated, warm dim light | handheld, he squeezes past the car | VO 1 |
 | **02** | 3–5 | **Vorher:** Laptop am Küchentisch zwischen Frühstück und Paketen | kitchen table at home, laptop, invoices, parcels, coffee mug, kids' drawings on the fridge | slow push-in | VO 1 |
 | **03** | 5–9 | **Schnitt – der Mietpark:** Drohne bei Sonnenaufgang, der weiße Transporter fährt auf das Gelände | aerial of the finished building (7 units, copper-wood/anthracite facade, numbers 1–7, asphalt, lawn, mountains), white van entering | drone tracking the van | Text: *Zeit für den nächsten Schritt.* |
-| **04** | 9–12 | Codetaster, Tor öffnet sich | Markus' hand on keypad next to anthracite sectional door; door rising | close-up → door opens, light floods out | VO 2 |
+| **04** | 9–12 | Elektrisches Tor öffnet sich | remote-controlled anthracite sectional door; door rising | close-up → door opens, light floods out | VO 2 |
 | **05** | 12–17 | **Van fährt hinein.** Unter der Lagerbühne arbeiten Lena (packt Versandpaket, Klebeband-Abroller) und Tom (Akkuschrauber an Werkstück an sauberer Werkbank) | inside the 7 m hall: white van entering through open sectional door, under the timber gallery a packing table with Lena taping a parcel and a clean workbench with Tom using a cordless screwdriver, tidy shelving | van rolls in and stops, both look up and wave | Text: *Unten: dein Lager.* |
 | **06** | 17–22 | Markus öffnet die Hecktüren, nimmt Kartons heraus, stellt sie ins Regal neben dem Van | rear doors of van open, Markus lifting cardboard boxes, heavy-duty shelf right next to the van | he places box on shelf, pushes it in | VO 3 |
 | **07** | 22–26 | Markus geht die Holztreppe hinauf (Treppe auf der Türseite) | glulam timber staircase up to the wooden mezzanine, office cube on top | follow shot from below, upward tilt | – |
@@ -104,7 +104,7 @@ Gebäude-Referenzen bei jedem Außen-/Innen-Shot mitgeben: `referenz-fotos/07…
 **15-s-Teaser:** 01 → 05 → 11 → Endcard · „Raus aus der Garage. Rein in den Gewerbepark. Sieben Hallen mit Büro – jetzt anfragen.“
 
 ### Gebäude-Version (ohne Personen) – fertig aus dem 3D-Modell
-Zwischenlösung zum sofortigen Posten, rein aus dem maßstabsgetreuen 3D-Modell: Anflug → Fassade → Codetaster → Tor öffnet → Halle → Büro → blaue Stunde → Endcard (45 s, 16:9).
+Zwischenlösung zum sofortigen Posten, rein aus dem maßstabsgetreuen 3D-Modell: Anflug → Fassade → Torfront → Tor öffnet → Halle → Büro → blaue Stunde → Endcard (45 s, 16:9).
 
 ## 6. Musik & Sound
 Moderner, positiver Corporate-Groove (100–110 BPM), heller Piano/Pluck-Hook, ab Shot 06 volle Drums; Endcard mit Akkord + Sub-Hit. SFX: Vögel/Wind, Tormotor, Transporter-Diesel/E-Motor, Tastenbeep, Whooshes. Sprache dominant, Musik −8 dB unter VO.
