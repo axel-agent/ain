@@ -32,7 +32,10 @@ Alternativen: „Raum zum Wachsen.“ · „Dein Business. Dein Platz.“ · „
 ### Innenausbau je Einheit (Stand Bauherr)
 - Hallenseite (Durchfahrt): **Gehtür links neben dem Tor** (von außen), Sektionaltor rechts, Codetaster.
 - **Treppe** zur Lagerbühne auf der **Türseite**.
-- Auf der Lagerbühne (Holzpodium) steht ein **Kubus = Büro**; darin **WC rechts im Eck**, daneben Anschlüsse für eine **Küche (optional)**. Fensterband nach vorne.
+- **Lagerbühne (Holzpodium) = offenes Büro** mit dem Fensterband nach vorne. Kein geschlossener Büro-Kubus, keine Bürotür.
+- **WC = kleiner Kubus** ganz vorne am Geländer: wer über die Stiege raufkommt, hat ihn **rechts**, vor dem Eck beim Geländer.
+- **Kochecke (optional)** an der Rückseite des WC-Kubus → steht damit **hinter dem Schreibtisch** am Fensterband.
+- Ansprache durchgehend **Du**.
 
 ## 2. Faktenbasis (Plan, Baubeschreibung, Bauherr)
 
@@ -81,14 +84,14 @@ Gebäude-Referenzen bei jedem Außen-/Innen-Shot mitgeben: `referenz-fotos/07…
 | **05** | 12–17 | **Van fährt hinein.** Unter der Lagerbühne arbeiten Lena (packt Versandpaket, Klebeband-Abroller) und Tom (Akkuschrauber an Werkstück an sauberer Werkbank) | inside the 7 m hall: white van entering through open sectional door, under the timber gallery a packing table with Lena taping a parcel and a clean workbench with Tom using a cordless screwdriver, tidy shelving | van rolls in and stops, both look up and wave | Text: *Unten: dein Lager.* |
 | **06** | 17–22 | Markus öffnet die Hecktüren, nimmt Kartons heraus, stellt sie ins Regal neben dem Van | rear doors of van open, Markus lifting cardboard boxes, heavy-duty shelf right next to the van | he places box on shelf, pushes it in | VO 3 |
 | **07** | 22–26 | Markus geht die Holztreppe hinauf (Treppe auf der Türseite) | glulam timber staircase up to the wooden mezzanine, office cube on top | follow shot from below, upward tilt | – |
-| **08** | 26–30 | Er öffnet die Tür zum Büro-Kubus – **Sandra arbeitet** am Laptop und grüßt | bright office in the cube, ribbon window with mountain view, Sandra at her desk smiling | he enters, short nod/greeting | Text: *Oben: dein Büro.* |
+| **08** | 26–30 | Er kommt oben an, rechts der kleine WC-Kubus – **Sandra arbeitet** am Laptop und grüßt | bright open office on the timber mezzanine (small white WC cube at the railing), ribbon window with mountain view, Sandra at her desk smiling | he enters, short nod/greeting | Text: *Oben: dein Büro.* |
 | **09** | 30–34 | Markus setzt sich an den PC, arbeitet konzentriert | Markus at desk with monitor, view to mountains | slow dolly around | VO 4 |
-| **10** | 34–38 | Er steht auf, geht zur **Küchenzeile hinter dem Schreibtisch**, Kaffee läuft aus der Maschine | compact kitchenette in the office cube (behind the desk), espresso machine pouring into a white cup, steam | macro coffee pour → he picks up the cup | SFX Kaffeemaschine |
+| **10** | 34–38 | Er steht auf, geht zur **Küchenzeile hinter dem Schreibtisch**, Kaffee läuft aus der Maschine | compact kitchenette on the back of the small WC cube (behind the desk), espresso machine pouring into a white cup, steam | macro coffee pour → he picks up the cup | SFX Kaffeemaschine |
 | **11** | 38–43 | **Kaffee am Fenster:** Markus lehnt entspannt am Fensterband, trinkt, schaut hinaus auf die Berge | Markus relaxed at the ribbon window holding coffee, golden morning light on his face, mountains outside | slow push-in, then he smiles | VO 5 |
 | **12** | 43–47 | Von außen: Kamera zieht vom Fenster zurück, Drohne steigt über das Gebäude | exterior view of upper ribbon window with Markus silhouette, pulling back to the whole building | drone pull-back + rise | Text: *Raus aus der Garage. Rein in den Gewerbepark.* |
 | **13** | 47–52 | Endcard (hell, Logo) | – | – | Slogan + *Nur 7 Hallen mit Büro* + Kontakt |
 
-## 5. Sprechertext (ElevenLabs, Deutsch, Du-Ansprache, ~45 s)
+## 5. Sprechertext (ElevenLabs bzw. vorerst Piper-Stimme „Thorsten“, Deutsch, Du-Ansprache, ~45 s)
 
 > **(1)** Dein Business wächst. Dein Zuhause nicht. Kartons in der Garage, das Büro am Küchentisch …
 > **(2)** Zeit für den nächsten Schritt.
