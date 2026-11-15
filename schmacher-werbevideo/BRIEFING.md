@@ -23,3 +23,4 @@ Story: Man f채hrt/geht in den Garagenpark hinein und erlebt eine Einheit von au�
 
 ## Plan채nderung (Info Bauherr)
 Bauteil 1: EG ist **nur Lagerfl채che/Halle**. **B체ro und WC liegen oben auf der Lagerb체hne.** Einreichplan zeigt noch den alten Stand (B체ro/WC im EG).
+B체ro oben hat das Fensterband (OG-Fenster vorne). Hinter dem WC: Anschl체sse f체r eine optionale Kochecke.
