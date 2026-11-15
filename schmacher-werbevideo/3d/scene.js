@@ -34,7 +34,7 @@ document.getElementById('stage').prepend(renderer.domElement);
 const MAXANISO = renderer.capabilities.getMaxAnisotropy();
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(40, W / H, 0.05, 14000);
+const camera = new THREE.PerspectiveCamera(40, W / H, 0.15, 14000);
 
 // ---------------------------------------------------------------- Helpers
 let seed = 1337;
@@ -126,9 +126,9 @@ function setRep(t, rx, ry) { const c = t.clone(); c.needsUpdate = true; c.repeat
 
 // ---------------------------------------------------------------- Materialien
 const M = {};
-M.wood = new THREE.MeshStandardMaterial({ map: tex.wood, bumpMap: tex.woodBump, bumpScale: 1.2, roughness: 0.62, metalness: 0.05 });
-M.anth = new THREE.MeshStandardMaterial({ map: tex.anth, bumpMap: tex.woodBump, bumpScale: 1.0, roughness: 0.5, metalness: 0.35 });
-M.grey = new THREE.MeshStandardMaterial({ map: tex.grey, bumpMap: tex.woodBump, bumpScale: 1.0, roughness: 0.5, metalness: 0.3 });
+M.wood = new THREE.MeshStandardMaterial({ map: tex.wood, bumpMap: tex.woodBump, bumpScale: 0.35, roughness: 0.62, metalness: 0.05 });
+M.anth = new THREE.MeshStandardMaterial({ map: tex.anth, bumpMap: tex.woodBump, bumpScale: 0.3, roughness: 0.5, metalness: 0.35 });
+M.grey = new THREE.MeshStandardMaterial({ map: tex.grey, bumpMap: tex.woodBump, bumpScale: 0.3, roughness: 0.5, metalness: 0.3 });
 M.plinth = new THREE.MeshStandardMaterial({ color: 0x232527, roughness: 0.85 });
 M.frame = new THREE.MeshStandardMaterial({ color: 0x2b2e32, roughness: 0.4, metalness: 0.5 });
 M.flash = new THREE.MeshStandardMaterial({ color: 0x2c2f33, roughness: 0.35, metalness: 0.7 });
@@ -410,7 +410,7 @@ function buildInterior() {
   const w = x1 - x0, d = z1 - z0, xc = (x0 + x1) / 2;
   // Boden
   const fg = new THREE.PlaneGeometry(w, d); const fuv = fg.attributes.uv; for (let i = 0; i < fuv.count; i++) fuv.setXY(i, fuv.getX(i) * w / 6, fuv.getY(i) * d / 6);
-  const floor = new THREE.Mesh(fg, M.concrete); floor.rotation.x = -Math.PI / 2; floor.position.set(xc, 0.005, (z0 + z1) / 2); floor.receiveShadow = true; interior.add(floor);
+  const floor = new THREE.Mesh(fg, M.concrete); floor.rotation.x = -Math.PI / 2; floor.position.set(xc, 0.04, (z0 + z1) / 2); floor.receiveShadow = true; interior.add(floor);
   // Seitenwände (Trennwände) innen
   const wallMat = M.panelWhite;
   const side = (x, dir) => { const g = new THREE.PlaneGeometry(d, ceil); const uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * d * .5, uv.getY(i) * ceil * .5); const m = new THREE.Mesh(g, wallMat); m.rotation.y = dir * Math.PI / 2; m.position.set(x, ceil / 2, (z0 + z1) / 2); m.receiveShadow = true; m.castShadow = true; interior.add(m); };
@@ -569,34 +569,34 @@ function lightPole(x, z) {
 function buildSite() {
   // Weite Landschaft
   const fg = new THREE.PlaneGeometry(9000, 9000); const fuv = fg.attributes.uv; for (let i = 0; i < fuv.count; i++) fuv.setXY(i, fuv.getX(i) * 4.4, fuv.getY(i) * 4.4);
-  const f = new THREE.Mesh(fg, M.fields); f.rotation.x = -Math.PI / 2; f.position.y = -0.06; f.receiveShadow = true; scene.add(f);
+  const f = new THREE.Mesh(fg, M.fields); f.rotation.x = -Math.PI / 2; f.position.y = -0.5; f.receiveShadow = true; scene.add(f);
   // Grundstück: Asphalt
   plane(56.5, 54.2, M.asphalt, 24.25, 6.0, 0.0, 0.25);
   // Kies-Traufstreifen um die Gebäude
   [[B1.x0, B1.x1, B1.z0, B1.z1]].forEach(([x0, x1, z0, z1]) => {
-    plane(x1 - x0 + 1.0, 0.5, M.gravel, (x0 + x1) / 2, z0 - 0.25, 0.012, 1); plane(x1 - x0 + 1.0, 0.5, M.gravel, (x0 + x1) / 2, z1 + 0.25, 0.012, 1);
-    plane(0.5, z1 - z0, M.gravel, x0 - 0.25, (z0 + z1) / 2, 0.012, 1); plane(0.5, z1 - z0, M.gravel, x1 + 0.25, (z0 + z1) / 2, 0.012, 1);
+    plane(x1 - x0 + 1.0, 0.5, M.gravel, (x0 + x1) / 2, z0 - 0.25, 0.03, 1); plane(x1 - x0 + 1.0, 0.5, M.gravel, (x0 + x1) / 2, z1 + 0.25, 0.03, 1);
+    plane(0.5, z1 - z0, M.gravel, x0 - 0.25, (z0 + z1) / 2, 0.03, 1); plane(0.5, z1 - z0, M.gravel, x1 + 0.25, (z0 + z1) / 2, 0.03, 1);
   });
   // Pflasterflächen vor den Türen (Front B1)
-  for (let n = 1; n <= 7; n++) { const xr = B1.x1 - (n - 1) * UW; plane(1.6, 1.5, M.paver, xr - 1.4, B1.z0 - 1.25, 0.015, 1); }
+  for (let n = 1; n <= 7; n++) { const xr = B1.x1 - (n - 1) * UW; plane(1.6, 1.5, M.paver, xr - 1.4, B1.z0 - 1.25, 0.035, 1); }
   // Stellplätze vor B1 (Front): Markierungen
-  for (let i = 0; i <= 7; i++) { const x = B1.x1 - i * UW; plane(0.12, 5.0, M.line, x, B1.z0 - 3.2, 0.02, 1); }
-  plane(48.5, 0.12, M.line, 24.25, B1.z0 - 5.7, 0.02, 1);
+  for (let i = 0; i <= 7; i++) { const x = B1.x1 - i * UW; plane(0.12, 5.0, M.line, x, B1.z0 - 3.2, 0.03, 1); }
+  plane(48.5, 0.12, M.line, 24.25, B1.z0 - 5.7, 0.03, 1);
   // Grünflächen lt. Lageplan
-  plane(4.0, 54.2, M.grass, -2.0, 6.0, 0.03, 0.5); // West 213 m²
-  plane(4.4, 12.0, M.grass, 51.6, -8.5, 0.03, 0.5); // Ost-Nord
-  plane(4.4, 10.0, M.grass, 51.6, 19.5, 0.03, 0.5); // Ost-Süd
-  plane(56.5, 2.0, M.grass, 24.25, -22.0, 0.03, 0.5);
+  plane(4.0, 54.2, M.grass, -2.0, 6.0, 0.06, 0.5); // West 213 m²
+  plane(4.4, 12.0, M.grass, 51.6, -8.5, 0.06, 0.5); // Ost-Nord
+  plane(4.4, 10.0, M.grass, 51.6, 19.5, 0.06, 0.5); // Ost-Süd
+  plane(56.5, 2.0, M.grass, 24.25, -22.0, 0.06, 0.5);
   // Straße außen
   plane(1200, 7, M.asphalt, 0, -26, 0.0, 0.25); plane(7, 600, M.asphalt, 57.5, 0, -0.01, 0.25);
-  plane(1200, 0.15, M.line, 0, -26, 0.012, 1);
+  plane(1200, 0.15, M.line, 0, -26, 0.03, 1);
   // Hecken, junge Bäume
   hedge(-21, 33, -3.2, 1.6, true);
   hedge(-21, -5, 53.6, 1.4, true); hedge(14, 33, 53.6, 1.4, true);
   [[-2, -16], [-2, -6], [-2, 4], [-2, 14], [-2, 24], [-2, 31]].forEach(([x, z]) => tree(x, z, rr(5, 6.5), rr(1.6, 2.1), true));
   [[51.6, -12], [51.6, -5], [51.6, 18], [51.6, 22]].forEach(([x, z]) => tree(x, z, rr(5, 6), rr(1.5, 1.9), true));
   // Fläche von Bauteil 2 (noch nicht gebaut): gepflegte Wiese mit Baumgruppe
-  plane(50, 22, M.grass, 24.5, 19.5, 0.025, 0.5);
+  plane(50, 22, M.grass, 24.5, 19.5, 0.05, 0.5);
   [[8, 16], [14, 22], [22, 17], [31, 23], [40, 18], [45, 25]].forEach(([x, z]) => tree(x, z, rr(5.5, 7), rr(1.8, 2.3), true));
   // Laternen entlang der Zufahrt
   [[52.5, -14], [52.5, 4], [-1.2, -21.2], [-1.2, 4]].forEach(([x, z]) => lightPole(x, z));
@@ -706,7 +706,7 @@ const grade = new ShaderPass({
       c=mix(c, c*vec3(1.04,1.0,.95), smoothstep(.4,1.,l)); c=mix(c, c*vec3(.95,1.0,1.05), 1.-smoothstep(0.,.35,l));
       c=(c-.5)*1.05+.5;
       c*=1.-vig*pow(length(d)*1.35,2.2);
-      c+= (h(vUv*1000.+time)-.5)*.022;
+      c+= (h(vUv*1000.+time)-.5)*.012;
       c*=1.-fade;
       gl_FragColor=vec4(c,1.);}`
 }); composer.addPass(grade);
