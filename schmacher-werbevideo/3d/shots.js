@@ -13,14 +13,14 @@ export const SHOTS = (c, portrait = false) => {
     { dur: 5.5, look: MORNING_FRONT, pos: [[-95, 70, -175], [-30, 32, -78]], target: [[60, -8, 60], [36, 0, 10]], fov: 38, pfov: 0.6, shadowC: [24, 0, -8], shadowR: 60, interior: false },
     // 02 Fassaden-Gleitfahrt entlang der Hausnummern
     { dur: 5.5, look: MORNING_FRONT, pos: [[52, 1.7, -25.5], [20, 1.9, -24.5]], target: [[44, 3.2, -15], [12, 3.4, -15]], fov: 42, shadowC: [32, 0, -16], shadowR: 30, interior: false },
-    // 03 Codetaster-Makro (Rückseite, Einheit 4)
-    { dur: 3, look: MORNING_BACK, pos: [[c.B1.keypad.x + 0.75, 1.55, 0.95], [c.B1.keypad.x + 0.55, 1.45, 0.7]], target: [[c.B1.keypad.x - 0.15, 1.3, 0.03], [c.B1.keypad.x - 0.1, 1.32, 0.03]], fov: 32, pfov: 0.7, ledGreenAt: 1.6, shadowC: [c.B1.keypad.x, 1, 0], shadowR: 8, interior: false },
+    // 03 Rückseite: Torfront mit elektrischen Sektionaltoren (seitliche Gleitfahrt)
+    { dur: 3, look: MORNING_BACK, pos: [[X + 15, 1.5, 7.5], [X + 10, 1.6, 6.6]], target: [[X - 4, 2.4, 0], [X - 7, 2.5, 0]], fov: 40, pfov: 0.7, shadowC: [X, 0, 0], shadowR: 24, interior: false },
     // 04 Tor öffnet sich – Kamerafahrt hinein
-    { dur: 6, look: DAY_INT, pos: [[X + 0.3, 1.5, 11], [X + 0.2, 1.65, 2.2]], target: [[X, 2.0, 0], [X, 2.4, -10]], fov: 44, door: [0.4, 4.6], shadowC: [X, 0, -4], shadowR: 22 },
+    { dur: 6, look: DAY_INT, pos: [[X + 0.3, 1.3, 11], [X + 0.2, 1.2, 1.6]], target: [[X, 2.2, 0], [X, 3.0, -10]], fov: 52, door: [0.4, 4.6], shadowC: [X, 0, -4], shadowR: 22 },
     // 05 Halle innen – Kran nach oben zur Galerie
-    { dur: 6, look: DAY_INT, doorOpen: 1, pos: [[X - 0.2, 0.9, -0.8], [X + 1.2, 3.9, -6.6]], target: [[X - 0.4, 3.2, -12], [X + 0.6, 4.0, -14]], fov: 50, shadowC: [X, 0, -7], shadowR: 18, ao: 0.9 },
-    // 06 Büro auf der Galerie – Blick durchs Fensterband
-    { dur: 6, look: DAY_INT, doorOpen: 1, pos: [[c.B1.office.ox0 + 0.8, c.B1.office.oy + 1.6, c.B1.office.oz1 - 0.35], [c.B1.office.ox0 + 1.5, c.B1.office.oy + 1.5, c.B1.office.oz1 - 1.3]], target: [[c.B1.office.desk.x + 0.4, c.B1.office.oy + 1.0, -15.2], [c.B1.office.desk.x + 0.2, c.B1.office.oy + 1.2, -15.6]], fov: 52, shadowC: [X, 0, -10], shadowR: 14, ao: 0.9 },
+    { dur: 6, look: DAY_INT, doorOpen: 1, pos: [[X - 0.1, 0.7, 0.2], [X + 0.4, 4.1, -6.4]], target: [[X - 0.6, 3.6, -12], [X - 0.6, 4.0, -14]], fov: [64, 60], shadowC: [X, 0, -7], shadowR: 18, ao: 0.9 },
+    // 06 Büro auf der Galerie – Schreibtisch am Fensterband, WC-Kubus mit Küchenzeile rechts
+    { dur: 6, look: DAY_INT, doorOpen: 1, pos: [[c.B1.int.x0 + 1.55, c.B1.office.oy + 1.6, c.B1.int.z0 + 5.3], [c.B1.int.x0 + 1.95, c.B1.office.oy + 1.55, c.B1.int.z0 + 4.3]], target: [[c.B1.office.desk.x - 0.4, c.B1.office.oy + 1.05, c.B1.int.z0], [c.B1.office.desk.x + 1.5, c.B1.office.oy + 1.0, c.B1.int.z0 + 1.6]], fov: 60, shadowC: [X, 0, -10], shadowR: 14, ao: 0.9 },
     // 07 Blaue Stunde – Drohne zieht zurück
     { dur: 7, look: BLUE_HOUR, doorOpen: 1, pos: [[60, 14, -42], [92, 46, -95]], target: [[26, 2, -8], [24, 1, -4]], fov: 40, pfov: 0.65, shadowC: [24, 0, -8], shadowR: 60 },
     // 08 Endcard (Kamera driftet weiter, Overlay)

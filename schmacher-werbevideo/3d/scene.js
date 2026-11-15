@@ -333,11 +333,8 @@ function buildB1() {
   for (let i = 0; i < 7; i++) {
     const u0 = i * UW; wallLamp(R, u0 + 1.25, 3.0); wallLamp(R, u0 + 4.3, 5.1);
     if (i > 0) { fbox(R, u0 + 0.58, u0 + 0.68, 0.25, B1.h - 0.1, 0.02, 0.12, M.flash); } // Fallrohr
-    // Codetaster neben dem Tor
-    const ku = u0 + 6.62; const kp = fbox(R, ku - 0.055, ku + 0.055, 1.25, 1.43, 0, 0.032, M.inox);
-    for (let a = 0; a < 3; a++) for (let b = 0; b < 4; b++) fbox(R, ku - 0.032 + a * 0.032, ku - 0.032 + a * 0.032 + 0.022, 1.27 + b * 0.031, 1.27 + b * 0.031 + 0.022, 0.03, 0.038, M.frame);
-    const led = new THREE.Mesh(new THREE.SphereGeometry(0.006, 12, 8), new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff2a1a, emissiveIntensity: 3 }));
-    led.position.copy(R.point(ku, 1.415, 0.035)); scene.add(led);
+    // kein Codetaster – elektrische Tore
+    const ku = u0 + 6.62; const led = new THREE.Mesh(new THREE.SphereGeometry(0.001), new THREE.MeshStandardMaterial());
     if (7 - i === HERO) { heroKeypadLED = led; B1.keypad = R.point(ku, 1.34, 0.035); B1.backF = R; }
   }
   // Stirnseiten
@@ -454,34 +451,81 @@ function buildInterior() {
   const st = box(0.06, 0.3, sl, M.glulam, sx + sw / 2, (gy + gt) / 2, gz1 + steps * run / 2, interior); st.rotation.x = Math.atan2(gy + gt, steps * run);
   const hr = box(0.05, 0.05, sl, M.glulam, sx + sw / 2, (gy + gt) / 2 + 0.95, gz1 + steps * run / 2, interior); hr.rotation.x = st.rotation.x;
   // Galerie = offenes Büro mit Fensterband. WC als kleiner Kubus vorne am Geländer, rechts vom Treppenaustritt.
-  const oy = ry, oh = 2.4;
+  const oy = ry, oh = 2.25;
   box(w - 0.02, 0.02, gd - 0.02, M.plank, xc, oy + 0.01, z0 + gd / 2, interior); // Bodenbelag
-  const wx0 = x0 + 1.45, wx1 = wx0 + 1.6, wz0 = gz1 - 0.25 - 1.8, wz1 = gz1 - 0.25, wxc = (wx0 + wx1) / 2, wzc = (wz0 + wz1) / 2;
+  // WC-Kubus ganz rechts in der Ecke am Geländer (gegenüber der Stiege), Tür zur Raummitte
+  const wx1 = x1, wx0 = x1 - 1.5, wz1 = gz1 - 0.2, wz0 = wz1 - 2.6, wxc = (wx0 + wx1) / 2, wzc = (wz0 + wz1) / 2;
   box(wx1 - wx0, oh, 0.1, M.white, wxc, oy + oh / 2, wz0, interior); box(wx1 - wx0, oh, 0.1, M.white, wxc, oy + oh / 2, wz1, interior);
-  box(0.1, oh, wz1 - wz0, M.white, wx1, oy + oh / 2, wzc, interior);
-  // Stirnwand zur Treppe mit WC-Tür
-  const dw = 0.8, dz0 = wzc - dw / 2 - 0.1;
+  const dw = 0.8, dz0 = wzc - dw / 2;
   box(0.1, oh, dz0 - wz0, M.white, wx0, oy + oh / 2, (wz0 + dz0) / 2, interior); box(0.1, oh, wz1 - (dz0 + dw), M.white, wx0, oy + oh / 2, (dz0 + dw + wz1) / 2, interior);
   box(0.1, oh - 2.05, dw, M.white, wx0, oy + 2.05 + (oh - 2.05) / 2, dz0 + dw / 2, interior);
   box(0.04, 2.05, dw, M.frame, wx0 - 0.03, oy + 1.025, dz0 + dw / 2, interior);
   box(0.012, 0.03, 0.14, M.inox, wx0 - 0.065, oy + 1.02, dz0 + 0.12, interior);
   box(0.01, 0.14, 0.14, M.inox, wx0 - 0.055, oy + 1.6, dz0 + dw / 2, interior);
-  box(wx1 - wx0 + 0.1, 0.08, wz1 - wz0 + 0.1, M.white, wxc, oy + oh + 0.04, wzc, interior); // Deckel
-  // Kochecke an der Rückseite des WC-Kubus (hinter dem Schreibtisch)
+  box(wx1 - wx0 + 0.1, 0.06, wz1 - wz0 + 0.1, M.white, wxc, oy + oh + 0.03, wzc, interior); // Deckel
+  // Kochecke an der Rückseite des WC-Kubus (Richtung Schreibtisch)
   const kz = wz0 - 0.05 - 0.31;
-  box(1.5, 0.9, 0.62, M.white, wxc, oy + 0.45, kz, interior); box(1.52, 0.04, 0.64, M.black, wxc, oy + 0.92, kz, interior);
-  box(1.5, 0.6, 0.36, M.white, wxc, oy + 1.9, wz0 - 0.05 - 0.18, interior);
-  box(0.26, 0.34, 0.3, M.black, wxc + 0.45, oy + 1.11, kz - 0.02, interior); // Kaffeemaschine
-  box(0.4, 0.02, 0.32, M.steel, wxc - 0.3, oy + 0.945, kz, interior); // Spüle
-  // Möbel: Schreibtisch unter dem Fensterband, Stuhl, Monitor, Regal, Pflanze
+  box(1.4, 0.9, 0.62, M.white, wxc, oy + 0.45, kz, interior); box(1.42, 0.04, 0.64, M.black, wxc, oy + 0.92, kz, interior);
+  box(1.4, 0.55, 0.36, M.white, wxc, oy + 1.85, wz0 - 0.05 - 0.18, interior);
+  box(0.26, 0.34, 0.3, M.black, wxc - 0.4, oy + 1.11, kz - 0.02, interior); // Kaffeemaschine
+  box(0.4, 0.02, 0.32, M.steel, wxc + 0.3, oy + 0.945, kz, interior); // Spüle
+  // Möbel: richtiges Büro – zwei Arbeitsplätze, Aktenschränke, Sideboard mit Drucker, Whiteboard, Besprechungstisch
   const winC = heroX1 - 3.75, dz = z0 + 0.55, dx = winC;
-  box(1.8, 0.04, 0.8, M.plank, dx, oy + 0.74, dz, interior); box(0.04, 0.72, 0.7, M.black, dx - 0.86, oy + 0.36, dz, interior); box(0.04, 0.72, 0.7, M.black, dx + 0.86, oy + 0.36, dz, interior);
-  box(0.6, 0.36, 0.03, M.black, dx - 0.3, oy + 1.0, dz - 0.15, interior); box(0.06, 0.2, 0.06, M.black, dx - 0.3, oy + 0.84, dz - 0.15, interior);
-  box(0.34, 0.012, 0.24, M.steel, dx + 0.35, oy + 0.77, dz + 0.05, interior);
-  box(0.5, 0.06, 0.5, M.black, dx, oy + 0.48, dz + 0.65, interior); box(0.5, 0.55, 0.06, M.black, dx, oy + 0.8, dz + 0.9, interior); box(0.05, 0.45, 0.05, M.steel, dx, oy + 0.23, dz + 0.65, interior);
-  box(0.4, 1.9, 1.4, M.plank, x0 + 0.25, oy + 0.95, z0 + 1.3, interior);
-  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(x1 - 0.45, oy + 0.21, gz1 - 0.6); interior.add(pot);
-  const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(x1 - 0.45, oy + 0.85, gz1 - 0.6); pl.scale.set(1, 1.3, 1); interior.add(pl);
+  const mScr = new THREE.MeshStandardMaterial({ color: 0x0b1220, emissive: 0x9ab8e0, emissiveIntensity: 0.55, roughness: 0.2 });
+  const mGrey = new THREE.MeshStandardMaterial({ color: 0x8c9096, roughness: 0.45, metalness: 0.2 });
+  const mCab = new THREE.MeshStandardMaterial({ color: 0xf3f2ef, roughness: 0.55 });
+  const mFab = new THREE.MeshStandardMaterial({ color: 0x2d3540, roughness: 0.9 });
+  const mWb = new THREE.MeshStandardMaterial({ color: 0xfafafa, roughness: 0.15 });
+  const chair = (cx, cz, ry) => {
+    const g = new THREE.Group(); const b = (w, h, d, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); o.castShadow = true; g.add(o); return o; };
+    b(0.5, 0.07, 0.48, mFab, 0, 0.48, 0); const bk = b(0.46, 0.58, 0.06, mFab, 0, 0.86, 0.25); bk.rotation.x = -0.12;
+    b(0.04, 0.32, 0.04, M.steel, 0, 0.3, 0); for (let i = 0; i < 5; i++) { const l = b(0.3, 0.03, 0.04, M.black, Math.cos(i * 1.2566) * 0.15, 0.06, Math.sin(i * 1.2566) * 0.15); l.rotation.y = -i * 1.2566; }
+    for (const sx of [-0.27, 0.27]) { b(0.04, 0.2, 0.04, M.black, sx, 0.6, 0.02); b(0.06, 0.03, 0.26, M.black, sx, 0.71, 0.02); }
+    g.position.set(cx, oy, cz); g.rotation.y = ry; interior.add(g); };
+  const desk = (cx, w2) => {
+    box(w2, 0.03, 0.8, M.plank, cx, oy + 0.74, dz, interior);
+    for (const sx of [-1, 1]) box(0.05, 0.72, 0.7, M.black, cx + sx * (w2 / 2 - 0.05), oy + 0.36, dz, interior);
+    box(w2 - 0.1, 0.3, 0.02, M.black, cx, oy + 0.55, dz - 0.36, interior); // Sichtblende
+    for (const mx of [-0.33, 0.33]) { box(0.55, 0.33, 0.025, mScr, cx + mx, oy + 1.06, dz - 0.18, interior); box(0.57, 0.35, 0.02, M.black, cx + mx, oy + 1.06, dz - 0.195, interior); box(0.05, 0.16, 0.05, M.black, cx + mx, oy + 0.84, dz - 0.21, interior); box(0.2, 0.01, 0.16, M.black, cx + mx, oy + 0.76, dz - 0.2, interior); }
+    box(0.44, 0.015, 0.14, M.steel, cx, oy + 0.763, dz + 0.12, interior); box(0.06, 0.02, 0.1, M.black, cx + 0.34, oy + 0.765, dz + 0.13, interior);
+    box(0.15, 0.1, 0.1, M.black, cx - 0.62, oy + 0.8, dz - 0.05, interior); // Telefon
+    box(0.3, 0.05, 0.22, M.white, cx + 0.62, oy + 0.78, dz - 0.02, interior); // Ablage
+    chair(cx, dz + 0.7, Math.PI);
+    box(0.4, 0.6, 0.55, mCab, cx - w2 / 2 + 0.3, oy + 0.3, dz + 0.0, interior); // Rollcontainer
+  };
+  desk(dx + 0.15, 1.6); desk(dx - 1.75, 1.6);
+  // Aktenschränke an der Stiegen-Wand (x0) mit Ordnern
+  const cz0 = z0 + 0.15;
+  for (let i = 0; i < 3; i++) {
+    const cz = cz0 + 0.42 + i * 0.84;
+    box(0.45, 2.0, 0.82, mCab, x0 + 0.24, oy + 1.0, cz, interior);
+    box(0.012, 0.14, 0.02, M.black, x0 + 0.475, oy + 1.05, cz + (i % 2 ? -0.3 : 0.3), interior);
+    box(0.005, 1.96, 0.004, M.black, x0 + 0.47, oy + 1.0, cz, interior); // Türfuge
+    if (i === 2) for (let k = 0; k < 7; k++) box(0.3, 0.32, 0.07, [M.black, mGrey, M.black, M.wood, M.black, mGrey, M.black][k], x0 + 0.24, oy + 2.18, cz - 0.3 + k * 0.09, interior); // Ordner oben
+  }
+  // Sideboard mit Drucker + Papier, Whiteboard darüber
+  const sbz = z0 + 3.35;
+  box(0.45, 0.75, 1.3, mCab, x0 + 0.24, oy + 0.375, sbz, interior); box(0.47, 0.03, 1.32, M.plank, x0 + 0.24, oy + 0.765, sbz, interior);
+  box(0.42, 0.28, 0.46, mGrey, x0 + 0.26, oy + 0.92, sbz - 0.3, interior); box(0.43, 0.04, 0.3, M.black, x0 + 0.26, oy + 1.075, sbz - 0.3, interior); // Drucker
+  box(0.3, 0.012, 0.22, M.white, x0 + 0.33, oy + 1.0, sbz - 0.3, interior); // Ausgabe-Papier
+  box(0.3, 0.08, 0.21, M.white, x0 + 0.26, oy + 0.82, sbz + 0.25, interior); // Papierstapel
+  box(0.02, 0.95, 1.5, mWb, x0 + 0.02, oy + 1.6, sbz, interior); box(0.025, 1.0, 0.03, mGrey, x0 + 0.02, oy + 1.6, sbz - 0.77, interior); box(0.025, 1.0, 0.03, mGrey, x0 + 0.02, oy + 1.6, sbz + 0.77, interior);
+  box(0.025, 0.03, 1.55, mGrey, x0 + 0.02, oy + 2.1, sbz, interior); box(0.025, 0.03, 1.55, mGrey, x0 + 0.02, oy + 1.1, sbz, interior);
+  for (let k = 0; k < 4; k++) box(0.005, 0.02, 0.5 - k * 0.08, M.black, x0 + 0.035, oy + 1.9 - k * 0.12, sbz - 0.3, interior); // Notizen
+  // Besprechungstisch rund mit 3 Stühlen
+  const tx = xc - 0.2, tz = z0 + 4.6;
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.03, 40), M.plank); top.position.set(tx, oy + 0.74, tz); top.castShadow = true; interior.add(top);
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.72, 12), M.black); leg.position.set(tx, oy + 0.37, tz); interior.add(leg);
+  const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.02, 30), M.black); foot.position.set(tx, oy + 0.01, tz); interior.add(foot);
+  chair(tx - 0.65, tz, -Math.PI / 2); chair(tx + 0.65, tz, Math.PI / 2); chair(tx, tz + 0.65, 0);
+  const lap = box(0.32, 0.015, 0.22, M.steel, tx - 0.15, oy + 0.765, tz + 0.1, interior); lap.rotation.y = 0.4;
+  const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.09, 16), M.white); cup.position.set(tx + 0.2, oy + 0.8, tz - 0.12); interior.add(cup);
+  // Pendelleuchten über den Arbeitsplätzen
+  for (const px of [dx + 0.15, dx - 1.75]) { box(0.01, 1.7, 0.01, M.black, px, oy + 3.0, dz + 0.1, interior); box(1.2, 0.05, 0.12, M.black, px, oy + 2.13, dz + 0.1, interior); box(1.15, 0.01, 0.1, M.ledOn, px, oy + 2.1, dz + 0.1, interior, false); }
+  // Wanduhr
+  const clk = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.03, 32), M.white); clk.rotation.z = Math.PI / 2; clk.position.set(x0 + 0.02, oy + 2.05, z0 + 2.9 + 0.0); interior.add(clk);
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(x1 - 0.4, oy + 0.21, z0 + 0.45); interior.add(pot);
+  const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(x1 - 0.4, oy + 0.85, z0 + 0.45); pl.scale.set(1, 1.3, 1); interior.add(pl);
   const ox0 = x0, ox1 = x1, oz1 = z0 + 4.0;
   // LED-Lichtbänder
   for (let z = z0 + 1.6; z < z1; z += 2.1) box(w * 0.7, 0.04, 0.12, M.ledOn, xc, ceil - 0.45, z + 1.05, interior, false);

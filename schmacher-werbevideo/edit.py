@@ -50,14 +50,14 @@ def v916():
     segs = [(0.3, 3.8), (6.9, 9.7), (11.0, 14.0), (14.2, 19.7), (20.8, 24.8), (26.2, 30.4), (32.6, 35.6)]
     def titles(c, te): return [('hook', c[0] + 0.5, c[1] - 0.1), ('slogan', c[1] + 0.2, c[2]), ('code', c[2] + 0.4, c[3] - 0.1),
                                ('lager', c[3] + 1.6, c[4] - 0.1), ('hoehe', c[4] + 0.3, c[5] - 0.1), ('buero', c[5] + 0.4, c[6] - 0.1), ('hallen', c[6] + 0.3, te)]
-    def vo(c, te): return [('01', c[0] + 0.3, 1), ('02', c[1] - 0.3, 1.05), ('03', c[2] + 1.85, 1.08), ('04', c[3] + 0.5, 1),
+    def vo(c, te): return [('01', c[0] + 0.3, 1), ('02', c[1] - 0.3, 1.05), ('03', c[2] + 1.8, 1.08), ('04', c[3] + 1.1, 1),
                            ('05k', c[4] + 0.2, 1), ('06', c[5] + 0.1, 1.1), ('07', c[6] + 0.5, 1.1), ('08', te + 0.95, 1.05), ('09', te + 3.75, 1.08)]
     def mk(te): return dict(t_pulse=3.5, t_drop=9.5, t_break=te - 3.0, t_logo=te)
     def sfx(L, c, te):
         fx = ambience(L, [(0, c[3] + 5.5, 'morning'), (c[4], c[6], 'interior'), (c[6], te + 0.6, 'night')])
         add(fx, whoosh(1.4, 0.5, 200, 2500), 0, 0.5)
         for t in c[1:] + [te]: add(fx, whoosh(0.7, 0.65), t - 0.45, 0.3)
-        keypad(fx, c[2] + 0.45, c[2] + 1.6); gate(fx, c[3] + 0.2, c[3] + 4.4); return fx
+        gate(fx, c[3] + 0.2, c[3] + 4.4); return fx
     vid, L = build_vertical('Schmacher_Gewerbepark_9x16', segs, 6.4, titles, vo, mk, sfx)
     run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-vf', 'crop=1080:1350:0:285', '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-c:a', 'copy', '-movflags', '+faststart', f'{OUT}/Schmacher_Gewerbepark_4x5.mp4'])
 
