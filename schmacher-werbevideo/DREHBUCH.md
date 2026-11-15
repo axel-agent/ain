@@ -51,41 +51,57 @@ Alternativen: „Raum zum Wachsen.“ · „Dein Business. Dein Platz.“ · „
 
 ---
 
-## 3. Dramaturgie
+## 3. Dramaturgie – Story-Version (Hauptfilm)
 
-**Idee: „Draußen arbeiten. Hier zuhause.“**
-Ein sauberer weißer Firmen-Transporter (ohne Fremdlogos) startet morgens aus der Halle – der Elektriker/Installateur fährt zum Kunden. Wir zeigen, was er hier hat: geordnete Regale mit Material, ein helles Büro oben, Parkplatz vor der Tür. Montage der Branchen. Abends: Anlage leuchtet → Logo + „Nur 7 Einheiten“ + Kontakt.
+**Zielgruppe:** kleine Firmen und Selbstständige, die **heute noch von zu Hause** arbeiten (Garage, Keller, Wohnzimmer) und **wachsen** wollen – egal welche Branche.
+**Slogan:** **„Raus aus der Garage. Rein in den Gewerbepark.“**
+Variante für die zweite Fassung: **„Raus aus der Wohnung. Rein in den Gewerbepark.“**
+Abbinder: *Unten Lager. Oben Büro. Platz für dein Business.*
 
-## 4. Shotliste – Version C (16:9, 45 s); Versionen A/B/D sind daraus geschnitten bzw. neu gerahmt
+**Figuren** (in Higgsfield als feste Charakter-Referenz anlegen, damit sie in jedem Shot gleich aussehen):
+- **Markus**, ~38, Gründer/Inhaber – dunkelblauer Pullover mit Viertel-Reißverschluss, dunkle Jeans, saubere weiße Sneaker, kurzer Bart. Fährt den Lieferwagen.
+- **Lena**, ~28, Mitarbeiterin – schwarzes T-Shirt, Haare zusammengebunden; verpackt Versandpakete.
+- **Tom**, ~45, Mitarbeiter – graue, saubere Arbeitskleidung; montiert etwas an einer Werkbank (Akkuschrauber, sauberes Werkstück – keine Werkstatt-Optik).
+- **Sandra**, ~35, Büro – helle Bluse, Blazer; arbeitet oben im Büro am Laptop.
+- **Lieferwagen:** weißer Transporter (Kastenwagen, Größe wie Ford Transit / Fiat Ducato), **ohne Logos**, sauber.
 
-Stil-Suffix für alle Higgsfield-Prompts:
-> *photorealistic architectural commercial, shot on ARRI Alexa 35, 35mm, natural light, crisp, clean, premium real-estate film look, no construction equipment, no extra buildings, no text artifacts*
+## 4. Shotliste Story-Version (16:9 · ca. 50 s; 9:16 neu gerahmt)
 
-| # | Zeit | Bild | Higgsfield-Keyframe | Seedance-Bewegung | Text / VO |
+Stil-Suffix für jeden Higgsfield-Prompt:
+> *photorealistic cinematic commercial, ARRI Alexa 35, 35mm lens, soft natural morning light, clean modern premium look, realistic people with natural expressions, no logos, no text artifacts*
+
+Gebäude-Referenzen bei jedem Außen-/Innen-Shot mitgeben: `referenz-fotos/07…`, `05…`, `04…` + 3D-Renderings aus `3d/out/` (exakte Fassade, Tor, Galerie, Kubus).
+
+| # | Zeit | Inhalt | Higgsfield-Keyframe (Startbild) | Seedance-2.5-Bewegung | Text / VO |
 |---|---|---|---|---|---|
-| 01 | 0–4 | Drohne Sonnenaufgang | single long modern 2-storey commercial building (48 m) with alternating copper-wood and anthracite ribbed facade panels, numbers 1–7, flat roof, fresh asphalt yard, lawns, Carinthian fields, mountains, morning haze | slow push-in + descent | VO 1 |
-| 02 | 4–7 | Tor öffnet sich von innen, Transporter rollt raus | interior view from inside hall towards opening anthracite sectional door, white clean van, organized shelving | door rises, van drives out into sunlight | VO 1 |
-| 03 | 7–10 | Van fährt vom Gelände | van leaving along building front, numbers passing | tracking shot | Text: *Dein Team ist draußen.* |
-| 04 | 10–14 | Fassade Gleitfahrt, Nummern 1→7 | eye-level facade, wall lights, paved entrances, own parking spot per unit | lateral gimbal | VO 2 · Text: *7 Hallen mit Büro* |
-| 05 | 14–17 | Codetaster | macro keypad on anthracite panel, LED turns green | finger press | Text: *Zugang per Code – rund um die Uhr* |
-| 06 | 17–22 | Halle innen | 7 m high clean hall, glulam beams, polished concrete, tidy heavy-duty shelving with labeled boxes, cable drums, pipes neatly stored, gallery with glazed office above | crane-up to gallery | VO 3 · Text: *Unten: Lager bis 7 m Raumhöhe* |
-| 07 | 22–27 | Büro oben | bright office on gallery, desk at ribbon window, view to mountains, glass wall to hall, WC door, kitchenette niche | dolly in | VO 3 · Text: *Oben: Büro mit WC* |
-| 08 | 27–35 | Branchen-Montage (je ~2 s, gleiche Halle) | (a) electrician: cable drums & switchgear boxes on shelves · (b) plumber: pipes & fittings organized · (c) facility/cleaning service: cleaning machines, supplies · (d) online shop: parcels on shelves, packing table | short slides, match-cuts | Branchen-Wörter einblenden |
-| 09 | 35–40 | Blaue Stunde Drohne | complete park lit at blue hour, warm wall lights, office windows glowing | pull-back rise | VO 4 · Text: *Nur 7 Einheiten.* |
-| 10 | 40–45 | Endcard | Logo hell, Kontakt | – | VO 5 |
+| **01** | 0–3 | **Vorher:** enge Privatgarage, Kartons bis zur Decke, Markus quetscht sich mit Paket am Familienauto vorbei | cramped private home garage full of stacked cardboard boxes and shelves, family car, man (Markus) carrying a parcel, slightly frustrated, warm dim light | handheld, he squeezes past the car | VO 1 |
+| **02** | 3–5 | **Vorher:** Laptop am Küchentisch zwischen Frühstück und Paketen | kitchen table at home, laptop, invoices, parcels, coffee mug, kids' drawings on the fridge | slow push-in | VO 1 |
+| **03** | 5–9 | **Schnitt – der Mietpark:** Drohne bei Sonnenaufgang, der weiße Transporter fährt auf das Gelände | aerial of the finished building (7 units, copper-wood/anthracite facade, numbers 1–7, asphalt, lawn, mountains), white van entering | drone tracking the van | Text: *Zeit für den nächsten Schritt.* |
+| **04** | 9–12 | Codetaster, Tor öffnet sich | Markus' hand on keypad next to anthracite sectional door; door rising | close-up → door opens, light floods out | VO 2 |
+| **05** | 12–17 | **Van fährt hinein.** Unter der Lagerbühne arbeiten Lena (packt Versandpaket, Klebeband-Abroller) und Tom (Akkuschrauber an Werkstück an sauberer Werkbank) | inside the 7 m hall: white van entering through open sectional door, under the timber gallery a packing table with Lena taping a parcel and a clean workbench with Tom using a cordless screwdriver, tidy shelving | van rolls in and stops, both look up and wave | Text: *Unten: dein Lager.* |
+| **06** | 17–22 | Markus öffnet die Hecktüren, nimmt Kartons heraus, stellt sie ins Regal neben dem Van | rear doors of van open, Markus lifting cardboard boxes, heavy-duty shelf right next to the van | he places box on shelf, pushes it in | VO 3 |
+| **07** | 22–26 | Markus geht die Holztreppe hinauf (Treppe auf der Türseite) | glulam timber staircase up to the wooden mezzanine, office cube on top | follow shot from below, upward tilt | – |
+| **08** | 26–30 | Er öffnet die Tür zum Büro-Kubus – **Sandra arbeitet** am Laptop und grüßt | bright office in the cube, ribbon window with mountain view, Sandra at her desk smiling | he enters, short nod/greeting | Text: *Oben: dein Büro.* |
+| **09** | 30–34 | Markus setzt sich an den PC, arbeitet konzentriert | Markus at desk with monitor, view to mountains | slow dolly around | VO 4 |
+| **10** | 34–38 | Er steht auf, geht zur **Küchenzeile hinter dem Schreibtisch**, Kaffee läuft aus der Maschine | compact kitchenette in the office cube (behind the desk), espresso machine pouring into a white cup, steam | macro coffee pour → he picks up the cup | SFX Kaffeemaschine |
+| **11** | 38–43 | **Kaffee am Fenster:** Markus lehnt entspannt am Fensterband, trinkt, schaut hinaus auf die Berge | Markus relaxed at the ribbon window holding coffee, golden morning light on his face, mountains outside | slow push-in, then he smiles | VO 5 |
+| **12** | 43–47 | Von außen: Kamera zieht vom Fenster zurück, Drohne steigt über das Gebäude | exterior view of upper ribbon window with Markus silhouette, pulling back to the whole building | drone pull-back + rise | Text: *Raus aus der Garage. Rein in den Gewerbepark.* |
+| **13** | 47–52 | Endcard (hell, Logo) | – | – | Slogan + *Nur 7 Hallen mit Büro* + Kontakt |
 
-## 5. Sprechertext (ElevenLabs, Deutsch, Du-Ansprache, ~40 s)
+## 5. Sprechertext (ElevenLabs, Deutsch, Du-Ansprache, ~45 s)
 
-> **(1)** Dein Team ist draußen. Beim Kunden. Auf der Baustelle. Unterwegs.
-> **(2)** Aber dein Material, deine Fahrzeuge und dein Büro brauchen einen festen Platz.
-> **(3)** Der Mietpark Schmacher in Zell bei Ebenthal: sieben moderne Hallen mit Büro. Unten sauberes Lager bis sieben Meter Raumhöhe – mit dem Transporter direkt durchs Tor. Oben dein Büro mit WC und Blick ins Grüne.
-> **(4)** Platz für Ware, Material und Arbeitsmaschinen – für jedes Unternehmen, das Lager und Büro braucht. Nur sieben Einheiten.
-> **(5)** Unten Lager. Oben Büro. Platz für dein Business. Schmacher Solutions – jetzt anfragen: null-sechs-sechs-vier, eins-zwei-null-null, sieben-vier-fünf.
+> **(1)** Dein Business wächst. Dein Zuhause nicht. Kartons in der Garage, das Büro am Küchentisch …
+> **(2)** Zeit für den nächsten Schritt.
+> **(3)** Unten: dein Lager – mit dem Transporter direkt hinein. Platz für Ware, Material und dein Team.
+> **(4)** Oben: dein Büro. Mit WC, Küche und Blick ins Grüne.
+> **(5)** Sieben Hallen mit Büro im Mietpark Zell bei Ebenthal.
+> **(6)** Raus aus der Garage. Rein in den Gewerbepark. Schmacher Solutions – jetzt anfragen: null-sechs-sechs-vier, eins-zwei-null-null, sieben-vier-fünf.
 
-**30-s-Version (A/B):** (1) gekürzt „Dein Team ist draußen beim Kunden.“ → (3) → (4) → (5).
-**15-s-Teaser (D):** „Lager unten. Büro oben. Parkplatz vor der Tür. Sieben Hallen in Zell bei Ebenthal – jetzt anfragen.“
+**30-s-Social-Fassung (9:16):** Shots 01, 03, 05, 06, 08, 11, 12, 13 · VO (1)+(3)+(4)+(6).
+**15-s-Teaser:** 01 → 05 → 11 → Endcard · „Raus aus der Garage. Rein in den Gewerbepark. Sieben Hallen mit Büro – jetzt anfragen.“
 
-ElevenLabs: Multilingual v2, warme männliche Stimme (Alternative weiblich für B-Variante), Stability 0,45, Similarity 0,8, Style 0,2.
+### Gebäude-Version (ohne Personen) – fertig aus dem 3D-Modell
+Zwischenlösung zum sofortigen Posten, rein aus dem maßstabsgetreuen 3D-Modell: Anflug → Fassade → Codetaster → Tor öffnet → Halle → Büro → blaue Stunde → Endcard (45 s, 16:9).
 
 ## 6. Musik & Sound
 Moderner, positiver Corporate-Groove (100–110 BPM), heller Piano/Pluck-Hook, ab Shot 06 volle Drums; Endcard mit Akkord + Sub-Hit. SFX: Vögel/Wind, Tormotor, Transporter-Diesel/E-Motor, Tastenbeep, Whooshes. Sprache dominant, Musik −8 dB unter VO.
