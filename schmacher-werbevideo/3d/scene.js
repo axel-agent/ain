@@ -12,8 +12,11 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { SHOTS, TITLES, DURATION } from './shots.js';
 
-const W = 1920, H = 1080;
 const params = new URLSearchParams(location.search);
+const W = parseInt(params.get('w') || '1920'), H = parseInt(params.get('h') || '1080');
+const PORTRAIT = H > W, NOTITLES = params.get('notitles') === '1';
+if (PORTRAIT) { const st = document.getElementById('stage'); st.style.width = W + 'px'; st.style.height = H + 'px'; }
+if (NOTITLES) document.getElementById('ov').style.display = 'none';
 const SCALE = parseFloat(params.get('scale') || '1');
 const USE_AO = params.get('ao') !== '0';
 
@@ -440,35 +443,36 @@ function buildInterior() {
     for (const bx of [-0.06, 0.06]) for (const by of [-0.34, -0.29]) { const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), M.inox); bolt.rotation.x = Math.PI / 2; bolt.position.set(x + bx, gy + by, gz1 + 0.016); interior.add(bolt); }
   });
   B1.connector = new THREE.Vector3(xc, gy - 0.32, gz1 + 0.01);
-  // Geländer
-  const rh = 1.0, ry = gy + gt;
-  for (let x = x0 + 0.05; x <= x1; x += (w - 0.1) / 4) box(0.09, rh, 0.09, M.glulam, x, ry + rh / 2, gz1 - 0.05, interior);
-  [0.35, 0.68, 1.0].forEach(hh => box(w, 0.1, 0.05, M.glulam, xc, ry + hh - 0.05, gz1 - 0.02, interior));
-  // Treppe entlang linker Wand (x1-Seite) von Hallenboden zur Galerie
+  // Geländer (mit Öffnung an der Stiege, x0-Seite)
+  const rh = 1.0, ry = gy + gt, gap = 1.15;
+  for (let x = x0 + gap; x <= x1 + 0.01; x += (w - gap - 0.05) / 4) box(0.09, rh, 0.09, M.glulam, Math.min(x, x1 - 0.05), ry + rh / 2, gz1 - 0.05, interior);
+  [0.35, 0.68, 1.0].forEach(hh => box(w - gap, 0.1, 0.05, M.glulam, (x0 + gap + x1) / 2, ry + hh - 0.05, gz1 - 0.02, interior));
+  // Treppe entlang der Wand auf der Türseite (x0) vom Hallenboden zur Galerie
   const sw = 1.0, steps = 15, rise = (gy + gt) / steps, run = 0.27, sx = x0 + sw / 2 + 0.05;
   for (let i = 0; i < steps; i++) box(sw, 0.05, run + 0.03, M.plank, sx, rise * (i + 1) - 0.025, gz1 + steps * run - i * run - run / 2, interior);
   const sl = Math.hypot(steps * run, gy + gt);
   const st = box(0.06, 0.3, sl, M.glulam, sx + sw / 2, (gy + gt) / 2, gz1 + steps * run / 2, interior); st.rotation.x = Math.atan2(gy + gt, steps * run);
   const hr = box(0.05, 0.05, sl, M.glulam, sx + sw / 2, (gy + gt) / 2 + 0.95, gz1 + steps * run / 2, interior); hr.rotation.x = st.rotation.x;
-  // Büro-Kubus auf der Lagerbühne – WC innen rechts im Eck, daneben Anschlüsse für Küche
-  const oy = ry, oh = 2.55, cd = 4.0, zc = z0 + cd;
-  const cubeF = new Facade(new THREE.Vector3(x0, oy, zc), new THREE.Vector3(1, 0, 0), w, oh); // Vorderwand zur Halle (außen = +z)
-  cubeF.band(0, w, M.white);
-  cubeF.hole(0.35, 1.3, 0, 2.1, 'door'); cubeF.hole(2.1, 5.2, 0.95, 2.15, 'window', { panes: 3, clear: true });
-  cubeF.build(interior);
-  const cubeI = new Facade(new THREE.Vector3(x1, oy, zc), new THREE.Vector3(-1, 0, 0), w, oh); cubeI.inMat = M.white;
-  cubeI.hole(w - 1.3, w - 0.35, 0, 2.1, 'door'); cubeI.hole(w - 5.2, w - 2.1, 0.95, 2.15, 'window'); cubeI.build(interior, true);
-  box(w, 0.1, cd, M.white, xc, oy + oh + 0.05, z0 + cd / 2, interior); // Decke Kubus
-  box(w - 0.02, 0.02, cd - 0.02, M.plank, xc, oy + 0.01, z0 + cd / 2, interior); // Bodenbelag
-  // WC-Raum rechts hinten im Eck
-  const wx0 = x1 - 1.65, wz1 = z0 + 2.0;
-  box(0.1, oh, wz1 - z0, M.white, wx0, oy + oh / 2, (z0 + wz1) / 2, interior);
-  box(x1 - wx0, oh, 0.1, M.white, (wx0 + x1) / 2, oy + oh / 2, wz1, interior);
-  box(0.8, 2.05, 0.04, M.frame, (wx0 + x1) / 2, oy + 1.025, wz1 + 0.06, interior);
-  box(0.14, 0.14, 0.01, M.inox, (wx0 + x1) / 2, oy + 1.6, wz1 + 0.085, interior);
-  // Küchenanschluss/Küchenzeile (optional) an der rechten Wand vor dem WC
-  box(0.62, 0.9, 1.5, M.white, x1 - 0.33, oy + 0.45, wz1 + 0.85, interior); box(0.64, 0.04, 1.52, M.black, x1 - 0.33, oy + 0.92, wz1 + 0.85, interior);
-  box(0.36, 0.6, 1.5, M.white, x1 - 0.2, oy + 1.9, wz1 + 0.85, interior);
+  // Galerie = offenes Büro mit Fensterband. WC als kleiner Kubus vorne am Geländer, rechts vom Treppenaustritt.
+  const oy = ry, oh = 2.4;
+  box(w - 0.02, 0.02, gd - 0.02, M.plank, xc, oy + 0.01, z0 + gd / 2, interior); // Bodenbelag
+  const wx0 = x0 + 1.45, wx1 = wx0 + 1.6, wz0 = gz1 - 0.25 - 1.8, wz1 = gz1 - 0.25, wxc = (wx0 + wx1) / 2, wzc = (wz0 + wz1) / 2;
+  box(wx1 - wx0, oh, 0.1, M.white, wxc, oy + oh / 2, wz0, interior); box(wx1 - wx0, oh, 0.1, M.white, wxc, oy + oh / 2, wz1, interior);
+  box(0.1, oh, wz1 - wz0, M.white, wx1, oy + oh / 2, wzc, interior);
+  // Stirnwand zur Treppe mit WC-Tür
+  const dw = 0.8, dz0 = wzc - dw / 2 - 0.1;
+  box(0.1, oh, dz0 - wz0, M.white, wx0, oy + oh / 2, (wz0 + dz0) / 2, interior); box(0.1, oh, wz1 - (dz0 + dw), M.white, wx0, oy + oh / 2, (dz0 + dw + wz1) / 2, interior);
+  box(0.1, oh - 2.05, dw, M.white, wx0, oy + 2.05 + (oh - 2.05) / 2, dz0 + dw / 2, interior);
+  box(0.04, 2.05, dw, M.frame, wx0 - 0.03, oy + 1.025, dz0 + dw / 2, interior);
+  box(0.012, 0.03, 0.14, M.inox, wx0 - 0.065, oy + 1.02, dz0 + 0.12, interior);
+  box(0.01, 0.14, 0.14, M.inox, wx0 - 0.055, oy + 1.6, dz0 + dw / 2, interior);
+  box(wx1 - wx0 + 0.1, 0.08, wz1 - wz0 + 0.1, M.white, wxc, oy + oh + 0.04, wzc, interior); // Deckel
+  // Kochecke an der Rückseite des WC-Kubus (hinter dem Schreibtisch)
+  const kz = wz0 - 0.05 - 0.31;
+  box(1.5, 0.9, 0.62, M.white, wxc, oy + 0.45, kz, interior); box(1.52, 0.04, 0.64, M.black, wxc, oy + 0.92, kz, interior);
+  box(1.5, 0.6, 0.36, M.white, wxc, oy + 1.9, wz0 - 0.05 - 0.18, interior);
+  box(0.26, 0.34, 0.3, M.black, wxc + 0.45, oy + 1.11, kz - 0.02, interior); // Kaffeemaschine
+  box(0.4, 0.02, 0.32, M.steel, wxc - 0.3, oy + 0.945, kz, interior); // Spüle
   // Möbel: Schreibtisch unter dem Fensterband, Stuhl, Monitor, Regal, Pflanze
   const winC = heroX1 - 3.75, dz = z0 + 0.55, dx = winC;
   box(1.8, 0.04, 0.8, M.plank, dx, oy + 0.74, dz, interior); box(0.04, 0.72, 0.7, M.black, dx - 0.86, oy + 0.36, dz, interior); box(0.04, 0.72, 0.7, M.black, dx + 0.86, oy + 0.36, dz, interior);
@@ -476,14 +480,14 @@ function buildInterior() {
   box(0.34, 0.012, 0.24, M.steel, dx + 0.35, oy + 0.77, dz + 0.05, interior);
   box(0.5, 0.06, 0.5, M.black, dx, oy + 0.48, dz + 0.65, interior); box(0.5, 0.55, 0.06, M.black, dx, oy + 0.8, dz + 0.9, interior); box(0.05, 0.45, 0.05, M.steel, dx, oy + 0.23, dz + 0.65, interior);
   box(0.4, 1.9, 1.4, M.plank, x0 + 0.25, oy + 0.95, z0 + 1.3, interior);
-  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(x0 + 0.4, oy + 0.21, zc - 0.5); interior.add(pot);
-  const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(x0 + 0.4, oy + 0.85, zc - 0.5); pl.scale.set(1, 1.3, 1); interior.add(pl);
-  const ox0 = x0, ox1 = x1, oz1 = zc;
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(x1 - 0.45, oy + 0.21, gz1 - 0.6); interior.add(pot);
+  const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(x1 - 0.45, oy + 0.85, gz1 - 0.6); pl.scale.set(1, 1.3, 1); interior.add(pl);
+  const ox0 = x0, ox1 = x1, oz1 = z0 + 4.0;
   // LED-Lichtbänder
   for (let z = z0 + 1.6; z < z1; z += 2.1) box(w * 0.7, 0.04, 0.12, M.ledOn, xc, ceil - 0.45, z + 1.05, interior, false);
   // Innenlicht
   const hallL = new THREE.PointLight(0xfff1dd, 0, 22, 1.5); hallL.position.set(xc, 5.6, -5.5); interior.add(hallL); intLights.push({ l: hallL, i: 60 });
-  const offL = new THREE.PointLight(0xffd9a8, 0, 7, 1.6); offL.position.set((ox0 + ox1) / 2, oy + 2.2, z0 + 1.8); interior.add(offL); intLights.push({ l: offL, i: 14 });
+  const offL = new THREE.PointLight(0xffd9a8, 0, 7, 1.6); offL.position.set((ox0 + ox1) / 2, oy + 2.6, z0 + 2.2); interior.add(offL); intLights.push({ l: offL, i: 14 });
   const galL = new THREE.PointLight(0xfff1dd, 0, 12, 1.6); galL.position.set(xc, 5.8, z0 + 3); interior.add(galL); intLights.push({ l: galL, i: 22 });
   B1.office = { desk: new THREE.Vector3(dx, oy + 0.9, dz), ox0, ox1, oz1, oy };
   B1.int = { x0, x1, z0, z1, xc, gz1, gy: ry };
@@ -675,7 +679,7 @@ function evalPath(pts, t) {
   const c = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), false, 'centripetal'); return c.getPoint(t);
 }
 const ctx = { heroXC, B1, B2, UW, heroX0, heroX1 };
-const shotList = SHOTS(ctx);
+const shotList = SHOTS(ctx, PORTRAIT);
 function shotAt(t) { let acc = 0; for (const s of shotList) { if (t < acc + s.dur) return { s, lt: t - acc, k: (t - acc) / s.dur }; acc += s.dur; } const s = shotList[shotList.length - 1]; return { s, lt: s.dur, k: 1 }; }
 
 const titleEls = {}; for (const id of Object.keys(TITLES)) titleEls[id] = document.getElementById(id);
@@ -696,6 +700,10 @@ window.renderAt = function (t) {
   camera.position.copy(evalPath(s.pos, kk));
   const tgt = evalPath(s.target, kk);
   camera.fov = s.fov ? (Array.isArray(s.fov) ? s.fov[0] + (s.fov[1] - s.fov[0]) * kk : s.fov) : 40;
+  camera.aspect = W / H;
+  if (PORTRAIT) { // horizontalen Bildwinkel etwas enger als im Querformat, vertikal entsprechend weiter
+    const hf = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * 16 / 9) * (s.pfov || 0.8);
+    camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(hf / 2) * H / W)); }
   if (s.roll !== undefined || s.topdown) { const a = THREE.MathUtils.degToRad((s.roll || [0, 0])[0] + ((s.roll || [0, 0])[1] - (s.roll || [0, 0])[0]) * kk); camera.up.set(Math.sin(a), 0, -Math.cos(a)); } else camera.up.set(0, 1, 0);
   camera.lookAt(tgt); camera.updateProjectionMatrix();
   setShadowBox(s.shadowC ? new THREE.Vector3(...s.shadowC) : tgt, s.shadowR || 45);
