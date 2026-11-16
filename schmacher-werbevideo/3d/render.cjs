@@ -23,7 +23,7 @@ const srv = http.createServer((q, r) => { const f = path.join(root, decodeURICom
     const st = Date.now();
     await p.evaluate(t => window.renderAt(t), t);
     const name = still ? `t${t.toFixed(2)}.jpg` : `f${String(Math.round(t * fps)).padStart(5, '0')}.jpg`;
-    await p.screenshot({ path: path.join(out, name), type: 'jpeg', quality: 94, clip: { x: 0, y: 0, width: VW, height: VH } });
+    for (let k = 0; ; k++) { try { await p.screenshot({ path: path.join(out, name), type: 'jpeg', quality: 94, timeout: 180000, clip: { x: 0, y: 0, width: VW, height: VH } }); break; } catch (e) { if (k >= 2) throw e; console.log('retry', name); } }
     console.log(name, ((Date.now() - st) / 1000).toFixed(1) + 's');
   }
   await b.close(); srv.close();
