@@ -384,7 +384,7 @@ function roofOf(x0, x1, z0, z1, h) {
   const g = new THREE.PlaneGeometry(w - 0.3, d - 0.3); const uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * (w - 0.3) * 0.5, uv.getY(i) * (d - 0.3) * 0.5);
   const r = new THREE.Mesh(g, M.roof); r.rotation.x = -Math.PI / 2; r.position.set((x0 + x1) / 2, h - 0.25, (z0 + z1) / 2); r.receiveShadow = true; scene.add(r);
   // Deckel (Schattenwurf) + Attika-Abdeckung
-  box(w, 0.3, d, M.flash, (x0 + x1) / 2, h - 0.42, (z0 + z1) / 2).visible = true;
+  box(w - 0.12, 0.3, d - 0.12, M.flash, (x0 + x1) / 2, h - 0.42, (z0 + z1) / 2); // eingerückt: kein Z-Fighting mit der Fassade
   const t = 0.14, ah = 0.12;
   box(w + 0.06, ah, t, M.flash, (x0 + x1) / 2, h + ah / 2, z0 + t / 2 - 0.03);
   box(w + 0.06, ah, t, M.flash, (x0 + x1) / 2, h + ah / 2, z1 - t / 2 + 0.03);
