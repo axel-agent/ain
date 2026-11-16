@@ -9,3 +9,11 @@
 09|Schmacher Solutions. Ruf jetzt an!
 05k|Sieben Meter Raumhöhe. Mit Fußbodenheizung.
 10|Null sechs sechs vier – zwölf null null – sieben vier fünf.
+f2_01|Stell dir vor …
+f2_02|… das hier ist deins.
+f2_03|Unten: dein Lager. Bis zu sieben Meter hoch – mit Fußbodenheizung.
+f2_04|Und oben …
+f2_05|… dein eigenes Büro.
+f2_06|Mit WC – und Platz für deine Kaffeeküche.
+f2_07|Gewerbepark Ebenthal. Sieben Hallen mit Büro.
+f2_08|Licht an – für dein Business.

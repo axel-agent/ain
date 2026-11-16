@@ -10,11 +10,13 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
-import { SHOTS, TITLES, DURATION } from './shots.js';
+import { SHOTS as SHOTS1, TITLES as TITLES1, DURATION as DURATION1 } from './shots.js';
+import { SHOTS2, DURATION2 } from './shots2.js';
 
 const params = new URLSearchParams(location.search);
 const W = parseInt(params.get('w') || '1920'), H = parseInt(params.get('h') || '1080');
 const PORTRAIT = H > W, NOTITLES = params.get('notitles') === '1';
+const FILM2 = params.get('film') === '2'; // Film 2: „Licht an.“
 if (PORTRAIT) { const st = document.getElementById('stage'); st.style.width = W + 'px'; st.style.height = H + 'px'; }
 if (NOTITLES) document.getElementById('ov').style.display = 'none';
 const SCALE = parseFloat(params.get('scale') || '1');
@@ -404,7 +406,7 @@ function plinth(x0, x1, z0, z1) {
 
 // ---------------------------------------------------------------- Innenraum Einheit 4 (Halle EG, Galerie mit Büro + WC)
 const interior = new THREE.Group(); scene.add(interior);
-const intLights = [];
+const intLights = []; const ledRows = []; const anims = [];
 function buildInterior() {
   const x0 = heroX0 + 0.12, x1 = heroX1 - 0.12, z0 = B1.z0 + 0.2, z1 = B1.z1 - 0.2, ceil = 6.55;
   const w = x1 - x0, d = z1 - z0, xc = (x0 + x1) / 2;
@@ -471,6 +473,7 @@ function buildInterior() {
   box(0.4, 0.02, 0.32, M.steel, wxc + 0.3, oy + 0.945, kz, interior); // Spüle
   // Möbel: richtiges Büro – zwei Arbeitsplätze, Aktenschränke, Sideboard mit Drucker, Whiteboard, Besprechungstisch
   const winC = heroX1 - 3.75, dz = z0 + 0.55, dx = winC;
+  if (FILM2) buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w); else {
   const mScr = new THREE.MeshStandardMaterial({ color: 0x0b1220, emissive: 0x9ab8e0, emissiveIntensity: 0.55, roughness: 0.2 });
   const mGrey = new THREE.MeshStandardMaterial({ color: 0x8c9096, roughness: 0.45, metalness: 0.2 });
   const mCab = new THREE.MeshStandardMaterial({ color: 0xf3f2ef, roughness: 0.55 });
@@ -526,9 +529,10 @@ function buildInterior() {
   const clk = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.03, 32), M.white); clk.rotation.z = Math.PI / 2; clk.position.set(x0 + 0.02, oy + 2.05, z0 + 2.9 + 0.0); interior.add(clk);
   const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.42, 20), M.white); pot.position.set(x1 - 0.4, oy + 0.21, z0 + 0.45); interior.add(pot);
   const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 2), M.leaf); pl.position.set(x1 - 0.4, oy + 0.85, z0 + 0.45); pl.scale.set(1, 1.3, 1); interior.add(pl);
+  }
   const ox0 = x0, ox1 = x1, oz1 = z0 + 4.0;
   // LED-Lichtbänder
-  for (let z = z0 + 1.6; z < z1; z += 2.1) box(w * 0.7, 0.04, 0.12, M.ledOn, xc, ceil - 0.45, z + 1.05, interior, false);
+  for (let z = z0 + 1.6; z < z1; z += 2.1) { const mt = FILM2 ? M.ledOn.clone() : M.ledOn; if (FILM2) ledRows.push({ m: mt, z: z + 1.05 }); box(w * 0.7, 0.04, 0.12, mt, xc, ceil - 0.45, z + 1.05, interior, false); }
   // Innenlicht
   const hallL = new THREE.PointLight(0xfff1dd, 0, 22, 1.5); hallL.position.set(xc, 5.6, -5.5); interior.add(hallL); intLights.push({ l: hallL, i: 60 });
   const offL = new THREE.PointLight(0xffd9a8, 0, 7, 1.6); offL.position.set((ox0 + ox1) / 2, oy + 2.6, z0 + 2.2); interior.add(offL); intLights.push({ l: offL, i: 14 });
@@ -536,6 +540,154 @@ function buildInterior() {
   B1.office = { desk: new THREE.Vector3(dx, oy + 0.9, dz), ox0, ox1, oz1, oy };
   B1.int = { x0, x1, z0, z1, xc, gz1, gy: ry };
 }
+
+// ---------------------------------------------------------------- Film 2 „Licht an.“: Lager wächst, Büro richtet sich ein
+const easeOutBack = k => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+const easeOutCubic = k => 1 - Math.pow(1 - k, 3);
+function bounce(k) { const n1 = 7.5625, d1 = 2.75; if (k < 1 / d1) return n1 * k * k; if (k < 2 / d1) return n1 * (k -= 1.5 / d1) * k + .75; if (k < 2.5 / d1) return n1 * (k -= 2.25 / d1) * k + .9375; return n1 * (k -= 2.625 / d1) * k + .984375; }
+// Gruppe mit Drehpunkt am Boden, erscheint zur Zeit t
+function G(x, y, z, t, type = 'pop', dur = 0.5, ry = 0) { const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry; interior.add(g); anims.push({ g, t, type, dur, y }); return g; }
+function gb(g, w, h, d, mat, x, y, z, cast = true) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = true; g.add(m); return m; }
+function gc(g, rt, rb, h, mat, x, y, z, seg = 24) { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m; }
+function applyAnims(t) {
+  for (const a of anims) {
+    const k = (t - a.t) / a.dur; if (k <= 0) { a.g.visible = false; continue; }
+    a.g.visible = true; const kk = Math.min(1, k);
+    if (a.type === 'grow') a.g.scale.set(1, Math.max(0.001, easeOutCubic(kk)), 1);
+    else if (a.type === 'pop') { const s = Math.max(0.001, easeOutBack(kk)); a.g.scale.set(s, s, s); }
+    else if (a.type === 'drop') { a.g.position.y = a.y + (1 - bounce(kk)) * 1.3; }
+  }
+}
+const F2 = {};
+function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
+  const mat = (c, r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
+  const mBlue = mat(0x1f4e9c, 0.45, 0.4), mOrange = mat(0xe0661b, 0.45, 0.3), mPal = mat(0xc9a678, 0.85), mCard = mat(0xb8875a, 0.85), mCard2 = mat(0xa87a4f, 0.85);
+  const mWrap = mat(0xdfe3e6, 0.25, 0.05), mTape = mat(0xd9c39a, 0.5), mLabel = mat(0xf7f7f4, 0.6), mGreyS = mat(0x9ea3a8, 0.4, 0.6);
+  const mOak = M.plank, mFab = mat(0x30363e, 0.92), mSage = mat(0x7d8f74, 0.95), mTerra = mat(0xb5643c, 0.9), mRug = mat(0x8d8780, 1), mRug2 = mat(0x5f6b73, 1);
+  const mSofa = mat(0x56626e, 0.95), mCab = mat(0xf3f2ef, 0.55), mBlack = M.black, mArt1 = mat(0xc27a3e, 0.8), mArt2 = mat(0x2a3446, 0.8), mArt3 = mat(0xe8dccb, 0.8);
+  F2.scr = new THREE.MeshStandardMaterial({ color: 0x0b1220, emissive: 0x9ab8e0, emissiveIntensity: 0, roughness: 0.2 });
+  F2.lamp = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffe2b8, emissiveIntensity: 0 });
+
+  // ------------------------------------------------ Halle unten: Palettenregal an der rechten Wand (x1)
+  const rx1 = x1 - 0.05, rd = 1.1, rx0 = rx1 - rd, rxc = (rx0 + rx1) / 2, bayL = 2.7, zs = [-2.0, -4.7, -7.4], levels = [0.0, 1.75, 3.35], H = 4.9;
+  zs.forEach((z, i) => { for (const x of [rx0 + 0.04, rx1 - 0.04]) { const g = G(x, 0.04, z, 8.9 + i * 0.25, 'grow', 0.7); gb(g, 0.08, H, 0.08, mBlue, 0, H / 2, 0); }
+    const g = G(rxc, 0.04, z, 9.2 + i * 0.25, 'grow', 0.7); for (let y = 0.6; y < H; y += 1.1) { const d = gb(g, 0.03, 0.03, Math.hypot(rd, 1.1), mBlue, 0, y + 0.55, 0); d.rotation.x = Math.atan2(1.1, rd); d.rotation.y = Math.PI / 2; } });
+  for (let b = 0; b < 2; b++) levels.slice(1).forEach((y, li) => { const g = G(rxc, y, (zs[b] + zs[b + 1]) / 2, 9.9 + b * 0.2 + li * 0.25, 'pop', 0.35);
+    for (const x of [-rd / 2 + 0.05, rd / 2 - 0.05]) gb(g, 0.06, 0.13, bayL - 0.08, mOrange, x, -0.06, 0); });
+  // Paletten mit Ware fallen ins Regal
+  let pt = 10.6; const loads = ['card', 'wrap', 'card2', 'wrap', 'card', 'mix'];
+  for (let b = 0; b < 2; b++) for (let li = 0; li < 3; li++) for (let s = 0; s < 3; s++) {
+    const zc = (zs[b] + zs[b + 1]) / 2 + (s - 1) * 0.86, y = levels[li] + (li ? 0.0 : 0.04);
+    if (b === 1 && li === 0 && s === 0) continue; // Lücke
+    const g = G(rxc, y, zc, pt, 'drop', 0.55); pt += 0.17;
+    gb(g, 1.2, 0.144, 0.8, mPal, 0, 0.072, 0);
+    const kind = loads[(b * 9 + li * 3 + s) % loads.length], hh = 0.75 + ((b + li * 2 + s) % 3) * 0.18;
+    if (kind === 'wrap') { gb(g, 1.16, hh, 0.78, mWrap, 0, 0.144 + hh / 2, 0); gb(g, 0.01, 0.18, 0.3, mLabel, -0.585, 0.144 + hh * 0.6, 0.1); }
+    else { const n = kind === 'mix' ? 2 : 3; for (let iy = 0; iy < n; iy++) for (let ix = 0; ix < 2; ix++) for (let iz = 0; iz < 2; iz++) {
+      const bh = hh / n; gb(g, 0.56, bh - 0.01, 0.37, (ix + iy + iz) % 2 ? mCard : mCard2, -0.29 + ix * 0.58, 0.144 + bh * (iy + 0.5), -0.19 + iz * 0.38);
+      gb(g, 0.06, 0.003, 0.37, mTape, -0.29 + ix * 0.58, 0.144 + bh * (iy + 1) - 0.004, -0.19 + iz * 0.38, false); } }
+  }
+  // Fachbodenregale unter der Galerie (Wand x0) mit Kartons
+  for (let i = 0; i < 3; i++) { const zc = z0 + 0.8 + i * 1.05, g = G(x0 + 0.3, 0.04, zc, 12.6 + i * 0.2, 'grow', 0.5);
+    for (const dz of [-0.48, 0.48]) for (const dx of [-0.24, 0.24]) gb(g, 0.04, 2.1, 0.04, mGreyS, dx, 1.05, dz);
+    [0.15, 0.75, 1.35, 1.95].forEach(y => gb(g, 0.5, 0.025, 1.0, mGreyS, 0, y, 0));
+    const gB = G(x0 + 0.3, 0.04, zc, 13.0 + i * 0.2, 'pop', 0.4); [0.17, 0.77, 1.37].forEach((y, k) => { for (let j = 0; j < 2; j++) gb(gB, 0.42, 0.3 + ((i + k + j) % 2) * 0.1, 0.42, (i + j) % 2 ? mCard : mCard2, 0, y + 0.18 + ((i + k + j) % 2) * 0.05, -0.24 + j * 0.48); }); }
+  // Hubwagen + Palettenstapel in der Halle
+  const hw = G(xc + 0.4, 0.04, -3.4, 14.0, 'pop', 0.45, 0.5);
+  for (const dx of [-0.2, 0.2]) gb(hw, 0.16, 0.08, 1.15, mOrange, dx, 0.06, 0); gb(hw, 0.56, 0.35, 0.2, mOrange, 0, 0.25, -0.62);
+  const hd = gb(hw, 0.05, 1.1, 0.05, mBlack, 0, 0.85, -0.9); hd.rotation.x = -0.35; gb(hw, 0.36, 0.05, 0.05, mBlack, 0, 1.36, -1.08);
+  const ps = G(xc - 1.2, 0.04, -2.6, 14.2, 'pop', 0.45, 0.15); for (let i = 0; i < 6; i++) gb(ps, 1.2, 0.144, 0.8, mPal, 0, 0.072 + i * 0.146, 0);
+  // Werkbank vor der Stiege an der Wand x0
+  const wb = G(x0 + 0.4, 0.04, -2.8, 14.4, 'pop', 0.45);
+  gb(wb, 0.75, 0.05, 2.0, mOak, 0, 0.9, 0); for (const dz of [-0.9, 0.9]) gb(wb, 0.7, 0.88, 0.06, mGreyS, 0, 0.44, dz); gb(wb, 0.7, 0.03, 1.9, mGreyS, 0, 0.2, 0);
+  gb(wb, 0.02, 0.8, 1.9, mat(0x6e7378, 0.5, 0.4), -0.34, 1.55, 0); for (let i = 0; i < 6; i++) gb(wb, 0.04, 0.22 + (i % 3) * 0.08, 0.05, i % 2 ? mOrange : mBlack, -0.31, 1.45 + (i % 2) * 0.25, -0.7 + i * 0.28);
+  gb(wb, 0.3, 0.15, 0.4, mOrange, 0.05, 1.0, 0.5);
+
+  // ------------------------------------------------ Galerie: Büro mit Raumkonzept
+  const T0 = 19.75;
+  const chair = (cx, cz, ry, t, fab = mFab) => { const g = G(cx, oy, cz, t, 'pop', 0.4, ry);
+    gb(g, 0.5, 0.07, 0.48, fab, 0, 0.48, 0); const bk = gb(g, 0.46, 0.55, 0.06, fab, 0, 0.84, 0.24); bk.rotation.x = -0.12;
+    gb(g, 0.04, 0.32, 0.04, M.steel, 0, 0.3, 0); for (let i = 0; i < 5; i++) { const l = gb(g, 0.3, 0.03, 0.04, mBlack, Math.cos(i * 1.2566) * 0.15, 0.05, Math.sin(i * 1.2566) * 0.15); l.rotation.y = -i * 1.2566; }
+    for (const sx of [-0.27, 0.27]) { gb(g, 0.04, 0.2, 0.04, mBlack, sx, 0.6, 0.02); gb(g, 0.06, 0.03, 0.26, mBlack, sx, 0.71, 0.02); } };
+  // Arbeitsinsel: 4 Plätze, quer zum Fensterband (blendfrei), Akustik-Trennwand
+  const ix = 23.4, iz0 = z0 + 0.8, iz1 = iz0 + 2.8, izc = (iz0 + iz1) / 2;
+  const rug = G(ix, oy + 0.02, izc, T0, 'pop', 0.4); gb(rug, 3.4, 0.012, 3.6, mRug, 0, 0.006, 0, false);
+  const isl = G(ix, oy, izc, T0 + 0.2, 'pop', 0.45);
+  gb(isl, 1.6, 0.035, 2.8, mOak, 0, 0.74, 0); for (const dz of [-1.35, 0, 1.35]) gb(isl, 1.5, 0.05, 0.06, mBlack, 0, 0.05, dz); for (const dz of [-1.35, 1.35]) for (const dx of [-0.7, 0.7]) gb(isl, 0.05, 0.7, 0.05, mBlack, dx, 0.39, dz);
+  gb(isl, 0.03, 0.42, 2.7, mSage, 0, 0.97, 0);
+  for (const side of [-1, 1]) for (const dz of [-0.7, 0.7]) {
+    const g = G(ix + side * 0.32, oy + 0.757, izc + dz, T0 + 0.7 + (side + 1) * 0.1 + (dz > 0 ? 0.08 : 0), 'pop', 0.35, side > 0 ? -Math.PI / 2 : Math.PI / 2);
+    gb(g, 0.64, 0.38, 0.025, F2.scr, 0, 0.42, 0.04); gb(g, 0.66, 0.4, 0.02, mBlack, 0, 0.42, 0.025); gb(g, 0.05, 0.2, 0.05, mBlack, 0, 0.12, 0.0); gb(g, 0.22, 0.012, 0.16, mBlack, 0, 0.006, 0.0);
+    gb(g, 0.44, 0.015, 0.14, M.steel, 0, 0.008, -0.3); gb(g, 0.06, 0.02, 0.1, mBlack, 0.32, 0.01, -0.3);
+    if (dz < 0) { const c = gc(g, 0.04, 0.035, 0.09, side > 0 ? mTerra : M.white, -0.45, 0.045, -0.25); }
+    else { gb(g, 0.22, 0.02, 0.3, M.white, -0.42, 0.01, -0.22); }
+    chair(ix + side * 1.25, izc + dz, side > 0 ? Math.PI / 2 : -Math.PI / 2, T0 + 1.05 + (side + 1) * 0.06 + (dz > 0 ? 0.1 : 0));
+  }
+  // Linearleuchte über der Insel
+  const lin = G(ix, oy + 2.05, izc, T0 + 2.9, 'pop', 0.4); gb(lin, 0.14, 0.05, 2.6, mBlack, 0, 0, 0); gb(lin, 0.1, 0.01, 2.5, F2.lamp, 0, -0.03, 0, false); for (const dz of [-1.1, 1.1]) gb(lin, 0.008, 1.4, 0.008, mBlack, 0, 0.72, dz, false);
+  // Schrankwand an der Wand x0: geschlossen + offen mit Ordnern, Büchern, Pflanzen
+  const cw = 0.8; for (let i = 0; i < 4; i++) { const zc = z0 + 0.45 + i * cw, g = G(x0 + 0.23, oy, zc, T0 + 1.3 + i * 0.12, 'grow', 0.45);
+    if (i % 3 === 0) { gb(g, 0.44, 2.05, cw - 0.02, mCab, 0, 1.025, 0); gb(g, 0.005, 2.0, 0.004, mBlack, 0.222, 1.02, 0); gb(g, 0.012, 0.16, 0.02, mBlack, 0.23, 1.05, 0.06); }
+    else { gb(g, 0.44, 0.03, cw - 0.02, mOak, 0, 0.02, 0); [0.42, 0.84, 1.26, 1.68, 2.05].forEach(y => gb(g, 0.44, 0.03, cw - 0.02, mOak, 0, y, 0));
+      for (const dzs of [-cw / 2 + 0.02, cw / 2 - 0.02]) gb(g, 0.44, 2.07, 0.02, mOak, 0, 1.03, dzs);
+      [0.04, 0.46, 0.88, 1.3].forEach((y, k) => { const n = 4 + ((i + k) % 3); for (let j = 0; j < n; j++) gb(g, 0.3, 0.32 + (j % 2) * 0.04, 0.065, [mBlack, mArt2, M.white, mSage, mTerra][(j + k + i) % 5], 0.02, y + 0.18, -cw / 2 + 0.08 + j * 0.075); });
+      const pp = gc(g, 0.08, 0.07, 0.14, M.white, 0.02, 1.77, 0.18); const pl = new THREE.Mesh(new THREE.IcosahedronGeometry(0.13, 1), M.leaf); pl.position.set(0.02, 1.92, 0.18); g.add(pl); } }
+  // Sideboard mit Drucker + großes Bild darüber
+  const sbz = z0 + 4.15, sb = G(x0 + 0.23, oy, sbz, T0 + 1.8, 'pop', 0.4);
+  gb(sb, 0.44, 0.72, 1.4, mCab, 0, 0.38, 0); gb(sb, 0.46, 0.03, 1.42, mOak, 0, 0.755, 0); for (const dz of [-0.35, 0.35]) gb(sb, 0.005, 0.6, 0.004, mBlack, 0.222, 0.38, dz);
+  gb(sb, 0.4, 0.27, 0.45, mat(0xe9eaec, 0.45), 0.0, 0.905, -0.35); gb(sb, 0.41, 0.04, 0.3, mBlack, 0.0, 1.06, -0.35); gb(sb, 0.28, 0.012, 0.21, M.white, 0.08, 0.99, -0.35);
+  gb(sb, 0.3, 0.09, 0.22, M.white, 0, 0.82, 0.3);
+  const art = G(x0 + 0.02, oy + 1.2, sbz, T0 + 2.95, 'pop', 0.35); gb(art, 0.03, 1.0, 1.4, mBlack, 0, 0.5, 0); gb(art, 0.035, 0.92, 1.32, mArt3, 0, 0.5, 0);
+  gb(art, 0.04, 0.5, 0.5, mArt1, 0, 0.62, -0.3); gb(art, 0.04, 0.34, 0.6, mArt2, 0, 0.3, 0.25); gb(art, 0.04, 0.14, 0.9, mSage, 0, 0.82, 0.12);
+  // Besprechungsecke vor der Kaffeeküche: runder Tisch, 4 Stühle, Kugelleuchte
+  const tx = x1 - 1.05, tz = z0 + 0.95, tb = G(tx, oy, tz, T0 + 2.1, 'pop', 0.4);
+  gc(tb, 0.55, 0.55, 0.035, mOak, 0, 0.74, 0, 48); gc(tb, 0.04, 0.04, 0.72, mBlack, 0, 0.37, 0, 12); gc(tb, 0.3, 0.3, 0.02, mBlack, 0, 0.01, 0, 32);
+  gb(tb, 0.32, 0.015, 0.22, M.steel, -0.12, 0.765, 0.08).rotation.y = 0.4; gc(tb, 0.04, 0.035, 0.09, M.white, 0.22, 0.8, -0.1, 16);
+  [[0, -0.72, 0], [-0.72, 0, -Math.PI / 2], [0.72, 0, Math.PI / 2]].forEach(([dx, dz, ry], k) => chair(tx + dx, tz + dz, ry + Math.PI, T0 + 2.25 + k * 0.07, mTerra));
+  const glb = G(tx, oy + 1.55, tz, T0 + 2.95, 'pop', 0.35); const sp = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 16), F2.lamp); sp.position.y = 0.2; glb.add(sp); gb(glb, 0.006, 1.3, 0.006, mBlack, 0, 1.05, 0, false);
+  // Lounge zur Halle hin: Sofa, Couchtisch, Teppich, Bogenleuchte, Pflanzen
+  const lz = gz1 - 1.15, lx = 23.9;
+  const r2 = G(lx, oy + 0.02, lz + 0.1, T0 + 2.35, 'pop', 0.35); gb(r2, 2.5, 0.012, 1.8, mRug2, 0, 0.006, 0, false);
+  const so = G(lx, oy, lz - 0.45, T0 + 2.45, 'pop', 0.45);
+  gb(so, 2.0, 0.42, 0.88, mSofa, 0, 0.25, 0); gb(so, 2.0, 0.42, 0.2, mSofa, 0, 0.62, -0.34); for (const sx of [-0.92, 0.92]) gb(so, 0.18, 0.6, 0.88, mSofa, sx, 0.32, 0);
+  for (const sx of [-0.45, 0.45]) gb(so, 0.86, 0.12, 0.62, mSofa, sx, 0.5, 0.08); gb(so, 0.4, 0.4, 0.12, mSage, -0.6, 0.72, -0.2).rotation.z = 0.15; gb(so, 0.38, 0.38, 0.12, mTerra, 0.62, 0.72, -0.2).rotation.z = -0.12;
+  const ct = G(lx, oy, lz + 0.35, T0 + 2.6, 'pop', 0.35); gb(ct, 1.0, 0.04, 0.55, mOak, 0, 0.38, 0); for (const sx of [-0.45, 0.45]) for (const sz of [-0.22, 0.22]) gb(ct, 0.035, 0.36, 0.035, mBlack, sx, 0.18, sz);
+  gb(ct, 0.28, 0.03, 0.2, mArt2, -0.2, 0.415, 0); gc(ct, 0.09, 0.07, 0.06, M.white, 0.25, 0.43, 0.05, 20);
+  const fl = G(lx - 1.35, oy, lz - 0.5, T0 + 2.7, 'pop', 0.35); gc(fl, 0.15, 0.15, 0.03, mBlack, 0, 0.015, 0, 24); gb(fl, 0.025, 1.6, 0.025, mBlack, 0, 0.8, 0); const sh = gc(fl, 0.12, 0.2, 0.22, mArt3, 0, 1.62, 0, 24); const bulb = gc(fl, 0.1, 0.1, 0.01, F2.lamp, 0, 1.51, 0, 16);
+  const plant = (x, z, t, s = 1) => { const g = G(x, oy, z, t, 'pop', 0.45); gc(g, 0.17 * s, 0.13 * s, 0.4 * s, mat(0xd9d4cc, 0.8), 0, 0.2 * s, 0, 20);
+    for (let k = 0; k < 3; k++) { const l = new THREE.Mesh(new THREE.IcosahedronGeometry((0.3 - k * 0.05) * s, 2), M.leaf); l.position.set((k - 1) * 0.08 * s, (0.6 + k * 0.32) * s, (k % 2 ? 0.06 : -0.05) * s); l.scale.set(1, 1.15, 1); l.castShadow = true; g.add(l); } };
+  plant(lx + 1.35, lz - 0.45, T0 + 2.8, 1.0); plant(x1 - 0.3, z0 + 0.32, T0 + 2.85, 1.15); plant(25.35, z0 + 0.35, T0 + 2.9, 0.8);
+  // Kaffeeküche-Extras (erscheinen beim seitlichen Schwenk)
+  const wx1 = x1, wx0 = x1 - 1.5, wz0 = gz1 - 0.2 - 2.6, kz = wz0 - 0.05 - 0.31, kc = (wx0 + wx1) / 2;
+  const kk = G(kc, oy + 0.94, kz, 24.9, 'pop', 0.35);
+  gb(kk, 1.4, 0.5, 0.015, mat(0x3f5a4e, 0.35), 0, 0.27, 0.3); // Fliesenspiegel
+  gb(kk, 0.18, 0.02, 0.12, M.inox, -0.4, 0.21, -0.12); gc(kk, 0.03, 0.03, 0.06, M.white, -0.36, 0.03, -0.18, 12); gc(kk, 0.03, 0.03, 0.06, mTerra, -0.44, 0.03, -0.2, 12);
+  gc(kk, 0.07, 0.08, 0.2, M.inox, 0.05, 0.1, 0.05, 20); gb(kk, 0.05, 0.12, 0.03, mBlack, 0.12, 0.12, 0.05);
+  const bowl = gc(kk, 0.13, 0.08, 0.07, mOak, 0.55, 0.035, -0.1, 24); for (let k = 0; k < 4; k++) { const f = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 8), [mOrange, mat(0x9bbf3f, 0.6), mOrange, mat(0xd8c23a, 0.6)][k]); f.position.set(0.55 + (k - 1.5) * 0.05, 0.09, -0.1 + (k % 2) * 0.04); kk.add(f); }
+  gb(kk, 0.03, 0.06, 0.4, M.inox, 0.31, 0.03, 0.14); // Armatur
+  const tap = gb(kk, 0.02, 0.25, 0.02, M.inox, 0.3, 0.13, 0.22);
+  // Lichter Büro
+  const ol = new THREE.PointLight(0xffd9a8, 0, 8, 1.6); ol.position.set(ix, oy + 1.9, izc); interior.add(ol); F2.offLights = [ol];
+  const ol2 = new THREE.PointLight(0xffd9a8, 0, 6, 1.6); ol2.position.set(tx, oy + 1.4, tz); interior.add(ol2); F2.offLights.push(ol2);
+  const ol3 = new THREE.PointLight(0xffd9a8, 0, 5, 1.6); ol3.position.set(lx - 1.35, oy + 1.4, lz - 0.5); interior.add(ol3); F2.offLights.push(ol3);
+  const hl2 = new THREE.PointLight(0xfff1dd, 0, 16, 1.5); hl2.position.set(xc, 5.4, -3.0); interior.add(hl2); F2.hall2 = hl2;
+}
+// beleuchtete Fenster der Einheit 4 von außen (Endeinstellung)
+function film2LitWindows() {
+  const m = new THREE.MeshStandardMaterial({ color: 0xffe0b0, emissive: 0xffc27a, emissiveIntensity: 0.55, transparent: true, opacity: 0.6, roughness: 0.1 });
+  const z = B1.z0 - 0.07; const add = (xa, xb, ya, yb) => { const p = new THREE.Mesh(new THREE.PlaneGeometry(xb - xa - 0.13, yb - ya - 0.13), m); p.position.set((xa + xb) / 2, (ya + yb) / 2, z); p.rotation.y = Math.PI; scene.add(p); };
+  add(heroX1 - 5.75, heroX1 - 1.75, 4.15, 5.2); add(heroX1 - 5.8, heroX1 - 3.3, 0.95, 2.25);
+}
+// Licht-Zeitplan: Reihen gehen nacheinander an (mit kurzem Flackern), Büro ab 22.6 s
+function film2Light(t) {
+  const rows = [...ledRows].sort((a, b) => b.z - a.z); let on = 0;
+  rows.forEach((r, i) => { const ti = 1.05 + i * 0.2, d = t - ti; const v = d < 0 ? 0 : d < 0.05 ? 1 : d < 0.11 ? 0.12 : 1; r.m.emissiveIntensity = v * 3.2; r.m.emissive.set(v > 0 ? 0xfff3e0 : 0x000000); on += v; });
+  const L = on / rows.length, o = Math.min(1, Math.max(0, (t - 22.6) / 0.35));
+  intLights.forEach(x => x.l.intensity = x.i * L * 1.1); F2.hall2.intensity = 40 * L;
+  F2.offLights.forEach((l, k) => l.intensity = [9, 5, 4][k] * o); F2.lamp.emissiveIntensity = 2.6 * o;
+  F2.scr.emissiveIntensity = 0.6 * Math.min(1, Math.max(0, (t - 23.0) / 0.4));
+}
+
 
 // ---------------------------------------------------------------- Außenanlage
 function plane(w, d, mat, x, z, y = 0, rep = 0.5) {
@@ -712,7 +864,7 @@ const grade = new ShaderPass({
 }); composer.addPass(grade);
 
 // ---------------------------------------------------------------- Aufbau
-buildB1(); buildInterior(); buildSite(); setupLampLights(); // Bauteil 2 vorerst nicht gebaut
+buildB1(); buildInterior(); buildSite(); setupLampLights(); if (FILM2) film2LitWindows(); // Bauteil 2 vorerst nicht gebaut
 scene.traverse(o => { if (o.isMesh && o.material && o.material.map) { /* ok */ } });
 
 // ---------------------------------------------------------------- Kamera-/Zeitachse
@@ -723,6 +875,7 @@ function evalPath(pts, t) {
   const c = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), false, 'centripetal'); return c.getPoint(t);
 }
 const ctx = { heroXC, B1, B2, UW, heroX0, heroX1 };
+const SHOTS = FILM2 ? SHOTS2 : SHOTS1, TITLES = FILM2 ? {} : TITLES1, DURATION = FILM2 ? DURATION2 : DURATION1;
 const shotList = SHOTS(ctx, PORTRAIT);
 function shotAt(t) { let acc = 0; for (const s of shotList) { if (t < acc + s.dur) return { s, lt: t - acc, k: (t - acc) / s.dur }; acc += s.dur; } const s = shotList[shotList.length - 1]; return { s, lt: s.dur, k: 1 }; }
 
@@ -756,6 +909,7 @@ window.renderAt = function (t) {
   heroTor.set(doorOpen);
   heroKeypadLED.material.emissive.set(s.ledGreenAt !== undefined && lt > s.ledGreenAt ? 0x22ff55 : (s.doorOpen ? 0x22ff55 : 0xff2a1a));
   interior.visible = s.interior !== false;
+  if (FILM2) { applyAnims(t); film2Light(t); }
   grade.uniforms.time.value = t * 13.7;
   grade.uniforms.fade.value = 0; // kein Schwarz am Anfang: erstes Bild = Vorschaubild (Facebook)
   if (gtao) gtao.blendIntensity = s.ao ?? 0.85;
