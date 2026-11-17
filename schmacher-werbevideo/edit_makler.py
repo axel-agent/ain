@@ -27,8 +27,11 @@ def film1():
          ('end', 39.3, L16 + 1), ('endcta', 41.1, L16 + 1)]
     compose(['-framerate', '24', '-i', '3d/frames_mk/f%05d.jpg'], '3d/titles16m', T, L16, 'audio/out_16x9_mk.wav', f'{OUT}/{N1}_16x9.mp4', 17,
             pre=f'trim=end={40.5}:start=0,setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration={L16 - 40.5 + 0.5:.2f}')
+    film1v()
+
+def film1v():
     # 9:16 wie edit.v916, aber mit Makler-Bildern, -Titeln und -Abbinder
-    edit.FV, edit.TV, edit.OUT = '3d/framesV_mk', '3d/titlesVm', OUT
+    edit.FV, edit.TV, edit.OUT = '3d/framesV_mk', '3d/titlesVm', 'export'  # ffconcat-Pfade relativ zu export/
     segs = [(0.0, 5.2), (6.9, 9.7), (11.0, 14.0), (14.2, 19.7), (20.8, 24.8), (26.2, 30.4), (32.6, 35.6)]
     def titles(c, te): return [('cover', 0.0, 2.5), ('hook', 2.6, c[1] - 0.1), ('slogan', c[1] + 0.2, c[2]), ('code', c[2] + 0.4, c[3] - 0.1),
                                ('lager', c[3] + 1.6, c[4] - 0.1), ('hoehe', c[4] + 0.3, c[5] - 0.1), ('buero', c[5] + 0.4, c[6] - 0.1), ('hallen', c[6] + 0.3, te)]
@@ -41,6 +44,7 @@ def film1():
         for t in c[1:] + [te]: add(fx, whoosh(0.7, 0.65), t - 0.45, 0.3)
         gate(fx, c[3] + 0.2, c[3] + 4.4); return fx
     vid, L = edit.build_vertical(f'{N1}_9x16', segs, 10.6, titles, vo, mk, sfx)
+    os.replace(vid, f'{OUT}/{N1}_9x16.mp4'); vid = f'{OUT}/{N1}_9x16.mp4'
     run(['ffmpeg', '-y', '-v', 'error', '-i', vid, '-vf', 'crop=1080:1350:0:285', '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-c:a', 'copy', '-movflags', '+faststart', f'{OUT}/{N1}_4x5.mp4'])
 
 def film2():
@@ -66,5 +70,6 @@ if __name__ == '__main__':
     w = sys.argv[1] if len(sys.argv) > 1 else 'all'
     if w in ('2', 'all'): film2()
     if w in ('1', 'all'): film1()
+    if w == '1v': film1v()
     if w in ('web', 'all'): web()
     print('MAKLER DONE')
