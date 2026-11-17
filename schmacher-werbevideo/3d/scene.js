@@ -11,7 +11,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { SHOTS as SHOTS1, TITLES as TITLES1, DURATION as DURATION1 } from './shots.js';
-import { SHOTS2, DURATION2 } from './shots2.js';
+import { SHOTS2, DURATION2, animTime2, F2T, SW } from './shots2.js';
 
 const params = new URLSearchParams(location.search);
 const W = parseInt(params.get('w') || '1920'), H = parseInt(params.get('h') || '1080');
@@ -435,13 +435,13 @@ function buildInterior() {
   const gd = 6.2, gy = 2.58, gt = 0.2, gz1 = z0 + gd;
   box(w, gt, gd, M.plank, xc, gy + gt / 2, z0 + gd / 2, interior);
   for (let x = x0 + 0.3; x < x1; x += 0.62) box(0.1, 0.24, gd, M.glulam, x, gy - 0.12, z0 + gd / 2, interior); // Balken
-  box(w, 0.4, 0.2, M.glulam, xc, gy - 0.05, gz1 - 0.1, interior); // Randträger
+  box(w, 0.4, 0.2, M.glulam, xc, gy - 0.05, gz1 - 0.085, interior); // Randträger (1,5 cm vor Platte und Stützen: kein Z-Fighting)
   [x0 + 0.15, xc, x1 - 0.15].forEach(x => {
     box(0.2, gy, 0.2, M.glulam, x, gy / 2, gz1 - 0.1, interior);
-    box(0.22, 0.12, 0.012, M.steel, x, gy - 0.32, gz1 + 0.006, interior); // Stahlverbinder
-    for (const bx of [-0.06, 0.06]) for (const by of [-0.34, -0.29]) { const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), M.inox); bolt.rotation.x = Math.PI / 2; bolt.position.set(x + bx, gy + by, gz1 + 0.016); interior.add(bolt); }
+    box(0.22, 0.12, 0.012, M.steel, x, gy - 0.32, gz1 + 0.021, interior); // Stahlverbinder
+    for (const bx of [-0.06, 0.06]) for (const by of [-0.34, -0.29]) { const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), M.inox); bolt.rotation.x = Math.PI / 2; bolt.position.set(x + bx, gy + by, gz1 + 0.031); interior.add(bolt); }
   });
-  B1.connector = new THREE.Vector3(xc, gy - 0.32, gz1 + 0.01);
+  B1.connector = new THREE.Vector3(xc, gy - 0.32, gz1 + 0.025);
   // Geländer (mit Öffnung an der Stiege, x0-Seite)
   const rh = 1.0, ry = gy + gt, gap = 1.15;
   for (let x = x0 + gap; x <= x1 + 0.01; x += (w - gap - 0.05) / 4) box(0.09, rh, 0.09, M.glulam, Math.min(x, x1 - 0.05), ry + rh / 2, gz1 - 0.05, interior);
@@ -547,11 +547,12 @@ const easeOutCubic = k => 1 - Math.pow(1 - k, 3);
 function bounce(k) { const n1 = 7.5625, d1 = 2.75; if (k < 1 / d1) return n1 * k * k; if (k < 2 / d1) return n1 * (k -= 1.5 / d1) * k + .75; if (k < 2.5 / d1) return n1 * (k -= 2.25 / d1) * k + .9375; return n1 * (k -= 2.625 / d1) * k + .984375; }
 // Gruppe mit Drehpunkt am Boden, erscheint zur Zeit t
 function G(x, y, z, t, type = 'pop', dur = 0.5, ry = 0) { const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry; interior.add(g); anims.push({ g, t, type, dur, y }); return g; }
+function GV(...a) { const g = G(...a); anims[anims.length - 1].vt = true; return g; } // Zeit = Video-Zeit (Rundumschwenk)
 function gb(g, w, h, d, mat, x, y, z, cast = true) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = true; g.add(m); return m; }
 function gc(g, rt, rb, h, mat, x, y, z, seg = 24) { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m; }
-function applyAnims(t) {
+function applyAnims(t, v = t) {
   for (const a of anims) {
-    const k = (t - a.t) / a.dur; if (k <= 0) { a.g.visible = false; continue; }
+    const k = ((a.vt ? v : t) - a.t) / a.dur; if (k <= 0) { a.g.visible = false; continue; }
     a.g.visible = true; const kk = Math.min(1, k);
     if (a.type === 'grow') a.g.scale.set(1, Math.max(0.001, easeOutCubic(kk)), 1);
     else if (a.type === 'pop') { const s = Math.max(0.001, easeOutBack(kk)); a.g.scale.set(s, s, s); }
@@ -593,15 +594,40 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
     [0.15, 0.75, 1.35, 1.95].forEach(y => gb(g, 0.5, 0.025, 1.0, mGreyS, 0, y, 0));
     const gB = G(x0 + 0.3, 0.04, zc, 13.0 + i * 0.2, 'pop', 0.4); [0.17, 0.77, 1.37].forEach((y, k) => { for (let j = 0; j < 2; j++) gb(gB, 0.42, 0.3 + ((i + k + j) % 2) * 0.1, 0.42, (i + j) % 2 ? mCard : mCard2, 0, y + 0.18 + ((i + k + j) % 2) * 0.05, -0.24 + j * 0.48); }); }
   // Hubwagen + Palettenstapel in der Halle
-  const hw = G(xc + 0.4, 0.04, -3.4, 14.0, 'pop', 0.45, 0.5);
+  const hw = G(xc - 1.55, 0.04, -1.25, 14.0, 'pop', 0.45, 2.2);
   for (const dx of [-0.2, 0.2]) gb(hw, 0.16, 0.08, 1.15, mOrange, dx, 0.06, 0); gb(hw, 0.56, 0.35, 0.2, mOrange, 0, 0.25, -0.62);
   const hd = gb(hw, 0.05, 1.1, 0.05, mBlack, 0, 0.85, -0.9); hd.rotation.x = -0.35; gb(hw, 0.36, 0.05, 0.05, mBlack, 0, 1.36, -1.08);
-  const ps = G(xc - 1.2, 0.04, -2.6, 14.2, 'pop', 0.45, 0.15); for (let i = 0; i < 6; i++) gb(ps, 1.2, 0.144, 0.8, mPal, 0, 0.072 + i * 0.146, 0);
-  // Werkbank vor der Stiege an der Wand x0
-  const wb = G(x0 + 0.4, 0.04, -2.8, 14.4, 'pop', 0.45);
+  const ps = G(xc - 1.35, 0.04, -2.9, 14.2, 'pop', 0.45, 0.15); for (let i = 0; i < 6; i++) gb(ps, 1.2, 0.144, 0.8, mPal, 0, 0.072 + i * 0.146, 0);
+  // Werkbank unter der Lagerbühne an der rechten Wand (x1), Lochwand mit Werkzeug – Tür vorne bleibt frei
+  const wb = GV(x1 - 0.4, 0.04, -11.7, 18.55, 'pop', 0.45, Math.PI);
   gb(wb, 0.75, 0.05, 2.0, mOak, 0, 0.9, 0); for (const dz of [-0.9, 0.9]) gb(wb, 0.7, 0.88, 0.06, mGreyS, 0, 0.44, dz); gb(wb, 0.7, 0.03, 1.9, mGreyS, 0, 0.2, 0);
-  gb(wb, 0.02, 0.8, 1.9, mat(0x6e7378, 0.5, 0.4), -0.34, 1.55, 0); for (let i = 0; i < 6; i++) gb(wb, 0.04, 0.22 + (i % 3) * 0.08, 0.05, i % 2 ? mOrange : mBlack, -0.31, 1.45 + (i % 2) * 0.25, -0.7 + i * 0.28);
-  gb(wb, 0.3, 0.15, 0.4, mOrange, 0.05, 1.0, 0.5);
+  gb(wb, 0.6, 0.6, 0.55, mat(0x3d4652, 0.5, 0.3), 0, 0.55, -0.55); for (let i = 0; i < 4; i++) gb(wb, 0.01, 0.012, 0.3, M.inox, 0.305, 0.38 + i * 0.15, -0.55);
+  gb(wb, 0.02, 0.85, 1.95, mat(0x6e7378, 0.5, 0.4), -0.34, 1.5, 0); for (let i = 0; i < 9; i++) gb(wb, 0.04, 0.18 + (i % 3) * 0.08, 0.05, i % 3 === 0 ? mOrange : i % 3 === 1 ? mBlack : mGreyS, -0.31, 1.4 + (i % 2) * 0.32, -0.8 + i * 0.2);
+  gb(wb, 0.3, 0.15, 0.4, mOrange, 0.05, 1.0, 0.5); gb(wb, 0.14, 0.12, 0.2, mGreyS, 0.2, 0.99, -0.75); // Werkzeugkiste, Schraubstock
+  const lamp = gb(wb, 0.06, 0.04, 1.6, F2.lamp, -0.1, 2.05, 0, false);
+  const tc = GV(x1 - 0.32, 0.04, -9.75, 18.75, 'pop', 0.4, Math.PI); gb(tc, 0.55, 1.05, 0.65, mat(0xb52a1e, 0.4, 0.3), 0, 0.6, 0); for (let i = 0; i < 6; i++) gb(tc, 0.01, 0.012, 0.4, M.inox, 0.28, 0.22 + i * 0.16, 0); gc(tc, 0.05, 0.05, 0.06, mBlack, 0, 0.05, 0.2, 12);
+  // Kleinteilemagazin mit Sichtlagerkästen unter dem Fenster (Front unter der Lagerbühne)
+  const km = GV(23.15, 0.04, z0 + 0.3, 19.35, 'pop', 0.45); gb(km, 2.2, 0.86, 0.45, mGreyS, 0, 0.43, 0);
+  const mBin = [mat(0x2a63c9, 0.5), mat(0xf2b31b, 0.5), mat(0xd84a26, 0.5)];
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) gb(km, 0.2, 0.2, 0.08, mBin[(r + (c > 5 ? 1 : 0)) % 3], -0.96 + c * 0.24, 0.17 + r * 0.26, 0.24);
+  // Elektro-Stapler unter der Lagerbühne
+  const fk = GV(24.5, 0.04, -11.6, 19.05, 'pop', 0.5, 0.25);
+  gb(fk, 1.0, 0.75, 1.55, mOrange, 0, 0.55, 0); gb(fk, 1.02, 0.55, 0.45, mBlack, 0, 0.5, -0.82); gb(fk, 0.45, 0.12, 0.45, mBlack, 0, 1.0, -0.2); gb(fk, 0.45, 0.45, 0.08, mBlack, 0, 1.25, -0.42);
+  for (const sx of [-0.45, 0.45]) for (const sz of [-0.62, 0.55]) gb(fk, 0.06, 1.25, 0.06, mBlack, sx, 1.55, sz); gb(fk, 1.0, 0.05, 1.25, mBlack, 0, 2.17, -0.03);
+  for (const sx of [-0.3, 0.3]) { gb(fk, 0.08, 2.05, 0.1, mGreyS, sx, 1.07, 0.88); gb(fk, 0.1, 0.04, 1.0, mGreyS, sx, 0.12, 1.45); gb(fk, 0.1, 0.5, 0.04, mGreyS, sx, 0.35, 0.95); }
+  gb(fk, 0.7, 0.06, 0.06, mGreyS, 0, 0.5, 0.95); gb(fk, 0.7, 0.06, 0.06, mGreyS, 0, 1.95, 0.88);
+  for (const sx of [-0.5, 0.5]) for (const sz of [-0.55, 0.5]) { const w = gc(fk, 0.2, 0.2, 0.18, mBlack, sx, 0.2, sz, 18); w.rotation.z = Math.PI / 2; }
+  // Gitterboxen + Palettenware auf der anderen Seite (unter / neben der Stiege)
+  const ec = GV(x0 + 0.42, 0.04, -7.95, 20.35, 'pop', 0.4); for (let iy = 0; iy < 3; iy++) for (let iz = 0; iz < 2; iz++) gb(ec, 0.6, 0.31, 0.42, iy === 1 ? mBin[0] : mat(0x7b8288, 0.6), 0, 0.16 + iy * 0.32, -0.22 + iz * 0.44);
+  [[22.75, -10.0, 19.5, 'wrap'], [22.75, -11.15, 19.65, 'card']].forEach(([px, pz, pt2, kind]) => { const g = GV(px, 0.04, pz, pt2, 'drop', 0.5, Math.PI / 2); gb(g, 1.2, 0.144, 0.8, mPal, 0, 0.072, 0);
+    if (kind === 'wrap') { gb(g, 1.16, 1.1, 0.78, mWrap, 0, 0.144 + 0.55, 0); gb(g, 0.01, 0.18, 0.3, mLabel, -0.585, 0.8, 0.1); }
+    else for (let iy = 0; iy < 3; iy++) for (let ix = 0; ix < 2; ix++) for (let iz = 0; iz < 2; iz++) gb(g, 0.56, 0.29, 0.37, (ix + iy + iz) % 2 ? mCard : mCard2, -0.29 + ix * 0.58, 0.144 + 0.3 * (iy + 0.5), -0.19 + iz * 0.38); });
+  // Reifenregal an der Wand x0 beim Tor
+  const tr = GV(x0 + 0.3, 0.04, -2.7, 21.45, 'grow', 0.5); const tyre = mat(0x16171a, 0.8), rimM = mat(0xa9b0b6, 0.3, 0.8);
+  for (const dz of [-1.0, 1.0]) for (const dx of [-0.2, 0.2]) gb(tr, 0.04, 1.75, 0.04, mBlue, dx, 0.875, dz);
+  [0.42, 1.18].forEach(y => { for (const dx of [-0.2, 0.2]) gb(tr, 0.04, 0.04, 2.04, mOrange, dx, y - 0.3, 0);
+    for (let i = 0; i < 7; i++) { const t = gc(tr, 0.31, 0.31, 0.21, tyre, 0, y, -0.84 + i * 0.28, 24); t.rotation.x = Math.PI / 2; const r = gc(tr, 0.18, 0.18, 0.215, rimM, 0, y, -0.84 + i * 0.28, 16); r.rotation.x = Math.PI / 2; } });
+  const fx = GV(x0 + 0.08, 0.04, -4.05, 21.6, 'pop', 0.35); gc(fx, 0.08, 0.08, 0.5, mat(0xc4161c, 0.35, 0.1), 0, 1.0, 0, 16); gb(fx, 0.02, 0.3, 0.3, mat(0xc4161c, 0.5), -0.05, 1.85, 0);
 
   // ------------------------------------------------ Galerie: Büro mit Raumkonzept
   const T0 = 19.75;
@@ -671,6 +697,93 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
   const ol2 = new THREE.PointLight(0xffd9a8, 0, 6, 1.6); ol2.position.set(tx, oy + 1.4, tz); interior.add(ol2); F2.offLights.push(ol2);
   const ol3 = new THREE.PointLight(0xffd9a8, 0, 5, 1.6); ol3.position.set(lx - 1.35, oy + 1.4, lz - 0.5); interior.add(ol3); F2.offLights.push(ol3);
   const hl2 = new THREE.PointLight(0xfff1dd, 0, 16, 1.5); hl2.position.set(xc, 5.4, -3.0); interior.add(hl2); F2.hall2 = hl2;
+  film2Switch(); film2Hand(); film2Van();
+}
+// ------------------------------------------------ Lichtschalter (Doppelwippe) neben der Gehtür
+function film2Switch() {
+  const mW = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.35 });
+  const z = SW.z;
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.165, 0.088, 0.012), mW); plate.position.set(SW.x, SW.y, z - 0.006); plate.castShadow = false; plate.receiveShadow = true; interior.add(plate);
+  F2.rockers = []; F2.swLed = new THREE.MeshStandardMaterial({ color: 0x331a08, emissive: 0xff8a2a, emissiveIntensity: 2.2 });
+  for (const dx of [-0.04, 0.04]) {
+    const piv = new THREE.Group(); piv.position.set(SW.x + dx, SW.y, z - 0.012); interior.add(piv);
+    const r = new THREE.Mesh(new THREE.BoxGeometry(0.066, 0.066, 0.012), mW); r.position.z = -0.006; r.castShadow = false; r.receiveShadow = true; piv.add(r);
+    const led = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.004, 0.002), F2.swLed); led.position.set(0, -0.022, -0.0125); piv.add(led);
+    piv.rotation.x = -0.035; F2.rockers.push(piv);
+  }
+  const ledL = new THREE.PointLight(0xff9a40, 0, 0.6, 2); ledL.position.set(SW.x + 0.04, SW.y - 0.02, z - 0.06); interior.add(ledL); F2.swLedL = ledL;
+  const fill = new THREE.PointLight(0x9fb4e6, 0, 3.5, 1.6); fill.position.set(23.3, 1.8, -1.2); interior.add(fill); F2.swFill = fill;
+  const warm = new THREE.PointLight(0xffd2a0, 0, 2.2, 1.8); warm.position.set(23.2, 0.9, -0.75); interior.add(warm); F2.swWarm = warm;
+}
+// ------------------------------------------------ Hand mit Ärmel (Fingerspitze im Ursprung, Unterarm entlang -z)
+function film2Hand() {
+  const skin = new THREE.MeshStandardMaterial({ color: 0xd9a384, roughness: 0.55 }), sleeve = new THREE.MeshStandardMaterial({ color: 0x26344d, roughness: 0.92 }), cuffM = new THREE.MeshStandardMaterial({ color: 0x1c2638, roughness: 0.9 });
+  const hand = new THREE.Group(); interior.add(hand); F2.hand = hand;
+  const cap = (r, l, x, y, z, rx = 0, ry = 0, rz = 0, m = skin) => { const c = new THREE.Mesh(new THREE.CapsuleGeometry(r, l, 6, 14), m); c.position.set(x, y, z); c.rotation.set(rx, ry, rz); c.castShadow = true; c.receiveShadow = true; hand.add(c); return c; };
+  const H = Math.PI / 2;
+  cap(0.0092, 0.07, 0, 0, -0.047, H);                      // Zeigefinger gestreckt
+  const palm = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), skin); palm.scale.set(0.047, 0.021, 0.058); palm.position.set(0.02, -0.008, -0.135); palm.castShadow = true; hand.add(palm);
+  [[0.023, 0.0098], [0.043, 0.0094], [0.061, 0.0084]].forEach(([x, r], i) => {   // eingerollte Finger
+    cap(r, 0.026, x, -0.016, -0.088 - i * 0.004, H + 0.9);
+    cap(r, 0.018, x, -0.037, -0.103 - i * 0.004, 0.35);
+  });
+  cap(0.0105, 0.04, -0.016, -0.02, -0.098, H - 0.35, 0.55, 0);   // Daumen
+  const wrist = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.028, 0.07, 18), skin); wrist.rotation.x = H; wrist.scale.set(1.35, 1, 0.8); wrist.position.set(0.02, -0.01, -0.21); hand.add(wrist);
+  const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.043, 0.043, 0.035, 22), cuffM); cuff.rotation.x = H; cuff.position.set(0.02, -0.01, -0.245); cuff.castShadow = true; hand.add(cuff);
+  const sl = new THREE.Mesh(new THREE.CylinderGeometry(0.047, 0.055, 0.6, 22), sleeve); sl.rotation.x = H; sl.position.set(0.02, -0.01, -0.56); sl.castShadow = true; hand.add(sl);
+  hand.visible = false;
+}
+// ------------------------------------------------ Transporter (Front im Ursprung, fährt in -z)
+function film2Van() {
+  const mat = (c, r = 0.5, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
+  const white = mat(0xeef0f2, 0.32, 0.15), dark = mat(0x1b1d21, 0.6), glass = mat(0x0c1118, 0.08, 0.3), orange = mat(0xe0661b, 0.45), tyre = mat(0x111111, 0.85), rim = mat(0x9aa1a8, 0.35, 0.7);
+  const head = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff4e0, emissiveIntensity: 4 }), tail = new THREE.MeshStandardMaterial({ color: 0x400000, emissive: 0xff2010, emissiveIntensity: 2.5 });
+  const v = new THREE.Group(); scene.add(v); F2.van = v; v.visible = false;
+  const b = (w, h, d, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); o.castShadow = true; o.receiveShadow = true; v.add(o); return o; };
+  b(2.0, 2.05, 4.35, white, 0, 0.38 + 1.025, 1.05 + 2.175);    // Kofferaufbau
+  b(1.98, 0.92, 1.1, white, 0, 0.38 + 0.46, 0.55);             // Motorhaube
+  const ws = b(1.86, 1.42, 0.05, glass, 0, 1.92, 0.62); ws.rotation.x = Math.atan2(0.85, 1.15); // Frontscheibe
+  b(1.97, 1.2, 0.9, white, 0, 1.92, 1.12).scale.set(1, 1, 1);
+  for (const sx of [-1, 1]) { b(0.02, 0.62, 0.8, glass, sx * 1.0, 1.95, 1.4); b(0.02, 0.12, 4.0, orange, sx * 1.002, 1.05, 3.1); b(0.06, 0.12, 0.2, dark, sx * 1.08, 1.85, 0.95); }
+  b(2.04, 0.28, 0.16, dark, 0, 0.5, 0.0); b(1.3, 0.3, 0.03, dark, 0, 0.92, -0.01);   // Stoßfänger, Grill
+  for (const sx of [-1, 1]) { b(0.36, 0.13, 0.03, head, sx * 0.74, 1.04, -0.015); b(0.1, 0.32, 0.03, tail, sx * 0.94, 1.15, 5.41); }
+  b(2.04, 0.22, 0.12, dark, 0, 0.48, 5.4);
+  for (const sx of [-1, 1]) for (const z of [0.82, 4.35]) {
+    const w = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.37, 0.26, 28), tyre); w.rotation.z = Math.PI / 2; w.position.set(sx * 0.9, 0.37, z); w.castShadow = true; v.add(w);
+    const r = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.27, 20), rim); r.rotation.z = Math.PI / 2; r.position.copy(w.position); v.add(r);
+  }
+  F2.vanSpots = [];
+  for (const sx of [-1, 1]) { const sp = new THREE.SpotLight(0xfff1dc, 0, 30, 0.5, 0.6, 1.4); sp.position.set(sx * 0.74, 1.04, -0.1); const tg = new THREE.Object3D(); tg.position.set(sx * 0.9, 0.2, -10); v.add(tg); sp.target = tg; v.add(sp); F2.vanSpots.push(sp); }
+}
+// Schalter, Hand, Transporter nach Video-Zeit v
+function film2Extras(v) {
+  const ls = v - F2T.cover; // Zeit im Schalter-Shot
+  const inSw = ls >= 0 && ls < F2T.sw;
+  const pressed = ls >= F2T.pressAt || v < F2T.cover;
+  F2.rockers[1].rotation.x = pressed ? 0.035 : -0.035; F2.rockers[0].rotation.x = v < F2T.cover ? 0.035 : -0.035;
+  F2.swLed.emissiveIntensity = pressed ? 0.25 : 2.2; F2.swLedL.intensity = inSw && !pressed ? 0.05 : 0;
+  F2.swFill.intensity = inSw ? 1.4 : 0; F2.swWarm.intensity = 0;
+  // Hand: von rechts unten herein, drückt, zieht zurück
+  const hand = F2.hand; hand.visible = inSw && ls > 0.2 && ls < 1.58;
+  if (hand.visible) {
+    const dir = new THREE.Vector3(-0.5, -0.5, -1).normalize(); // Richtung zum Ellbogen
+    const press = new THREE.Vector3(SW.x + 0.041, SW.y + 0.012, SW.z - 0.016);
+    let d; const e = k => easeOutCubic(Math.min(1, Math.max(0, k)));
+    if (ls < 0.88) d = 0.012 + (1 - e((ls - 0.2) / 0.68)) * 0.42;
+    else if (ls < 0.95) d = 0.012 - 0.012 * e((ls - 0.88) / 0.07);
+    else if (ls < 1.1) d = 0.0;
+    else d = e((ls - 1.1) / 0.48) * 0.4;
+    const pos = press.clone().addScaledVector(dir, d); if (ls >= 1.1) pos.x -= e((ls - 1.1) / 0.48) * 0.08;
+    hand.position.copy(pos); hand.lookAt(pos.clone().sub(dir));
+    hand.rotateZ(0.35);
+  }
+  // Transporter
+  const g = v - F2T.gateAt; const van = F2.van; van.visible = v >= F2T.gateAt;
+  if (van.visible) {
+    const k = Math.min(1, Math.max(0, (g - 1.25) / 3.0)); const zf = 15 + (-4.2 - 15) * easeOutCubic(k);
+    van.position.set(heroX0 + 4.3, 0.04, zf);
+    F2.vanSpots.forEach(sp => sp.intensity = g < F2T.gateLen + 0.01 ? 60 : 0);
+  }
 }
 // beleuchtete Fenster der Einheit 4 von außen (Endeinstellung)
 function film2LitWindows() {
@@ -895,7 +1008,8 @@ window.renderAt = function (t) {
   applyLook(s.look);
   const kk = (s.ease || easeIO)(k);
   camera.position.copy(evalPath(s.pos, kk));
-  const tgt = evalPath(s.target, kk);
+  let tgt; if (s.yaw) { const y = THREE.MathUtils.degToRad(s.yaw[0] + (s.yaw[1] - s.yaw[0]) * kk), pt = THREE.MathUtils.degToRad(s.pitch[0] + (s.pitch[1] - s.pitch[0]) * kk);
+    tgt = camera.position.clone().add(new THREE.Vector3(Math.sin(y), Math.tan(pt), -Math.cos(y)).multiplyScalar(5)); } else tgt = evalPath(s.target, kk);
   camera.fov = s.fov ? (Array.isArray(s.fov) ? s.fov[0] + (s.fov[1] - s.fov[0]) * kk : s.fov) : 40;
   camera.aspect = W / H;
   if (PORTRAIT) { // horizontalen Bildwinkel etwas enger als im Querformat, vertikal entsprechend weiter
@@ -909,7 +1023,7 @@ window.renderAt = function (t) {
   heroTor.set(doorOpen);
   heroKeypadLED.material.emissive.set(s.ledGreenAt !== undefined && lt > s.ledGreenAt ? 0x22ff55 : (s.doorOpen ? 0x22ff55 : 0xff2a1a));
   interior.visible = s.interior !== false;
-  if (FILM2) { applyAnims(t); film2Light(t); }
+  if (FILM2) { const a = animTime2(t); applyAnims(a, t); film2Light(a); film2Extras(t); }
   grade.uniforms.time.value = t * 13.7;
   grade.uniforms.fade.value = 0; // kein Schwarz am Anfang: erstes Bild = Vorschaubild (Facebook)
   if (gtao) gtao.blendIntensity = s.ao ?? 0.85;

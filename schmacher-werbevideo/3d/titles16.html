@@ -51,6 +51,18 @@ body.nocta #end .cta, body.nocta #end2 .cta{visibility:hidden}
 #end2 .btn{display:flex;align-items:center;gap:16px;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:34px;padding:14px 40px;border-radius:999px;box-shadow:0 10px 30px rgba(194,122,62,.35);margin-bottom:16px}
 #end2 .btn svg{width:38px;height:38px}
 #end2 .cta{visibility:hidden}
+#end3{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#fbfbfc 0%,#eef0f3 70%,#e1e4e9 100%);color:#0f182a;text-align:center}
+#end3.on{display:flex}
+#end3 .logo{width:300px;margin-bottom:14px}
+#end3 .claim{font-weight:300;font-size:46px;line-height:1.1;color:#2a3242}
+#end3 .claim b{font-weight:700;color:#0f182a}
+#end3 .call{margin-top:34px;background:linear-gradient(180deg,#d2884a,#b86a2f);border-radius:36px;padding:26px 80px 30px;box-shadow:0 18px 50px rgba(184,106,47,.45);color:#fff;display:flex;flex-direction:column;align-items:center}
+#end3 .call .k{display:flex;align-items:center;gap:16px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:38px}
+#end3 .call svg{width:44px;height:44px}
+#end3 .call .n{font-weight:800;font-size:132px;letter-spacing:.02em;line-height:1.02;margin-top:6px}
+#end3 .web{font-weight:600;font-size:44px;color:#0f182a;margin-top:30px}
+#end3 .mail{font-size:34px;color:#5d6068;margin-top:6px}
+body.nocta #end3 .cta{visibility:hidden}
 </style></head><body>
 <div class="t" id="cover" style="top:0;bottom:0;padding:0"><div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.4) 40%,rgba(0,0,0,0) 68%)"></div>
 <div style="position:absolute;left:110px;top:150px"><div class="pill">Neu in Ebenthal · Kärnten</div><div class="big" style="margin-top:30px;font-size:124px">Gewerbepark<br><b>Ebenthal</b></div><div class="sub">7 Hallen mit Büro · <span style="color:#f0b27a">Unten Lager. Oben Büro.</span></div></div>
@@ -66,6 +78,10 @@ body.nocta #end .cta, body.nocta #end2 .cta{visibility:hidden}
 <div class="t" id="buero2" style="padding:0;top:0;bottom:0"><div style="position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,0))"></div><div style="position:absolute;left:110px;top:120px"><div class="kicker">Galerie</div><div class="big" style="font-size:80px;margin-top:14px">Oben: <b>dein Büro.</b></div><div class="sub">Arbeitsplätze, Besprechung, Lounge</div></div></div>
 <div class="t" id="kueche" style="padding:0;top:0;bottom:0"><div style="position:absolute;left:0;right:0;bottom:0;height:520px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.5))"></div><div style="position:absolute;left:110px;bottom:110px"><div class="big" style="font-size:80px">Mit <b>WC</b> &amp; <b>Kaffeeküche.</b></div><div class="sub">Küchenanschluss optional</div></div></div>
 <div class="t" id="hallen2" style="padding:0;top:0;bottom:0"><div style="position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,0))"></div><div style="position:absolute;left:0;right:0;top:120px;text-align:center"><div class="kicker">Gewerbepark Ebenthal</div><div class="big" style="font-size:84px;margin-top:14px"><b>7 Hallen</b> mit Büro</div></div></div>
+<div class="t" id="lager3" style="padding:0;top:0;bottom:0"><div style="position:absolute;left:0;right:0;bottom:0;height:520px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.5))"></div><div style="position:absolute;left:110px;bottom:110px"><div class="kicker">Platz für alles</div><div class="big" style="font-size:80px;margin-top:14px">Werkbank, Stapler, <b>Regale.</b></div><div class="sub">Lager, Werkstatt, Ausstellung – du entscheidest</div></div></div>
+<div class="t" id="tor" style="padding:0;top:0;bottom:0"><div style="position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,0))"></div><div style="position:absolute;left:110px;top:120px"><div class="kicker">Einfahrt</div><div class="big" style="font-size:80px;margin-top:14px">Großes Tor. <b>Direkt reinfahren.</b></div><div class="sub">Elektrisches Sektionaltor · 4 × 4,5 m</div></div></div>
+<div id="end3"><img class="logo" src="logo.png"><div class="claim">Licht an –<br><b>für dein Business.</b></div>
+<div class="cta" style="display:flex;flex-direction:column;align-items:center"><div class="call"><div class="k"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Jetzt anrufen</div><div class="n">0664 1200745</div></div><div class="web">www.gewerbepark-klagenfurt.at</div><div class="mail">office@gewerbepark-klagenfurt.at</div></div></div>
 <div id="end2" class="endx"><img class="logo" src="logo.png"><div class="claim">Licht an –<br><b>für dein Business.</b></div>
 <div class="small">Unten Lager. Oben Büro. · 7 Hallen mit Büro · Gewerbepark Ebenthal</div><div class="line"></div>
 <div class="cta"><div class="btn"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Jetzt anrufen</div><div class="ph">0664 1200745</div><div class="web">www.gewerbepark-klagenfurt.at</div><div class="mail">office@gewerbepark-klagenfurt.at</div></div></div>

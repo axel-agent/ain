@@ -17,3 +17,5 @@ f2_05|… dein eigenes Büro.
 f2_06|Mit WC – und Platz für deine Kaffeeküche.
 f2_07|Gewerbepark Ebenthal. Sieben Hallen mit Büro.
 f2_08|Licht an – für dein Business.
+f2_09|Werkbank, Stapler, Regale – hier hat alles seinen Platz.
+f2_10|Und durchs große Tor fährst du direkt hinein.
