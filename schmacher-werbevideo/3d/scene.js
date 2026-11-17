@@ -743,7 +743,7 @@ function film2Van() {
   b(2.0, 2.05, 4.35, white, 0, 0.38 + 1.025, 1.05 + 2.175);    // Kofferaufbau
   b(1.98, 0.92, 1.1, white, 0, 0.38 + 0.46, 0.55);             // Motorhaube
   const ws = b(1.86, 1.42, 0.05, glass, 0, 1.92, 0.62); ws.rotation.x = Math.atan2(0.85, 1.15); // Frontscheibe
-  b(1.97, 1.2, 0.9, white, 0, 1.92, 1.12).scale.set(1, 1, 1);
+  b(1.97, 1.2, 0.9, white, 0, 1.92, 1.12); const wd = b(1.97, 1.3, 0.5, white, 0, 1.84, 0.83); wd.rotation.x = Math.atan2(0.85, 1.15); // Kabine hinter der Scheibe
   for (const sx of [-1, 1]) { b(0.02, 0.62, 0.8, glass, sx * 1.0, 1.95, 1.4); b(0.02, 0.12, 4.0, orange, sx * 1.002, 1.05, 3.1); b(0.06, 0.12, 0.2, dark, sx * 1.08, 1.85, 0.95); }
   b(2.04, 0.28, 0.16, dark, 0, 0.5, 0.0); b(1.3, 0.3, 0.03, dark, 0, 0.92, -0.01);   // Stoßfänger, Grill
   for (const sx of [-1, 1]) { b(0.36, 0.13, 0.03, head, sx * 0.74, 1.04, -0.015); b(0.1, 0.32, 0.03, tail, sx * 0.94, 1.15, 5.41); }
@@ -1003,7 +1003,29 @@ function applyTitles(t) {
   }
 }
 
+// Schnittansicht (Vorschaubild): nur Einheit 4 innen, ohne Decke, heller Hintergrund
+const CUT = params.get('cut') === '1';
+const CUTLOOK = { elev: 58, azim: 215, turbidity: 3, rayleigh: 1.2, mie: 0.004, sunI: 2.2, sunColor: 0xfff1e0, hemiI: 0.9, hemiSky: 0xdfe8ff, exposure: 0.62, fog: 0xffffff, fogD: 0, envI: 0.9, intI: 0.6, bloom: 0.05 };
+if (CUT) {
+  for (const o of scene.children) if (!(o === interior || o.isLight || o === F2.van || heroTor.secs.includes(o))) o.visible = false;
+  scene.background = new THREE.Color(0xf1f2f4);
+  const gnd = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0xeceef1, roughness: 1 })); gnd.rotation.x = -Math.PI / 2; gnd.position.y = -0.02; gnd.receiveShadow = true; scene.add(gnd);
+  renderer.clippingPlanes = [new THREE.Plane(new THREE.Vector3(0, -1, 0), 5.7)];
+  // Mauerkronen der beiden sichtbaren Wände
+  const capM = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: 0.8 });
+  const cap = (w, d, x, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d), capM); m.position.set(x, 5.67, z); scene.add(m); };
+  cap(0.24, 15.0, heroX1 - 0.02, -7.5); cap(heroX1 - heroX0 + 0.2, 0.24, (heroX0 + heroX1) / 2, -0.08);
+}
+window.cutProject = pts => pts.map(p => { const v = new THREE.Vector3(...p).project(camera); return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; });
 window.renderAt = function (t) {
+  if (CUT) {
+    applyLook(CUTLOOK); const c = (params.get('cam') || '9.5,18.5,-25.5').split(',').map(Number), tg = (params.get('tgt') || '24.3,1.4,-7.2').split(',').map(Number);
+    camera.position.set(...c); camera.up.set(0, 1, 0); camera.fov = parseFloat(params.get('fov') || '28'); camera.aspect = W / H; camera.lookAt(...tg); camera.updateProjectionMatrix();
+    setShadowBox(new THREE.Vector3(24.3, 0, -7.5), 14); heroTor.set(0); interior.visible = true;
+    applyAnims(999, 999); film2Light(999); film2Extras(1.0);
+    F2.van.visible = true; F2.van.position.set(heroX0 + 4.3, 0.04, -5.7); F2.vanSpots.forEach(s => s.intensity = 0);
+    if (gtao) gtao.blendIntensity = 0.9; grade.uniforms.fade.value = 0; composer.render(); return true;
+  }
   const { s, lt, k } = shotAt(t);
   applyLook(s.look);
   const kk = (s.ease || easeIO)(k);

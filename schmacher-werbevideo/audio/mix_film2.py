@@ -1,7 +1,7 @@
 # Ton für Film 2 „Licht an.“ (gleiche Zeitachse für 16:9 und 9:16)
 import sys; sys.path.insert(0, '.')
 from sound import *
-L = 54.65
+L = 50.6
 C, INS = 2.25, 10.0   # Vorschaubild-Länge, eingeschobener Rundumschwenk + Tor
 def A(t): return t + C if t < 15.5 else t + C + INS   # Aufbau-Zeit -> Video-Zeit
 tt = lambda d: np.arange(T(d)) / SR
@@ -37,7 +37,7 @@ def engine(d):  # Transporter fährt herein (wird lauter, Diesel-Brummen)
     g = np.minimum(1, t / (d * 0.55)) ** 1.5 * np.minimum(1, (d - t) / 0.6); s = lp(s * g, 900); return np.stack([s * 0.9, s], 1) * 0.55
 
 if __name__ == '__main__':
-    mu = music(L, t_pulse=A(4.5), t_drop=A(8.9), t_break=A(28.0), t_logo=A(31.0), t_cta=44.65)
+    mu = music(L, t_pulse=A(4.5), t_drop=A(8.9), t_break=A(28.0), t_logo=A(31.0), t_cta=44.35)
     fade = np.clip((np.arange(len(mu)) / SR - 3.3) / 1.4, 0, 1); mu *= fade[:, None]
     fx = ambience(L, [(0.0, A(28.2), 'interior'), (A(28.0), L, 'night')])
     fx[:T(3.2)] *= 0.25
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     add(fx, whoosh(1.0, 0.6), A(27.6), 0.4); add(fx, whoosh(0.7, 0.65), A(15.1), 0.25); add(fx, whoosh(0.7, 0.65), A(19.25), 0.25); add(fx, whoosh(0.7, 0.65), A(24.2), 0.25)
     V = 'vo/raw_%s.wav'
     vo = [(V % 'f2_01', 2.45, 1.0), (V % 'f2_02', 7.55, 1.0), (V % 'f2_03', 11.85, 1.0), (V % 'f2_09', 17.95, 1.0), (V % 'f2_10', 24.6, 1.0),
-          (V % 'f2_04', A(16.6), 1.0), (V % 'f2_05', A(19.9), 1.0), (V % 'f2_06', A(25.0), 1.0), (V % 'f2_07', A(28.4), 1.0),
-          (V % 'f2_08', 43.6, 1.0), (V % '09', 46.4, 1.0), (V % '10', 49.0, 1.08)]
+          (V % 'f2_04', A(16.6), 1.0), (V % 'f2_05', A(19.9), 1.0), (V % 'f2_06', A(25.0), 1.0), (V % 'f2_07', 40.3, 1.0),
+          (V % '09', 43.4, 1.0), (V % '10', 45.75, 1.08)]
     mix(L, mu, fx, vo, 'out_film2.wav')
     print('ok')
