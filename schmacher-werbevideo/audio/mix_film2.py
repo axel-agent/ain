@@ -1,6 +1,7 @@
 # Ton für Film 2 „Licht an.“ (gleiche Zeitachse für 16:9 und 9:16)
 import sys; sys.path.insert(0, '.')
 from sound import *
+import os; MK = 'm' if os.environ.get('MAKLER') else ''  # Makler-Version: Russinov-Abbinder
 L = 50.6
 C, INS = 2.25, 10.0   # Vorschaubild-Länge, eingeschobener Rundumschwenk + Tor
 def A(t): return t + C if t < 15.5 else t + C + INS   # Aufbau-Zeit -> Video-Zeit
@@ -67,6 +68,6 @@ if __name__ == '__main__':
     V = 'vo/raw_%s.wav'
     vo = [(V % 'f2_01', 2.45, 1.0), (V % 'f2_02', 7.55, 1.0), (V % 'f2_03', 11.85, 1.0), (V % 'f2_09', 17.95, 1.0), (V % 'f2_10', 24.6, 1.0),
           (V % 'f2_04', A(16.6), 1.0), (V % 'f2_05', A(19.9), 1.0), (V % 'f2_06', A(25.0), 1.0), (V % 'f2_07', 40.3, 1.0),
-          (V % '09', 43.4, 1.0), (V % '10', 45.75, 1.08)]
-    mix(L, mu, fx, vo, 'out_film2.wav')
+          (V % (MK + '09'), 43.4, 1.0), (V % (MK + '10'), 45.75, 1.08)]
+    mix(L, mu, fx, vo, 'out_film2' + ('_mk' if MK else '') + '.wav')
     print('ok')

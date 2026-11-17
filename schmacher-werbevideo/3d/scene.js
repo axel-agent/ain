@@ -896,9 +896,18 @@ function buildSite() {
   const mtn = new THREE.Mesh(ring, M.mountain); mtn.material.side = THREE.DoubleSide; scene.add(mtn);
 }
 function logoSign(F, u, v, w) {
-  const img = new Image(); img.src = 'logo.png';
-  const t = new THREE.Texture(img); img.onload = () => { t.needsUpdate = true; }; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = MAXANISO;
+  let t;
+  if (params.get('sign') === 'gpe') { // neutrales Schild „Gewerbepark Ebenthal“ (Makler-Version, ohne Firmenlogo)
+    const cv = document.createElement('canvas'); cv.width = 2160; cv.height = 1158; const g = cv.getContext('2d');
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#0f182a'; g.font = '800 300px Inter, sans-serif'; g.fillText('GEWERBEPARK', 1080, 470, 2000);
+    g.fillStyle = '#c27a3e'; g.fillRect(780, 660, 600, 22);
+    g.fillStyle = '#0f182a'; g.font = '600 240px Inter, sans-serif'; g.fillText('EBENTHAL', 1080, 860, 2000);
+    t = new THREE.CanvasTexture(cv);
+  } else { const img = new Image(); img.src = 'logo.png'; t = new THREE.Texture(img); img.onload = () => { t.needsUpdate = true; }; }
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = MAXANISO;
   const h = w * 0.55;
+  B1.signC = [[-1, -1], [1, -1], [1, 1], [-1, 1], [0, 0]].map(([a, b]) => F.point(u + a * (w / 2 + 0.15), v + b * (h / 2 + 0.12), 0.06)); B1.signN = F.n.clone();
   fbox(F, u - w / 2 - 0.15, u + w / 2 + 0.15, v - h / 2 - 0.12, v + h / 2 + 0.12, 0, 0.05, M.white);
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, w * 1158 / 2160), new THREE.MeshStandardMaterial({ map: t, transparent: true, roughness: 0.5 }));
   m.position.copy(F.point(u, v, 0.055)); m.quaternion.copy(F.quat); scene.add(m);
@@ -1039,6 +1048,11 @@ window.renderAt = function (t) {
     camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(hf / 2) * H / W)); }
   if (s.roll !== undefined || s.topdown) { const a = THREE.MathUtils.degToRad((s.roll || [0, 0])[0] + ((s.roll || [0, 0])[1] - (s.roll || [0, 0])[0]) * kk); camera.up.set(Math.sin(a), 0, -Math.cos(a)); } else camera.up.set(0, 1, 0);
   camera.lookAt(tgt); camera.updateProjectionMatrix();
+  if (params.get('probe') === '1') { // nur prüfen, ob das Fassadenschild im Bild ist
+    const front = camera.position.clone().sub(B1.signC[4]).dot(B1.signN) > 0;
+    const vis = front && B1.signC.some(p => { const q = p.clone().project(camera); return q.z < 1 && Math.abs(q.x) < 1.05 && Math.abs(q.y) < 1.05; });
+    return vis;
+  }
   setShadowBox(s.shadowC ? new THREE.Vector3(...s.shadowC) : tgt, s.shadowR || 45);
   // Tor
   const doorOpen = s.door ? easeIO((lt - s.door[0]) / (s.door[1] - s.door[0])) : (s.doorOpen ?? 0);

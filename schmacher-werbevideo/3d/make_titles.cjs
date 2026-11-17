@@ -1,7 +1,10 @@
 // Rendert Titelkarten als transparente PNGs: node make_titles.cjs [V|16]
 // V: titlesV.html -> titlesV/*.png (1080x1920) · 16: titles16.html -> titles16/*.png (1920x1080)
 const { chromium } = require('playwright'); const path = require('path'), fs = require('fs');
-const CFG = { V: ['titlesV.html', 'titlesV', 1080, 1920, ['cover', 'hook', 'slogan', 'code', 'lager', 'hoehe', 'buero', 'hallen', 'end', 'endcta', 'stell', 'deins', 'lager2', 'buero2', 'kueche', 'hallen2', 'end2', 'lager3', 'tor', 'end3', 'end3cta', 'cover2']],
+const CFG = {
+  '16m': ['titles16m.html', 'titles16m', 1920, 1080, ['cover', 'hook', 'slogan', 'code', 'units', 'tech', 'end', 'endcta', 'stell', 'deins', 'lager2', 'buero2', 'kueche', 'hallen2', 'lager3', 'tor', 'end3', 'end3cta', 'cover2']],
+  Vm: ['titlesVm.html', 'titlesVm', 1080, 1920, ['cover', 'hook', 'slogan', 'code', 'lager', 'hoehe', 'buero', 'hallen', 'end', 'endcta', 'stell', 'deins', 'lager2', 'buero2', 'kueche', 'hallen2', 'lager3', 'tor', 'end3', 'end3cta', 'cover2']],
+  '45m': ['titles45m.html', 'titles45m', 1080, 1350, ['cover2']], V: ['titlesV.html', 'titlesV', 1080, 1920, ['cover', 'hook', 'slogan', 'code', 'lager', 'hoehe', 'buero', 'hallen', 'end', 'endcta', 'stell', 'deins', 'lager2', 'buero2', 'kueche', 'hallen2', 'end2', 'lager3', 'tor', 'end3', 'end3cta', 'cover2']],
               45: ['titles45.html', 'titles45', 1080, 1350, ['cover2']],
               16: ['titles16.html', 'titles16', 1920, 1080, ['cover', 'hook', 'slogan', 'code', 'units', 'tech', 'end', 'endcta', 'stell', 'deins', 'lager2', 'buero2', 'kueche', 'hallen2', 'end2', 'lager3', 'tor', 'end3', 'end3cta', 'cover2']] };
 (async () => {
