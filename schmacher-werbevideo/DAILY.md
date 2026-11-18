@@ -6,7 +6,7 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
   Kein Schmacher-Logo/-Kontakt; Fassadenschild neutral (`&sign=gpe`); Sprecher „Russinow Immobilien“ (Schreibweise im Bild: Russinov).
 
 ## Format
-- Video **9:16, 1080×1920, 24 fps, 15–25 s**, für WhatsApp-Status, Instagram/Facebook Reels und Stories. Ton mit Sprecher (ElevenLabs „Bill“, siehe `audio/`), Musik und Geräusche, Lautheit −14 LUFS. Zusätzlich eine `_web`-Fassung (crf 22).
+- Video **9:16, 1080×1920, 24 fps, ca. 45–50 s** (wie die bisherigen Filme, davon ca. 6–7 s Endkarte mit Anruf-Aufforderung), für WhatsApp-Status, Instagram/Facebook Reels und Stories. Ton mit Sprecher (ElevenLabs „Bill“, siehe `audio/`), Musik und Geräusche, Lautheit −14 LUFS. Zusätzlich eine `_web`-Fassung (crf 22).
 - Bild **4:5, 1080×1350, JPG**, für den Feed und den Status.
 - Ablage: `export/daily/JJJJ-MM-TT/` mit `Schmacher_…` und `Russinov_…` (Video und Bild), dazu ein kurzer Posttext (`Posttext_Schmacher.txt`, `Posttext_Russinov.txt`) mit Hashtags.
 - Fertig bis **7:00 Uhr (Wien)**. Danach die vier Dateien und die Posttexte mit SendUserFile (status proactive) schicken, mit 2–3 Sätzen auf Deutsch (Du): Idee des Tages und was neu ist.
@@ -19,12 +19,12 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - Unten Lager/Halle, oben Büro auf der Galerie (Lagerbühne), WC oben, Anschluss für Kaffeeküche/Kochecke optional
 - Großes elektrisches Sektionaltor (**keine Maße nennen**), Gehtür, Fensterband im Büro
 - Fußbodenheizung, Luft-Wärmepumpe, 3-fach-Verglasung, bis zu 7 m Raumhöhe
-- „ca. 150 m² Nutzfläche“ ist vom Bauherrn noch nicht bestätigt, also besser weglassen, bis er es bestätigt
+- ca. 150 m² Nutzfläche (Halle + Galerie, vom Bauherrn bestätigt; immer „ca.“ oder „rund“ davor)
 - Zielgruppe: saubere Betriebe mit Lager + Büro (Elektriker, Installateur, Hausbetreuung, Versandhandel/Onlineshop, Logistik, Handel, Tischler optional). **Keine** Kfz-Werkstatt bzw. schmutzige Betriebe zeigen.
 
 ## Werkzeuge
 - 3D-Modell `3d/scene.js` (three.js), Kameras in `3d/shots.js` (Film 1) und `3d/shots2.js` (Film 2); Rendern mit `3d/render.cjs` (VW/VH/QS, `--still`).
-  Ein Bild 1080×1920 braucht ca. 15–20 s, also **früh starten** und Läufe mit `setsid nohup … & disown` abkoppeln.
+  Ein Bild 1080×1920 braucht ca. 15–20 s; ~1000 Bilder pro Video → in 2–3 parallelen Render-Läufen aufteilen (Zeitbereiche), Endkarte über Standbild ohne Rendern. **Früh starten** und Läufe mit `setsid nohup … & disown` abkoppeln.
   Lange Wartezeiten mit Hintergrund-Waitern (max. 2 h) überbrücken.
 - Titel als HTML → transparente PNGs (Beispiele `3d/titlesV.html` und `3d/titlesVm.html`, Renderer `3d/make_titles.cjs`). Schnitt mit `compose()` aus `edit.py`, Ton mit `audio/sound.py`.
 - Neue Sprecherzeilen per ElevenLabs (Schlüssel kommt über den Proxy, `mp3_44100_128`). Abbinder vorhanden: `09`/`10` (Schmacher) und `m09`/`m10` (Russinov).
