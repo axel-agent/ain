@@ -30,6 +30,15 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - Neue Sprecherzeilen per ElevenLabs (Schlüssel kommt über den Proxy, `mp3_44100_128`). Abbinder vorhanden: `09`/`10` (Schmacher) und `m09`/`m10` (Russinov).
 - Für jeden Tag einen eigenen Kamera-/Szenen-Satz anlegen (z. B. `3d/daily/<datum>.js` oder ein neuer Shot-Modus), keine alten Videos einfach neu schneiden.
 
+
+## Anspruch: Vorfreude auf die nächste Folge
+- Die Videos laufen als **Serie** mit Folgennummer („Folge 1, 2, 3 …“). Jede Folge hat ein eigenes Genre und eine eigene Stimmung: Action, Doku, Comedy, Krimi-Spannung, Zeitraffer, Countdown, Quiz, Vorher/Nachher, Kino-Trailer usw.
+- **Hook in den ersten 1,5 s:** sofort etwas Überraschendes in Bild und Ton, nie langsam einsteigen.
+- Mindestens ein **Wow-Moment** in der Mitte, etwa eine spektakuläre Kamerafahrt, eine Verwandlung oder eine Pointe.
+- **Cliffhanger am Ende**, kurz vor oder in der Endkarte: „Morgen: …“ mit einem kurzen Vorgeschmack auf die nächste Idee, damit man sich auf die nächste Folge freut. Diese Ankündigung als Idee der nächsten Folge im Logbuch vormerken **und am nächsten Tag auch einlösen**.
+- Jede Folge soll mindestens in einem Punkt besser oder überraschender sein als die vorige. Nie dieselbe Kamerafahrt, Musik oder Dramaturgie zweimal.
+- Der Ton bleibt positiv und einladend: Freude, Stolz, „das könnte mein Betrieb sein“.
+
 ## Ideen-Logbuch (nie wiederholen!)
 Jeden Tag eine **neue Idee** mit eigener Kamera, eigener Dramaturgie, eigenem Hook in den ersten 1,5 s und eigener Musikstimmung. Hier eintragen (Datum · Titel · Kurzbeschreibung), damit sich nichts wiederholt.
 
