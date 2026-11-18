@@ -31,6 +31,15 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - Für jeden Tag einen eigenen Kamera-/Szenen-Satz anlegen (z. B. `3d/daily/<datum>.js` oder ein neuer Shot-Modus), keine alten Videos einfach neu schneiden.
 
 
+
+## Echte Baustellenfotos (Stand Nov. 2026) – `referenz-fotos/stand-2026-11/`
+Die Fotos dürfen in Videos und Bildern verwendet werden, aber **nur aufbereitet**:
+- Alles entfernen, was nach Baustelle aussieht: Hebebühne, Leitern, Latten, Säcke, Kabel, Baumaterial, Werkzeug, Personen. Werkzeug dafür: `retusche/lama.py` mit `inpaint()` und `poly_mask()` (LaMa-ONNX, Modell-Download siehe Kopf der Datei, `HF_HUB_DISABLE_XET=1`).
+- Fehlende Sektionaltore (anthrazit) mit `warp_into()` und `sectional_door()` perspektivisch einsetzen. Die Ecken der Öffnungen vorher mit einem Raster bestimmen. Die Stiege fehlt auf den Fotos noch, deshalb nicht so zuschneiden oder beschriften, als wäre sie da.
+- Schöner zuschneiden (Bildausschnitt, gerade Kanten), Licht und Farben leicht verbessern. Den Schotterboden möglichst wegschneiden.
+- Kennzeichnen, dass es echte Bilder sind, z. B. „Echte Fotos · Baufortschritt“ oder „So weit sind wir schon“. Ergebnis immer selbst prüfen, bevor es verwendet wird.
+- Beispiele: `retusche/out/test02.jpg` (Hebebühne weg), `test04.jpg` (Tore eingesetzt), `test09.jpg` (Halle aufgeräumt).
+
 ## Anspruch: Vorfreude auf die nächste Folge
 - Die Videos laufen als **Serie** mit Folgennummer („Folge 1, 2, 3 …“). Jede Folge hat ein eigenes Genre und eine eigene Stimmung: Action, Doku, Comedy, Krimi-Spannung, Zeitraffer, Countdown, Quiz, Vorher/Nachher, Kino-Trailer usw.
 - **Hook in den ersten 1,5 s:** sofort etwas Überraschendes in Bild und Ton, nie langsam einsteigen.
@@ -44,6 +53,6 @@ Jeden Tag eine **neue Idee** mit eigener Kamera, eigener Dramaturgie, eigenem Ho
 
 Bisher (Kampagne): Film 1 „Raus aus der Garage“ (Anflug, Fassade, Tor, Halle, Büro, Nacht) · Film 2 „Licht an.“ (Lichtschalter, Halle füllt sich, Tor + Transporter, Büro, Kaffeeküche).
 
-Ideenspeicher (noch frei): Branchen-Tag (z. B. Elektriker, Onlineshop, Installateur, Hausbetreuung – Halle passend eingerichtet) · Countdown „7 Hallen – 7 Gründe“ · Garage-vs-Halle-Splitscreen · Drohnen-Sonnenaufgang mit Karawanken · Winter/Schnee außen, warm innen (Fußbodenheizung) · „Wie viel passt rein?“ Paletten-Zeitraffer · POV Transporter von der Autobahn bis ins Tor · Tag-und-Nacht-Zeitraffer · Röntgen-/Schnitt-Fahrt durchs Gebäude · Hausnummer-Tour 1→7 · Miniatur-/Tilt-Shift-Look · Büro-Moodboard „Dein Logo hier“ · Quiz „Was passt in Halle 3?“ · Musik-Beat-Schnitt · Weihnachts-/Jahreswechsel-Specials passend zum Datum.
+Ideenspeicher (noch frei): Baustellen-Update „Vom Rendering zur Realität“ (3D-Modell geht in echtes Foto über) · Branchen-Tag (z. B. Elektriker, Onlineshop, Installateur, Hausbetreuung – Halle passend eingerichtet) · Countdown „7 Hallen – 7 Gründe“ · Garage-vs-Halle-Splitscreen · Drohnen-Sonnenaufgang mit Karawanken · Winter/Schnee außen, warm innen (Fußbodenheizung) · „Wie viel passt rein?“ Paletten-Zeitraffer · POV Transporter von der Autobahn bis ins Tor · Tag-und-Nacht-Zeitraffer · Röntgen-/Schnitt-Fahrt durchs Gebäude · Hausnummer-Tour 1→7 · Miniatur-/Tilt-Shift-Look · Büro-Moodboard „Dein Logo hier“ · Quiz „Was passt in Halle 3?“ · Musik-Beat-Schnitt · Weihnachts-/Jahreswechsel-Specials passend zum Datum.
 
 ### Logbuch
