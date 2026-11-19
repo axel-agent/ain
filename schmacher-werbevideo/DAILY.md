@@ -14,6 +14,7 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 ## Weitergabe an den Facebook-Gruppen-Agenten
 - Die fertige **Schmacher-Version** (9:16, unter 100 MB) zusätzlich nach `/home/user/ain/werbevideos/JJJJ-MM-TT_<Titel>_9x16.mp4` kopieren, in `werbevideos/LISTE.md` eine Zeile mit Inhalt eintragen, committen und pushen (Branch `claude/schmacher-solutions-ad-video-5gp2vk`).
 
+- `werbevideos/tagespakete/NEUESTES.txt` auf das neue Datum setzen (der Marketing-Agent liest es).
 - Zusätzlich das **komplette Tagespaket** (beide Videos, beide Bilder, beide Posttexte) nach `/home/user/ain/werbevideos/tagespakete/JJJJ-MM-TT/` kopieren und mitpushen. Ziel beim Bauherrn: Ordner „Marketing\Werbevideos & Bilder Claude“ (OneDrive) – direkt erreichbar erst, wenn sein Computer per Remote Control freigegeben ist; dann dorthin kopieren.
 
 ## Werbebild: sofort verständlich (Wunsch Bauherr 19.11.)

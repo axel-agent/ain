@@ -3,6 +3,12 @@
 **Quelle:** GitHub-Repository `axel-agent/ain`, Branch `claude/schmacher-solutions-ad-video-5gp2vk`, Ordner `werbevideos/`.
 **Neu jeden Tag:** spätestens **7:00 Uhr (Wien)**.
 
+## Zugriff (ohne Login – Repository ist öffentlich)
+- Neuestes Datum: https://raw.githubusercontent.com/axel-agent/ain/claude/schmacher-solutions-ad-video-5gp2vk/werbevideos/tagespakete/NEUESTES.txt
+- Dateien direkt laden: `https://raw.githubusercontent.com/axel-agent/ain/claude/schmacher-solutions-ad-video-5gp2vk/werbevideos/tagespakete/<DATUM>/<DATEINAME>`
+  z. B. …/tagespakete/2026-11-19/Schmacher_EchtJetzt_9x16.mp4
+- Dateiliste eines Tages: https://github.com/axel-agent/ain/tree/claude/schmacher-solutions-ad-video-5gp2vk/werbevideos/tagespakete
+
 ## Was liegt wo
 - `werbevideos/tagespakete/JJJJ-MM-TT/` – komplettes Tagespaket:
   - `Schmacher_<Titel>_9x16.mp4` – Video für Schmacher Solutions (1080×1920, ca. 50 s, < 25 MB)
