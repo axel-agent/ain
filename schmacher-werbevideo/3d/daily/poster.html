@@ -1,0 +1,65 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Werbebild Vorlage</title>
+<!-- Feste Vorlage für die täglichen Werbebilder (4:5). Parameter per URL: b=s|r, hero=<bild>, tag=<Tagesaufkleber>, line=<Tageszeile> -->
+<style>
+:root{--navy:#0f182a;--or:#e07a2c;--or2:#c2602a;--bg:#f6f3ef;--line:#e7e1d9}
+html,body{margin:0;width:1080px;height:1350px;overflow:hidden;font-family:Inter,sans-serif;background:var(--bg);color:var(--navy)}
+.head{height:122px;background:#fff;display:flex;align-items:center;padding:0 46px;border-bottom:5px solid var(--or)}
+.head img{height:84px}.head .sep{width:3px;height:70px;background:var(--or);margin:0 30px}
+.head .loc b{display:block;font-weight:800;letter-spacing:.2em;font-size:25px}.head .loc span{font-size:21px;color:#5b6170;letter-spacing:.02em}
+.hero{position:relative;height:320px;background-size:cover;background-position:center;clip-path:polygon(0 0,100% 0,100% 84%,0 100%)}
+.tag{position:absolute;left:40px;top:28px;background:rgba(255,255,255,.95);font-weight:800;font-size:24px;padding:10px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;gap:10px;align-items:center}
+.tag i{width:12px;height:12px;border-radius:50%;background:#e2483b}
+.main{display:flex;gap:24px;padding:0 46px;margin-top:-4px;height:540px}
+.l{width:560px;flex:none;padding-top:4px}
+.kick{font-weight:800;color:var(--or2);letter-spacing:.14em;font-size:23px;text-transform:uppercase}
+.big{font-weight:900;font-size:76px;line-height:.98;white-space:nowrap;letter-spacing:-.02em;margin-top:12px;text-transform:uppercase}
+.big .o{color:var(--or)}
+.units{margin-top:16px;font-weight:800;font-size:38px}.units small{display:block;font-size:26px;font-weight:600;color:#5b6170;margin-top:4px}
+.line{margin-top:14px;font-size:23px;font-style:italic;color:#3a4252;border-left:5px solid var(--or);padding-left:16px;line-height:1.35}
+.r{position:relative;flex:1;height:500px}
+.r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:24px;box-shadow:0 14px 40px rgba(15,24,42,.18)}
+.lb{position:absolute;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--or);border-radius:10px;font-weight:800;font-size:22px;padding:5px 12px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.icons{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding:0 46px;margin-top:16px}
+.ic{background:#fff;border-radius:16px;padding:14px 6px 12px;text-align:center;font-size:18px;font-weight:650;line-height:1.2;border:1px solid var(--line)}
+.ic svg{width:36px;height:36px;stroke:var(--or);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 8px}
+.cta{margin:16px 46px 0;height:118px;border-radius:22px;background:linear-gradient(90deg,var(--or),var(--or2));color:#fff;display:flex;align-items:center;padding:0 34px;box-shadow:0 12px 30px rgba(194,96,42,.35)}
+.cta .ph{width:64px;height:64px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin-right:22px}
+.cta .ph svg{width:36px;height:36px;fill:var(--or)}
+.cta .t small{white-space:nowrap;display:block;font-weight:800;letter-spacing:.16em;font-size:21px;text-transform:uppercase;opacity:.95}
+.cta .t b{white-space:nowrap;font-weight:900;font-size:62px;letter-spacing:.01em;line-height:1.05}
+.cta .w{margin-left:auto;text-align:right;font-weight:700;font-size:21px;line-height:1.45;white-space:nowrap}
+.foot{height:56px;margin-top:6px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:#3a4252;letter-spacing:.04em}
+.foot span{color:var(--or2)}
+</style></head><body>
+<div class="head"><img id="logo"><div class="sep"></div><div class="loc"><b>GEWERBEPARK KLAGENFURT-EBENTHAL</b><span>Josef-Madersperger-Str. 2 · 9065 Ebenthal bei Klagenfurt</span></div></div>
+<div class="hero" id="hero"><div class="tag" id="tag"><i></i><span></span></div></div>
+<div class="main">
+ <div class="l"><div class="kick">Neubau · 7 Hallen mit Büro</div>
+  <div class="big">Halle + Büro<br>+ Lager<br><span class="o">zu vermieten</span></div>
+  <div class="units">7 Einheiten je ca. 150 m²<small>Unten Halle &amp; Lager · oben Büro mit WC</small></div>
+  <div class="line" id="line"></div></div>
+ <div class="r"><img src="../out/cut_poster.jpg">
+  <div class="lb" style="left:62%;top:9%">Sektionaltor</div><div class="lb" style="left:30%;top:22%">Lager</div><div class="lb" style="left:74%;top:47%">Halle</div>
+  <div class="lb" style="left:22%;top:46%">WC</div><div class="lb" style="left:18%;top:64%">Kaffeeküche</div><div class="lb" style="left:52%;top:74%">Büro</div></div>
+</div>
+<div class="icons">
+ <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-5 9 5v12"/><path d="M7 21v-7h10v7M7 17h10"/></svg>7 Einheiten<br>à ca. 150 m²</div>
+ <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>Lagerbühne<br>ca. 40–50 m²</div>
+ <div class="ic"><svg viewBox="0 0 24 24"><path d="M7 4c-1.5 2 1.5 3 0 5s1.5 3 0 5M12 4c-1.5 2 1.5 3 0 5s1.5 3 0 5M17 4c-1.5 2 1.5 3 0 5s1.5 3 0 5"/><path d="M3 19h18"/></svg>Fußboden-<br>heizung</div>
+ <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 7h16"/><path d="M8 13.5a4 4 0 1 0 8 0a4 4 0 1 0-8 0"/></svg>WC &amp; Wasch-<br>maschinenanschl.</div>
+ <div class="ic"><svg viewBox="0 0 24 24"><path d="M5 16l1.5-5a2 2 0 0 1 2-1.5h7a2 2 0 0 1 2 1.5L19 16"/><rect x="3" y="16" width="18" height="4" rx="1"/><path d="M6 20v1M18 20v1"/></svg>Parkplätze<br>je Einheit</div>
+ <div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L5 14h6l-1 8 8-12h-6l1-8z"/></svg>Strom, Wasser,<br>Heizung je Zähler</div>
+</div>
+<div class="cta"><div class="ph"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></div>
+ <div class="t"><small id="ctak"></small><b id="phone"></b></div><div class="w" id="web"></div></div>
+<div class="foot">Bezugsfertig voraussichtlich&nbsp;<span>Q1/Q2 2027</span>&nbsp;· Mietpreis auf Anfrage</div>
+<script>
+const q=new URLSearchParams(location.search), r=q.get('b')==='r';
+document.getElementById('logo').src = r ? '../russinov_logo.png' : '../logo.png';
+document.getElementById('hero').style.backgroundImage = `url(${q.get('hero')||'../out/d1_bild_real.jpg'})`;
+document.querySelector('#tag span').textContent = q.get('tag')||'Echtes Foto · Stand Nov. 2026';
+document.getElementById('line').textContent = q.get('line')||'';
+document.getElementById('ctak').textContent = r ? 'Ihr Makler · Halle jetzt mieten' : 'Jetzt anrufen & Halle mieten';
+document.getElementById('phone').textContent = r ? '0463 203520' : '0664 1200745';
+document.getElementById('web').innerHTML = r ? 'Russinov Immobilien<br>www.russinov.at' : 'Schmacher Solutions GmbH<br>www.gewerbepark-klagenfurt.at';
+</script></body></html>

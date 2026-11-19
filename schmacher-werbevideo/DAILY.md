@@ -20,7 +20,8 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - Wer das Bild auf Facebook sieht, muss in 1 Sekunde verstehen: **Halle mit Büro zu vermieten.** Das gehört groß und eindeutig aufs Bild, z. B. „ZU VERMIETEN · Halle + Lager + Büro“.
 - Jedes Bild ist ein **fix-fertiger, vollständiger Post**: großer Titel „zu vermieten“, Ort „Klagenfurt-Ebenthal“, die wichtigsten Fakten (ca. 150 m², unten Lager/oben Büro, großes Sektionaltor, Fußbodenheizung), Telefonnummer groß, Logo.
 - Kreative Ideen sind erlaubt, aber die Botschaft „zu vermieten“ darf nie hinter dem Gag verschwinden. Auch der Posttext beginnt mit der klaren Aussage („Halle mit Büro zu vermieten …“).
-- Beispiel-Vorlage vom Bauherrn folgt; sobald sie da ist, unter `referenz-fotos/` ablegen und als Stilvorgabe nutzen.
+- **Feste Vorlage:** `3d/daily/poster.html` (Stil nach `referenz-fotos/werbebild-vorlagen/`): Kopf mit Logo + „Gewerbepark Klagenfurt-Ebenthal“ + Adresse, großes Tagesfoto/Render oben, „HALLE + BÜRO + LAGER ZU VERMIETEN“, „7 Einheiten je ca. 150 m²“, beschriftetes Schnittbild (`3d/out/cut_poster.jpg`, neu erzeugen mit `node cut.cjs 760 980 19.5,25,-26 24.6,2.3,-7.3 27 out/cut_poster.jpg`), 6 Fakten-Kacheln, orange Anruf-Leiste, Fußzeile Bezug/Mietpreis.
+  Erzeugen: `node 3d/daily/poster.cjs <hero relativ zu daily/> "<Aufkleber>" "<Tageszeile>" <Ausgabe-Präfix>` → `_Schmacher.jpg`/`_Russinov.jpg`. **Täglich wechseln:** Hero-Bild, Aufkleber und Tageszeile (zur Videoidee passend); Rest bleibt gleich, damit man sofort erkennt: 7 Hallen zu vermieten + anrufen.
 
 ## Ort immer so nennen
 „**Ebenthal bei Klagenfurt**“ oder „**Klagenfurt-Ebenthal**“. Klagenfurt soll sichtbar sein, Ebenthal muss vorkommen.
@@ -32,7 +33,11 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 ## Fakten – nur diese verwenden, nichts erfinden (keine Preise, Maße, Termine, Verfügbarkeiten)
 - **Nie „noch frei“, „verfügbar“ o. Ä. schreiben** (keine Verfügbarkeitsangaben).
 - Lage: Ebenthal, direkt an der Stadtgrenze von Klagenfurt.
-- Bezug voraussichtlich Frühjahr 2027 (Angabe aus der SEO-Session, vom Bauherrn noch nicht bestätigt, bis dahin nicht verwenden).
+- Adresse: Josef-Madersperger-Str. 2, 9065 Ebenthal (Kärnten).
+- Zusätzliche Lagerbühne ca. 40–50 m² · WC & Waschmaschinenanschluss · Parkplätze je Einheit · Strom, Wasser, Heizung je eigener Zähler · Fußbodenheizung mit Luft-Wärmepumpe.
+- Bezugsfertig voraussichtlich Q1/Q2 2027 (aus den Flyern des Bauherrn) · Mietpreis auf Anfrage.
+- Zielgruppen laut Flyer: Handwerk, Online-Handel, Dienstleister & Start-ups.
+- Posttext darf enden mit „Bitte teilen – gerne auch im WhatsApp-Status!“.
 - 7 Hallen mit Büro, Neubau, Gewerbepark Ebenthal bei Klagenfurt, Kärnten
 - Unten Lager/Halle, oben Büro auf der Galerie (Lagerbühne), WC oben, Anschluss für Kaffeeküche/Kochecke optional
 - Großes elektrisches Sektionaltor (**keine Maße nennen**), Gehtür, Fensterband im Büro
