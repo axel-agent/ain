@@ -29,3 +29,4 @@ d1_05|Echt: bis zu sieben Meter Raumhöhe.
 d1_06|Und so könnte deine Halle aussehen. Unten Lager, oben Büro.
 d1_07|Sieben Hallen mit Büro. Rund hundertfünfzig Quadratmeter. Mit Fußbodenheizung.
 d1_08|Morgen, in Folge zwei: Wir richten eine Halle für einen Elektriker ein!
+d1_08b|Und jetzt die Frage: Welche der sieben Hallen wird deine?

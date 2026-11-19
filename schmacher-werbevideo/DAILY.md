@@ -44,12 +44,13 @@ Die Fotos dürfen in Videos und Bildern verwendet werden, aber **nur aufbereitet
 - Kennzeichnen, dass es echte Bilder sind, z. B. „Echte Fotos · Baufortschritt“ oder „So weit sind wir schon“. Ergebnis immer selbst prüfen, bevor es verwendet wird.
 - Beispiele: `retusche/out/test02.jpg` (Hebebühne weg), `test04.jpg` (Tore eingesetzt), `test09.jpg` (Halle aufgeräumt).
 
-## Anspruch: Vorfreude auf die nächste Folge
-- Die Videos laufen als **Serie** mit Folgennummer („Folge 1, 2, 3 …“). Jede Folge hat ein eigenes Genre und eine eigene Stimmung: Action, Doku, Comedy, Krimi-Spannung, Zeitraffer, Countdown, Quiz, Vorher/Nachher, Kino-Trailer usw.
+## Anspruch: jedes Video steht für sich
+- **Keine Folgennummern und keine Verweise auf andere Videos** („Folge 2“, „Morgen: …“, „Teil 1“). Jedes Video muss einzeln gepostet werden können, in beliebiger Reihenfolge (Wunsch Bauherr 19.11.).
+- Jedes Video hat ein eigenes Genre und eine eigene Stimmung: Action, Doku, Comedy, Krimi-Spannung, Zeitraffer, Countdown, Quiz, Vorher/Nachher, Kino-Trailer usw.
 - **Hook in den ersten 1,5 s:** sofort etwas Überraschendes in Bild und Ton, nie langsam einsteigen.
 - Mindestens ein **Wow-Moment** in der Mitte, etwa eine spektakuläre Kamerafahrt, eine Verwandlung oder eine Pointe.
-- **Cliffhanger am Ende**, kurz vor oder in der Endkarte: „Morgen: …“ mit einem kurzen Vorgeschmack auf die nächste Idee, damit man sich auf die nächste Folge freut. Diese Ankündigung als Idee der nächsten Folge im Logbuch vormerken **und am nächsten Tag auch einlösen**.
-- Jede Folge soll mindestens in einem Punkt besser oder überraschender sein als die vorige. Nie dieselbe Kamerafahrt, Musik oder Dramaturgie zweimal.
+- **Starker Abschluss statt Cliffhanger:** eine Pointe oder Frage, die zum Anrufen motiviert, z. B. „Welche der 7 Hallen wird deine?“.
+- Jedes Video soll mindestens in einem Punkt besser oder überraschender sein als das vorige. Nie dieselbe Kamerafahrt, Musik oder Dramaturgie zweimal.
 - Der Ton bleibt positiv und einladend: Freude, Stolz, „das könnte mein Betrieb sein“.
 
 ## Ideen-Logbuch (nie wiederholen!)
@@ -61,4 +62,4 @@ Ideenspeicher (noch frei): Branchen-Tag (z. B. Elektriker, Onlineshop, Installat
 
 ### Logbuch
 - **2026-11-19 · Folge 1 „Echt jetzt.“** – Doku/Reveal: Einstieg mit echtem Foto „Das ist kein Rendering.“ → Glitch zu 3D „Das hier schon.“ → Kran-Aufstieg bei Sonnenaufgang → Vergleichsschieber 3D-Plan/echtes Foto Torseite → echte Halle 7 m → Überblendung ins eingerichtete 3D-Büro → Beat-Montage echter Details → Fakten-Karte → Cliffhanger. Musik Dm9-Bb-F-C, 2,2-s-Takt. Werbebild: Split „Plan ✓ Realität ✓“. Dateien: `3d/daily/2026-11-19.js`, `d1_*`.
-  **Angekündigt für Folge 2 (einlösen!):** „Wir richten eine Halle für einen Elektriker ein ⚡“ (Branchen-Tag Elektriker: Kabeltrommeln, Material-Regale, Transporter mit Leitern am Dach, Büro mit Plänen).
+  Nachträglich ohne Folgennummer und ohne „Morgen …“ neu geschnitten. Nächste Idee (frei, nicht angekündigt): Branchen-Tag Elektriker.

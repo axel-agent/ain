@@ -111,14 +111,14 @@ def audio(brand):
     V = os.path.join(ROOT, 'audio', 'vo', 'raw_%s.wav')
     tail = [('09', TEND + 0.6, 1.0), ('10', TEND + 2.9, 1.08)] if brand == 's' else [('m09', TEND + 0.6, 1.0), ('m10', TEND + 2.9, 1.1)]
     vo = [('d1_01', 0.35, 1.0), ('d1_02', 3.2, 1.0), ('d1_03', 6.1, 1.0), ('d1_04', 13.3, 1.0), ('d1_05', 18.8, 1.0), ('d1_06', 22.7, 1.0),
-          ('d1_07', 32.7, 1.05), ('d1_08', 38.5, 1.0)] + tail
+          ('d1_07', 32.7, 1.05), ('d1_08b', 38.6, 1.0)] + tail
     return mix(L, mu, fx, [(V % n, t, s) for n, t, s in vo], os.path.join(OUTF, f'audio_{brand}.wav'))
 
 def video(brand):
     name = {'s': 'Schmacher', 'r': 'Russinov'}[brand]
     endimg = os.path.join(TT, f'end_{brand}.png')
     last = os.path.join(OUTF, f'f{int(round(TEND * FPS)) - 1:05d}.jpg')
-    out = os.path.join(EXP, f'{name}_Folge1_EchtJetzt_9x16.mp4')
+    out = os.path.join(EXP, f'{name}_EchtJetzt_9x16.mp4')
     fc = (f"[0:v]tpad=stop_mode=clone:stop_duration={L - TEND + 0.5:.2f}[b];[1:v]format=rgba,fade=t=in:st={TEND:.2f}:d=0.45:alpha=1[e];"
           f"[b][e]overlay=0:0:enable='gte(t,{TEND:.2f})',fade=t=out:st={L - 0.35:.2f}:d=0.35,format=yuv420p[v]")
     subprocess.run(['ffmpeg', '-nostdin', '-y', '-v', 'error', '-framerate', '24', '-i', os.path.join(OUTF, 'f%05d.jpg'), '-loop', '1', '-t', f'{L + 0.5:.2f}', '-i', endimg,
