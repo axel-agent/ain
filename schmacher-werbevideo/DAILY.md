@@ -14,6 +14,10 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 ## Ort immer so nennen
 „**Ebenthal bei Klagenfurt**“ oder „**Klagenfurt-Ebenthal**“. Klagenfurt soll sichtbar sein, Ebenthal muss vorkommen.
 
+## Modell-Korrekturen (Bauherr)
+- Lagerbühne: **kein Steher in der Mitte**, nur Randstützen (im Modell umgesetzt 19.11.).
+- Sektionaltore: **3 Lichtreihen (Fensterreihen) in der Mitte** (im Modell umgesetzt 19.11.). Beim Einsetzen von Toren in Fotos ebenfalls 3 Fensterreihen zeichnen.
+
 ## Fakten – nur diese verwenden, nichts erfinden (keine Preise, Maße, Termine, Verfügbarkeiten)
 - 7 Hallen mit Büro, Neubau, Gewerbepark Ebenthal bei Klagenfurt, Kärnten
 - Unten Lager/Halle, oben Büro auf der Galerie (Lagerbühne), WC oben, Anschluss für Kaffeeküche/Kochecke optional

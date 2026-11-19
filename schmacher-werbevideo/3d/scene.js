@@ -135,6 +135,7 @@ M.plinth = new THREE.MeshStandardMaterial({ color: 0x232527, roughness: 0.85 });
 M.frame = new THREE.MeshStandardMaterial({ color: 0x2b2e32, roughness: 0.4, metalness: 0.5 });
 M.flash = new THREE.MeshStandardMaterial({ color: 0x2c2f33, roughness: 0.35, metalness: 0.7 });
 M.glass = new THREE.MeshStandardMaterial({ color: 0x7f8f99, roughness: 0.03, metalness: 0.95, envMapIntensity: 1.25 });
+M.doorGlass = new THREE.MeshStandardMaterial({ color: 0x6d7c86, roughness: 0.06, metalness: 0.7, transparent: true, opacity: 0.7, envMapIntensity: 1.0 });
 M.glassClear = new THREE.MeshStandardMaterial({ color: 0xc8d6dc, roughness: 0.02, metalness: 0.2, transparent: true, opacity: 0.18, depthWrite: false, envMapIntensity: 1.5 });
 M.door = new THREE.MeshStandardMaterial({ map: tex.door, roughness: 0.42, metalness: 0.55 });
 M.number = new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.5, metalness: 0.4 });
@@ -254,6 +255,17 @@ class SectionalDoor {
       const uv = g.attributes.uv; // Paneeltextur 0.5 m pro Sektion
       for (let k = 0; k < uv.count; k++) uv.setXY(k, uv.getX(k) * w * 0.5, uv.getY(k) * this.sh * 0.5);
       const m = new THREE.Mesh(g, M.door); m.castShadow = true; m.receiveShadow = true; parent.add(m); this.secs.push(m);
+      // 3 Lichtreihen in der Mitte (Info Bauherr): Sektionen 2–4 mit je einer Reihe Fenster
+      if (i >= 2 && i <= 4) {
+        const nw = Math.max(3, Math.round(w / 0.85)), gap = w / nw, ww = gap * 0.72, wh = this.sh * 0.42;
+        for (let k = 0; k < nw; k++) {
+          const xk = -w / 2 + gap * (k + 0.5);
+          for (const zs of [1, -1]) {
+            const fr = new THREE.Mesh(new THREE.BoxGeometry(ww + 0.05, wh + 0.05, 0.004), M.frame); fr.position.set(xk, 0, zs * 0.0235); m.add(fr);
+            const gl = new THREE.Mesh(new THREE.PlaneGeometry(ww, wh), M.doorGlass); gl.position.set(xk, 0, zs * 0.0262); if (zs < 0) gl.rotation.y = Math.PI; m.add(gl);
+          }
+        }
+      }
     }
     this.set(0);
   }
@@ -436,12 +448,12 @@ function buildInterior() {
   box(w, gt, gd, M.plank, xc, gy + gt / 2, z0 + gd / 2, interior);
   for (let x = x0 + 0.3; x < x1; x += 0.62) box(0.1, 0.24, gd, M.glulam, x, gy - 0.12, z0 + gd / 2, interior); // Balken
   box(w, 0.4, 0.2, M.glulam, xc, gy - 0.05, gz1 - 0.085, interior); // Randträger (1,5 cm vor Platte und Stützen: kein Z-Fighting)
-  [x0 + 0.15, xc, x1 - 0.15].forEach(x => {
+  [x0 + 0.15, x1 - 0.15].forEach(x => { // nur Randstützen – in der Mitte gibt es keinen Steher (Info Bauherr)
     box(0.2, gy, 0.2, M.glulam, x, gy / 2, gz1 - 0.1, interior);
     box(0.22, 0.12, 0.012, M.steel, x, gy - 0.32, gz1 + 0.021, interior); // Stahlverbinder
     for (const bx of [-0.06, 0.06]) for (const by of [-0.34, -0.29]) { const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), M.inox); bolt.rotation.x = Math.PI / 2; bolt.position.set(x + bx, gy + by, gz1 + 0.031); interior.add(bolt); }
   });
-  B1.connector = new THREE.Vector3(xc, gy - 0.32, gz1 + 0.025);
+  B1.connector = new THREE.Vector3(x1 - 0.15, gy - 0.32, gz1 + 0.025);
   // Geländer (mit Öffnung an der Stiege, x0-Seite)
   const rh = 1.0, ry = gy + gt, gap = 1.15;
   for (let x = x0 + gap; x <= x1 + 0.01; x += (w - gap - 0.05) / 4) box(0.09, rh, 0.09, M.glulam, Math.min(x, x1 - 0.05), ry + rh / 2, gz1 - 0.05, interior);
