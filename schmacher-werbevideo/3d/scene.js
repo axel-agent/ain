@@ -1034,6 +1034,7 @@ if (CUT) {
   scene.background = new THREE.Color(0xf1f2f4);
   const gnd = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0xeceef1, roughness: 1 })); gnd.rotation.x = -Math.PI / 2; gnd.position.y = -0.02; gnd.receiveShadow = true; scene.add(gnd);
   renderer.clippingPlanes = [new THREE.Plane(new THREE.Vector3(0, -1, 0), 5.7)];
+  if (params.get('side') === '1') renderer.clippingPlanes.push(new THREE.Plane(new THREE.Vector3(1, 0, 0), -(heroX0 + 0.16))); // Seitenansicht: Wand auf der Stiegenseite aufgeschnitten
   // Mauerkronen der beiden sichtbaren Wände
   const capM = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: 0.8 });
   const cap = (w, d, x, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d), capM); m.position.set(x, 5.67, z); scene.add(m); };

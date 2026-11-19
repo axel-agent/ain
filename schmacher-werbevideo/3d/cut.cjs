@@ -8,7 +8,7 @@ const PTS = { buero: [23.4, 3.7, -12.6], wc: [26.84, 5.0, -10.0], kueche: [26.84
   const [w, h, cam, tgt, fov, out] = process.argv.slice(2);
   const b = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const p = await b.newPage({ viewport: { width: +w, height: +h } });
-  await p.goto(`http://localhost:${port}/index.html?scale=1.5&ao=1&w=${w}&h=${h}&notitles=1&film=2&cut=1&cam=${cam}&tgt=${tgt}&fov=${fov}`);
+  await p.goto(`http://localhost:${port}/index.html?scale=1.5&ao=1&w=${w}&h=${h}&notitles=1&film=2&cut=1${process.env.SIDE ? '&side=1' : ''}&cam=${cam}&tgt=${tgt}&fov=${fov}`);
   await p.waitForFunction(() => window.READY === true, null, { timeout: 120000 }); await p.waitForTimeout(500);
   await p.evaluate(() => window.renderAt(1.0));
   await p.screenshot({ path: out, type: 'jpeg', quality: 95, timeout: 300000 });
