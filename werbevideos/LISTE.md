@@ -12,3 +12,7 @@ Jedes Video steht für sich (keine Folgennummern) und kann einzeln gepostet werd
 | 2026-11-19_EchtJetzt_9x16.mp4 | 50 s | „Echt jetzt.“: echte Baustellenfotos (Stand Nov. 2026) gegen das 3D-Modell, Vergleichsschieber Plan/Realität, eingerichtete Halle, Fakten – „Welche der 7 Hallen wird deine?“ |
 
 Neue tägliche Videos werden hier als `JJJJ-MM-TT_<Titel>_9x16.mp4` ergänzt und in dieser Liste eingetragen.
+
+## Tagespakete (für den Ordner „Werbevideos & Bilder Claude“)
+Unter `tagespakete/JJJJ-MM-TT/` liegt jeden Tag das komplette Paket: Video und Bild für Schmacher Solutions und für Russinov Immobilien, dazu die Posttexte.
+Der lokale Agent kann diese Ordner 1:1 nach `OneDrive … \Schmacher Solutions GmbH\Marketing\Werbevideos & Bilder Claude\` kopieren.
