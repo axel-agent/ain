@@ -16,6 +16,12 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 
 - Zusätzlich das **komplette Tagespaket** (beide Videos, beide Bilder, beide Posttexte) nach `/home/user/ain/werbevideos/tagespakete/JJJJ-MM-TT/` kopieren und mitpushen. Ziel beim Bauherrn: Ordner „Marketing\Werbevideos & Bilder Claude“ (OneDrive) – direkt erreichbar erst, wenn sein Computer per Remote Control freigegeben ist; dann dorthin kopieren.
 
+## Werbebild: sofort verständlich (Wunsch Bauherr 19.11.)
+- Wer das Bild auf Facebook sieht, muss in 1 Sekunde verstehen: **Halle mit Büro zu vermieten.** Das gehört groß und eindeutig aufs Bild, z. B. „ZU VERMIETEN · Halle + Lager + Büro“.
+- Jedes Bild ist ein **fix-fertiger, vollständiger Post**: großer Titel „zu vermieten“, Ort „Klagenfurt-Ebenthal“, die wichtigsten Fakten (ca. 150 m², unten Lager/oben Büro, großes Sektionaltor, Fußbodenheizung), Telefonnummer groß, Logo.
+- Kreative Ideen sind erlaubt, aber die Botschaft „zu vermieten“ darf nie hinter dem Gag verschwinden. Auch der Posttext beginnt mit der klaren Aussage („Halle mit Büro zu vermieten …“).
+- Beispiel-Vorlage vom Bauherrn folgt; sobald sie da ist, unter `referenz-fotos/` ablegen und als Stilvorgabe nutzen.
+
 ## Ort immer so nennen
 „**Ebenthal bei Klagenfurt**“ oder „**Klagenfurt-Ebenthal**“. Klagenfurt soll sichtbar sein, Ebenthal muss vorkommen.
 
