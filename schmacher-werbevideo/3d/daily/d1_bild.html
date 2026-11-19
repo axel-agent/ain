@@ -1,0 +1,33 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Folge 1 Bild</title>
+<style>
+html,body{margin:0;width:1080px;height:1350px;overflow:hidden;font-family:Inter,sans-serif;background:#0f182a;color:#fff}
+.half{position:absolute;top:0;bottom:170px;background-size:cover;background-position:center}
+.l{left:0;width:540px;background-image:url(../out/d1_bild_3d.jpg)}
+.r{left:540px;width:540px;background-image:url(../out/d1_bild_real.jpg)}
+.line{position:absolute;left:536px;top:0;bottom:500px;width:8px;background:#fff;box-shadow:0 0 30px rgba(0,0,0,.4)}
+.knob{position:absolute;left:490px;top:610px;width:100px;height:100px;border-radius:50%;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#0f182a;font-weight:900;font-size:38px}
+.chip{position:absolute;top:44px;display:inline-flex;align-items:center;gap:12px;font-weight:800;font-size:28px;padding:12px 24px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.chip i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.c1{left:40px;background:rgba(15,24,42,.9)}.c1 i{background:#5aa7ff}
+.c2{right:40px;background:#fff;color:#0f182a}.c2 i{background:#e2483b}
+.scrim{position:absolute;left:0;right:0;bottom:170px;height:620px;background:linear-gradient(rgba(5,10,20,0),rgba(5,10,20,.55) 45%,rgba(5,10,20,.85))}
+.txt{position:absolute;left:64px;right:64px;bottom:206px}
+.kick{display:inline-block;background:#c27a3e;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:24px;padding:12px 24px;border-radius:999px}
+h1{margin:22px 0 0;font-weight:300;font-size:92px;line-height:1.0;letter-spacing:-.02em;text-shadow:0 4px 30px rgba(0,0,0,.5)}h1 b{font-weight:800}.ok{color:#7be08a}
+.sub{font-weight:600;font-size:34px;margin-top:18px;line-height:1.3}
+.bar{position:absolute;left:0;right:0;bottom:0;height:170px;background:#fff;color:#0f182a;display:flex;align-items:center;padding:0 56px}
+.bar img{height:96px}.bar .r2{margin-left:auto;text-align:right}
+.bar .k{font-weight:800;font-size:22px;letter-spacing:.18em;color:#c27a3e;text-transform:uppercase}
+.bar .n{font-weight:800;font-size:58px;line-height:1.05}
+</style></head><body>
+<div class="half l"></div><div class="half r"></div><div class="scrim"></div><div class="line"></div><div class="knob">⇆</div>
+<div class="chip c1"><i></i>3D-Plan</div><div class="chip c2"><i></i>Echt · Nov. 2026</div>
+<div class="txt"><div class="kick">Folge 1 · Echt jetzt.</div><h1>Plan <span class="ok">✓</span> <b>Realität <span class="ok">✓</span></b></h1>
+<div class="sub">Gewerbepark Klagenfurt-Ebenthal<br>7 Hallen mit Büro · ca. 150 m²</div></div>
+<div class="bar" id="bar"></div>
+<script>
+const b=new URLSearchParams(location.search).get('b');
+document.getElementById('bar').innerHTML = b==='r'
+ ? '<img src="../russinov_logo.png"><div class="r2"><div class="k">Ihr Makler · Jetzt anfragen</div><div class="n">0463 203520</div></div>'
+ : '<img src="../logo.png"><div class="r2"><div class="k">Jetzt anfragen</div><div class="n">0664 1200745</div></div>';
+</script></body></html>

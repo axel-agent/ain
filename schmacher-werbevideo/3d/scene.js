@@ -997,7 +997,9 @@ function evalPath(pts, t) {
   const c = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), false, 'centripetal'); return c.getPoint(t);
 }
 const ctx = { heroXC, B1, B2, UW, heroX0, heroX1 };
-const SHOTS = FILM2 ? SHOTS2 : SHOTS1, TITLES = FILM2 ? {} : TITLES1, DURATION = FILM2 ? DURATION2 : DURATION1;
+const DAILY = params.get('daily'); // tägliche Folgen: Kameras aus daily/<id>.js, Halle fertig eingerichtet
+const DMOD = DAILY ? await import(`./daily/${DAILY}.js`) : null;
+const SHOTS = DMOD ? DMOD.SHOTS : FILM2 ? SHOTS2 : SHOTS1, TITLES = FILM2 || DMOD ? {} : TITLES1, DURATION = DMOD ? DMOD.DURATION : FILM2 ? DURATION2 : DURATION1;
 const shotList = SHOTS(ctx, PORTRAIT);
 function shotAt(t) { let acc = 0; for (const s of shotList) { if (t < acc + s.dur) return { s, lt: t - acc, k: (t - acc) / s.dur }; acc += s.dur; } const s = shotList[shotList.length - 1]; return { s, lt: s.dur, k: 1 }; }
 
@@ -1059,7 +1061,8 @@ window.renderAt = function (t) {
   heroTor.set(doorOpen);
   heroKeypadLED.material.emissive.set(s.ledGreenAt !== undefined && lt > s.ledGreenAt ? 0x22ff55 : (s.doorOpen ? 0x22ff55 : 0xff2a1a));
   interior.visible = s.interior !== false;
-  if (FILM2) { const a = animTime2(t); applyAnims(a, t); film2Light(a); film2Extras(t); }
+  if (FILM2 && DMOD) { applyAnims(999, 999); film2Light(999); film2Extras(0.5); }
+  else if (FILM2) { const a = animTime2(t); applyAnims(a, t); film2Light(a); film2Extras(t); }
   grade.uniforms.time.value = t * 13.7;
   grade.uniforms.fade.value = 0; // kein Schwarz am Anfang: erstes Bild = Vorschaubild (Facebook)
   if (gtao) gtao.blendIntensity = s.ao ?? 0.85;

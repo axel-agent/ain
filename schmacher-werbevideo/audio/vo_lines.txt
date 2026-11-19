@@ -21,3 +21,11 @@ f2_09|Werkbank, Stapler, Regale – hier hat alles seinen Platz.
 f2_10|Und durchs große Tor fährst du direkt hinein.
 m09|Russinow Immobilien. Ruf jetzt an!
 m10|Null vier sechs drei – zwei null drei – fünf zwei null.
+d1_01|Das ist kein Rendering.
+d1_02|Das hier schon.
+d1_03|Aus dem Plan ist Wirklichkeit geworden: der Gewerbepark Klagenfurt-Ebenthal.
+d1_04|Plan – und Realität.
+d1_05|Echt: bis zu sieben Meter Raumhöhe.
+d1_06|Und so könnte deine Halle aussehen. Unten Lager, oben Büro.
+d1_07|Sieben Hallen mit Büro. Rund hundertfünfzig Quadratmeter. Mit Fußbodenheizung.
+d1_08|Morgen, in Folge zwei: Wir richten eine Halle für einen Elektriker ein!
