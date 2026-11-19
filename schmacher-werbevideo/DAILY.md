@@ -11,6 +11,9 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - Ablage: `export/daily/JJJJ-MM-TT/` mit `Schmacher_…` und `Russinov_…` (Video und Bild), dazu ein kurzer Posttext (`Posttext_Schmacher.txt`, `Posttext_Russinov.txt`) mit Hashtags.
 - Fertig bis **7:00 Uhr (Wien)**. Danach die vier Dateien und die Posttexte mit SendUserFile (status proactive) schicken, mit 2–3 Sätzen auf Deutsch (Du): Idee des Tages und was neu ist.
 
+## Weitergabe an den Facebook-Gruppen-Agenten
+- Die fertige **Schmacher-Version** (9:16, unter 100 MB) zusätzlich nach `/home/user/ain/werbevideos/JJJJ-MM-TT_<Titel>_9x16.mp4` kopieren, in `werbevideos/LISTE.md` eine Zeile mit Inhalt eintragen, committen und pushen (Branch `claude/schmacher-solutions-ad-video-5gp2vk`).
+
 ## Ort immer so nennen
 „**Ebenthal bei Klagenfurt**“ oder „**Klagenfurt-Ebenthal**“. Klagenfurt soll sichtbar sein, Ebenthal muss vorkommen.
 
@@ -19,6 +22,9 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - Sektionaltore: **3 Lichtreihen (Fensterreihen) in der Mitte** (im Modell umgesetzt 19.11.). Beim Einsetzen von Toren in Fotos ebenfalls 3 Fensterreihen zeichnen.
 
 ## Fakten – nur diese verwenden, nichts erfinden (keine Preise, Maße, Termine, Verfügbarkeiten)
+- **Nie „noch frei“, „verfügbar“ o. Ä. schreiben** (keine Verfügbarkeitsangaben).
+- Lage: Ebenthal, direkt an der Stadtgrenze von Klagenfurt.
+- Bezug voraussichtlich Frühjahr 2027 (Angabe aus der SEO-Session, vom Bauherrn noch nicht bestätigt, bis dahin nicht verwenden).
 - 7 Hallen mit Büro, Neubau, Gewerbepark Ebenthal bei Klagenfurt, Kärnten
 - Unten Lager/Halle, oben Büro auf der Galerie (Lagerbühne), WC oben, Anschluss für Kaffeeküche/Kochecke optional
 - Großes elektrisches Sektionaltor (**keine Maße nennen**), Gehtür, Fensterband im Büro
