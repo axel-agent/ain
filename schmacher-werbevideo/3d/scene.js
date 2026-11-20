@@ -629,7 +629,7 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
   const mBin = [mat(0x2a63c9, 0.5), mat(0xf2b31b, 0.5), mat(0xd84a26, 0.5)];
   for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) gb(km, 0.2, 0.2, 0.08, mBin[(r + (c > 5 ? 1 : 0)) % 3], -0.96 + c * 0.24, 0.17 + r * 0.26, 0.24);
   // Elektro-Stapler unter der Lagerbühne
-  const fk = GV(24.5, 0.04, -11.6, 19.05, 'pop', 0.5, 0.25); if (BRANCHE === 'elektro') fk.userData.hide = true;
+  const fk = GV(24.5, 0.04, -11.6, 19.05, 'pop', 0.5, 0.25); if (BRANCHE) fk.userData.hide = true;
   gb(fk, 1.0, 0.75, 1.55, mOrange, 0, 0.55, 0); gb(fk, 1.02, 0.55, 0.45, mBlack, 0, 0.5, -0.82); gb(fk, 0.45, 0.12, 0.45, mBlack, 0, 1.0, -0.2); gb(fk, 0.45, 0.45, 0.08, mBlack, 0, 1.25, -0.42);
   for (const sx of [-0.45, 0.45]) for (const sz of [-0.62, 0.55]) gb(fk, 0.06, 1.25, 0.06, mBlack, sx, 1.55, sz); gb(fk, 1.0, 0.05, 1.25, mBlack, 0, 2.17, -0.03);
   for (const sx of [-0.3, 0.3]) { gb(fk, 0.08, 2.05, 0.1, mGreyS, sx, 1.07, 0.88); gb(fk, 0.1, 0.04, 1.0, mGreyS, sx, 0.12, 1.45); gb(fk, 0.1, 0.5, 0.04, mGreyS, sx, 0.35, 0.95); }
@@ -644,7 +644,7 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
   const tr = GV(x0 + 0.3, 0.04, -2.7, 21.45, 'grow', 0.5); const tyre = mat(0x16171a, 0.8), rimM = mat(0xa9b0b6, 0.3, 0.8);
   for (const dz of [-1.0, 1.0]) for (const dx of [-0.2, 0.2]) gb(tr, 0.04, 1.75, 0.04, mBlue, dx, 0.875, dz);
   [0.42, 1.18].forEach(y => { for (const dx of [-0.2, 0.2]) gb(tr, 0.04, 0.04, 2.04, mOrange, dx, y - 0.3, 0);
-    if (BRANCHE === 'elektro') { const cab = [0xe0661b, 0x1b1d21, 0x8a9096, 0x2f8f3a, 0x1f4e9c]; for (let i = 0; i < 5; i++) { const zc = -0.8 + i * 0.4;
+    if (BRANCHE) { const cab = [0xe0661b, 0x1b1d21, 0x8a9096, 0x2f8f3a, 0x1f4e9c]; for (let i = 0; i < 5; i++) { const zc = -0.8 + i * 0.4;
         for (const dz of [-0.13, 0.13]) { const f = gc(tr, 0.3, 0.3, 0.03, mPal, 0, y, zc + dz, 24); f.rotation.x = Math.PI / 2; }
         const c = gc(tr, 0.24, 0.24, 0.24, mat(cab[(i + (y > 1 ? 2 : 0)) % 5], 0.55), 0, y, zc, 24); c.rotation.x = Math.PI / 2; } return; }
     for (let i = 0; i < 7; i++) { const t = gc(tr, 0.31, 0.31, 0.21, tyre, 0, y, -0.84 + i * 0.28, 24); t.rotation.x = Math.PI / 2; const r = gc(tr, 0.18, 0.18, 0.215, rimM, 0, y, -0.84 + i * 0.28, 16); r.rotation.x = Math.PI / 2; } });

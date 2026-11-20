@@ -42,13 +42,27 @@ html,body{margin:0;width:1080px;height:1350px;overflow:hidden;font-family:Inter,
 .facts li{font-size:19px;font-weight:650;padding:8px 0 8px 28px;position:relative;border-top:1px solid var(--line);line-height:1.2}
 .facts li:before{content:"";position:absolute;left:4px;top:13px;width:13px;height:13px;border-radius:50%;background:var(--or)}
 .line{margin:16px 46px 0;font-size:24px;font-style:italic;color:#3a4252;border-left:5px solid var(--or);padding-left:16px;line-height:1.3}
+
+/* Hochformat 9:16 (Startbild der Videos) */
+body.v{height:1920px}
+body.v .head{height:150px}body.v .head img{height:100px}body.v .head .loc b{font-size:25px;letter-spacing:.14em;white-space:nowrap}body.v .head .loc span{font-size:24px}
+body.v .hero{height:520px}
+body.v .tag{font-size:30px;top:36px}
+body.v .hl{margin-top:4px}body.v .hl .kick{font-size:27px}body.v .hl .big{font-size:84px}
+body.v .row{height:560px;margin-top:26px}body.v .cut{height:560px}
+body.v .facts .units{font-size:40px}body.v .facts li{font-size:21px;padding:9px 0 9px 30px}body.v .facts li:before{top:17px}
+body.v .line{font-size:28px;margin-top:22px}
+body.v .cta{height:160px;margin-top:26px}body.v .cta .t b{font-size:76px}body.v .cta .t small{font-size:24px}body.v .cta .w{display:none}body.v .cta{justify-content:center}
+body.v .foot{font-size:24px;height:70px}
+body.v .share{display:flex}
+.share{display:none;margin:10px 46px 0;height:70px;border-radius:18px;background:#0f182a;color:#fff;font-weight:800;font-size:28px;align-items:center;justify-content:center;gap:14px}
 </style></head><body>
 <div class="head"><img id="logo"><div class="sep"></div><div class="loc"><b>GEWERBEPARK KLAGENFURT-EBENTHAL</b><span>Josef-Madersperger-Str. 2 · 9065 Ebenthal bei Klagenfurt</span></div></div>
 <div class="hero" id="hero"><div class="tag" id="tag"><i></i><span></span></div></div>
 <div class="hl"><div class="kick">Neubau · 7 Hallen mit Büro · Klagenfurt-Ebenthal</div>
  <div class="big">Halle + Büro + Lager<br><span class="o">zu vermieten</span></div></div>
 <div class="row">
- <div class="cut"><img src="../out/cut_side_poster.jpg">
+ <div class="cut"><img id="cutimg" src="../out/cut_side_poster.jpg">
   <div class="lb" style="left:18%;top:31%">Büro</div><div class="lb" style="left:43%;top:13%">WC + Küche</div>
   <div class="lb" style="left:70%;top:24%">Lager</div><div class="lb" style="left:52%;top:76%">Halle</div><div class="lb" style="left:85%;top:34%">Sektionaltor ▸</div></div>
  <div class="facts"><div class="units">7 Einheiten<br>je ca. 150 m²</div>
@@ -57,14 +71,16 @@ html,body{margin:0;width:1080px;height:1350px;overflow:hidden;font-family:Inter,
 <div class="line" id="line"></div>
 <div class="cta"><div class="ph"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></div>
  <div class="t"><small id="ctak"></small><b id="phone"></b></div><div class="w" id="web"></div></div>
+<div class="share"><span id="webv"></span></div>
 <div class="foot">Bezugsfertig voraussichtlich&nbsp;<span>Q1/Q2 2027</span>&nbsp;· Mietpreis auf Anfrage</div>
 <script>
-const q=new URLSearchParams(location.search), r=q.get('b')==='r';
+const q=new URLSearchParams(location.search), r=q.get('b')==='r'; if (q.get('v')) document.body.classList.add('v'); if (q.get('cut')) document.getElementById('cutimg').src = q.get('cut');
 document.getElementById('logo').src = r ? '../russinov_logo.png' : '../logo.png';
 document.getElementById('hero').style.backgroundImage = `url(${q.get('hero')||'../out/d1_bild_real.jpg'})`;
 document.querySelector('#tag span').textContent = q.get('tag')||'Echtes Foto · Stand Nov. 2026';
 document.getElementById('line').textContent = q.get('line')||'';
 document.getElementById('ctak').textContent = r ? 'Ihr Makler · Halle jetzt mieten' : 'Jetzt anrufen & Halle mieten';
 document.getElementById('phone').textContent = r ? '0463 203520' : '0664 1200745';
+document.getElementById('webv').textContent = (r ? 'www.russinov.at' : 'www.gewerbepark-klagenfurt.at') + '  ·  📲 Bitte teilen!';
 document.getElementById('web').innerHTML = r ? 'Russinov Immobilien<br>www.russinov.at' : 'Schmacher Solutions GmbH<br>www.gewerbepark-klagenfurt.at';
 </script></body></html>

@@ -17,6 +17,11 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 - `werbevideos/tagespakete/NEUESTES.txt` auf das neue Datum setzen (der Marketing-Agent liest es).
 - Zusätzlich das **komplette Tagespaket** (beide Videos, beide Bilder, beide Posttexte) nach `/home/user/ain/werbevideos/tagespakete/JJJJ-MM-TT/` kopieren und mitpushen. Ziel beim Bauherrn: Ordner „Marketing\Werbevideos & Bilder Claude“ (OneDrive) – direkt erreichbar erst, wenn sein Computer per Remote Control freigegeben ist; dann dorthin kopieren.
 
+## Startbild jedes Videos = Plakat (Wunsch Bauherr 20.11.)
+- **Jedes Video beginnt mit dem Plakat im Hochformat** (ca. 2,2 s stehend, 0,3 s Überblendung, erst dann startet das Video). Es dient als Vorschaubild auf Facebook und muss sofort sagen: **Halle + Büro + Lager zu vermieten · Klagenfurt-Ebenthal · Telefonnummer**.
+- Erzeugen: `V=1 node 3d/daily/poster.cjs <hero> "<Aufkleber>" "<Tageszeile>" 3d/out/coverV_<tag>` (optional `CUT=../out/<schnittbild>.jpg`), dann `3d/daily/prepend_cover.sh <cover.jpg> <video_ohneStartbild.mp4> <video.mp4>` für Schmacher und Russinov.
+- Das Plakat wechselt täglich mit dem Video (Hero-Bild, Aufkleber, Tageszeile), der Aufbau bleibt gleich.
+
 ## Werbebild: sofort verständlich (Wunsch Bauherr 19.11.)
 - Wer das Bild auf Facebook sieht, muss in 1 Sekunde verstehen: **Halle mit Büro zu vermieten.** Das gehört groß und eindeutig aufs Bild, z. B. „ZU VERMIETEN · Halle + Lager + Büro“.
 - Jedes Bild ist ein **fix-fertiger, vollständiger Post**: großer Titel „zu vermieten“, Ort „Klagenfurt-Ebenthal“, die wichtigsten Fakten (ca. 150 m², unten Lager/oben Büro, großes Sektionaltor, Fußbodenheizung), Telefonnummer groß, Logo.
