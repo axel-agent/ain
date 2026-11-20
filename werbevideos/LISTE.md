@@ -10,6 +10,7 @@ Jedes Video steht für sich (keine Folgennummern) und kann einzeln gepostet werd
 | 2026-11_LichtAn_9x16.mp4 | 51 s | „Licht an.“: Schnittbild der Einheit, Hand am Lichtschalter, Halle füllt sich mit Regalen und Werkbank, Transporter fährt durchs Sektionaltor, Büro und Kaffeeküche. |
 | 2026-11_LichtAn_Teaser15s_9x16.mp4 | 16 s | Kurzfassung von „Licht an.“ (Lichtschalter, Tor mit Transporter, Büro). |
 | 2026-11-19_EchtJetzt_9x16.mp4 | 50 s | „Echt jetzt.“: echte Baustellenfotos (Stand Nov. 2026) gegen das 3D-Modell, Vergleichsschieber Plan/Realität, eingerichtete Halle, Fakten – „Welche der 7 Hallen wird deine?“ |
+| 2026-11-20_ElektroMorgen_9x16.mp4 | 51 s | „06:58 – Ein Morgen im Elektrobetrieb“: Röntgenblick von oben, Sturzflug in die Halle, Kabeltrommeln, Transporter mit Dachleiter, Büro, Uhr + Checkliste – Halle + Büro + Lager zu vermieten. |
 
 Neue tägliche Videos werden hier als `JJJJ-MM-TT_<Titel>_9x16.mp4` ergänzt und in dieser Liste eingetragen.
 

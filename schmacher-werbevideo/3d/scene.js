@@ -17,6 +17,7 @@ const params = new URLSearchParams(location.search);
 const W = parseInt(params.get('w') || '1920'), H = parseInt(params.get('h') || '1080');
 const PORTRAIT = H > W, NOTITLES = params.get('notitles') === '1';
 const FILM2 = params.get('film') === '2'; // Film 2: „Licht an.“
+const BRANCHE = params.get('branche') || ''; // tägliche Videos: Halle für eine Branche eingerichtet (z. B. elektro)
 if (PORTRAIT) { const st = document.getElementById('stage'); st.style.width = W + 'px'; st.style.height = H + 'px'; }
 if (NOTITLES) document.getElementById('ov').style.display = 'none';
 const SCALE = parseFloat(params.get('scale') || '1');
@@ -564,7 +565,7 @@ function gb(g, w, h, d, mat, x, y, z, cast = true) { const m = new THREE.Mesh(ne
 function gc(g, rt, rb, h, mat, x, y, z, seg = 24) { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m; }
 function applyAnims(t, v = t) {
   for (const a of anims) {
-    const k = ((a.vt ? v : t) - a.t) / a.dur; if (k <= 0) { a.g.visible = false; continue; }
+    const k = ((a.vt ? v : t) - a.t) / a.dur; if (k <= 0 || a.g.userData.hide) { a.g.visible = false; continue; }
     a.g.visible = true; const kk = Math.min(1, k);
     if (a.type === 'grow') a.g.scale.set(1, Math.max(0.001, easeOutCubic(kk)), 1);
     else if (a.type === 'pop') { const s = Math.max(0.001, easeOutBack(kk)); a.g.scale.set(s, s, s); }
@@ -609,7 +610,12 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
   const hw = G(xc - 1.55, 0.04, -1.25, 14.0, 'pop', 0.45, 2.2);
   for (const dx of [-0.2, 0.2]) gb(hw, 0.16, 0.08, 1.15, mOrange, dx, 0.06, 0); gb(hw, 0.56, 0.35, 0.2, mOrange, 0, 0.25, -0.62);
   const hd = gb(hw, 0.05, 1.1, 0.05, mBlack, 0, 0.85, -0.9); hd.rotation.x = -0.35; gb(hw, 0.36, 0.05, 0.05, mBlack, 0, 1.36, -1.08);
-  const ps = G(xc - 1.35, 0.04, -2.9, 14.2, 'pop', 0.45, 0.15); for (let i = 0; i < 6; i++) gb(ps, 1.2, 0.144, 0.8, mPal, 0, 0.072 + i * 0.146, 0);
+  if (BRANCHE === 'elektro') { // große Kabeltrommeln auf dem Boden
+    [[xc - 1.6, -3.1, 0.55, 0xe0661b], [xc - 1.5, -4.4, 0.48, 0x1b1d21], [xc - 2.3, -3.8, 0.42, 0x2f8f3a]].forEach(([dx, dz, r, c], k) => { const g = G(dx, 0.04, dz, 14.2 + k * 0.1, 'pop', 0.45, 0.3 * k);
+      for (const sx of [-0.24, 0.24]) { const f = gc(g, r, r, 0.05, mPal, sx, r, 0, 28); f.rotation.z = Math.PI / 2; }
+      const core = gc(g, r * 0.82, r * 0.82, 0.44, mat(c, 0.55), 0, r, 0, 28); core.rotation.z = Math.PI / 2;
+      for (let j = 0; j < 4; j++) { const sp = gb(g, 0.48, 0.05, 0.05, mPal, 0, r + Math.cos(j * 1.57) * r * 0.9, Math.sin(j * 1.57) * r * 0.9); } });
+  } else { const ps = G(xc - 1.35, 0.04, -2.9, 14.2, 'pop', 0.45, 0.15); for (let i = 0; i < 6; i++) gb(ps, 1.2, 0.144, 0.8, mPal, 0, 0.072 + i * 0.146, 0); }
   // Werkbank unter der Lagerbühne an der rechten Wand (x1), Lochwand mit Werkzeug – Tür vorne bleibt frei
   const wb = GV(x1 - 0.4, 0.04, -11.7, 18.55, 'pop', 0.45, Math.PI);
   gb(wb, 0.75, 0.05, 2.0, mOak, 0, 0.9, 0); for (const dz of [-0.9, 0.9]) gb(wb, 0.7, 0.88, 0.06, mGreyS, 0, 0.44, dz); gb(wb, 0.7, 0.03, 1.9, mGreyS, 0, 0.2, 0);
@@ -623,7 +629,7 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
   const mBin = [mat(0x2a63c9, 0.5), mat(0xf2b31b, 0.5), mat(0xd84a26, 0.5)];
   for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) gb(km, 0.2, 0.2, 0.08, mBin[(r + (c > 5 ? 1 : 0)) % 3], -0.96 + c * 0.24, 0.17 + r * 0.26, 0.24);
   // Elektro-Stapler unter der Lagerbühne
-  const fk = GV(24.5, 0.04, -11.6, 19.05, 'pop', 0.5, 0.25);
+  const fk = GV(24.5, 0.04, -11.6, 19.05, 'pop', 0.5, 0.25); if (BRANCHE === 'elektro') fk.userData.hide = true;
   gb(fk, 1.0, 0.75, 1.55, mOrange, 0, 0.55, 0); gb(fk, 1.02, 0.55, 0.45, mBlack, 0, 0.5, -0.82); gb(fk, 0.45, 0.12, 0.45, mBlack, 0, 1.0, -0.2); gb(fk, 0.45, 0.45, 0.08, mBlack, 0, 1.25, -0.42);
   for (const sx of [-0.45, 0.45]) for (const sz of [-0.62, 0.55]) gb(fk, 0.06, 1.25, 0.06, mBlack, sx, 1.55, sz); gb(fk, 1.0, 0.05, 1.25, mBlack, 0, 2.17, -0.03);
   for (const sx of [-0.3, 0.3]) { gb(fk, 0.08, 2.05, 0.1, mGreyS, sx, 1.07, 0.88); gb(fk, 0.1, 0.04, 1.0, mGreyS, sx, 0.12, 1.45); gb(fk, 0.1, 0.5, 0.04, mGreyS, sx, 0.35, 0.95); }
@@ -638,6 +644,9 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
   const tr = GV(x0 + 0.3, 0.04, -2.7, 21.45, 'grow', 0.5); const tyre = mat(0x16171a, 0.8), rimM = mat(0xa9b0b6, 0.3, 0.8);
   for (const dz of [-1.0, 1.0]) for (const dx of [-0.2, 0.2]) gb(tr, 0.04, 1.75, 0.04, mBlue, dx, 0.875, dz);
   [0.42, 1.18].forEach(y => { for (const dx of [-0.2, 0.2]) gb(tr, 0.04, 0.04, 2.04, mOrange, dx, y - 0.3, 0);
+    if (BRANCHE === 'elektro') { const cab = [0xe0661b, 0x1b1d21, 0x8a9096, 0x2f8f3a, 0x1f4e9c]; for (let i = 0; i < 5; i++) { const zc = -0.8 + i * 0.4;
+        for (const dz of [-0.13, 0.13]) { const f = gc(tr, 0.3, 0.3, 0.03, mPal, 0, y, zc + dz, 24); f.rotation.x = Math.PI / 2; }
+        const c = gc(tr, 0.24, 0.24, 0.24, mat(cab[(i + (y > 1 ? 2 : 0)) % 5], 0.55), 0, y, zc, 24); c.rotation.x = Math.PI / 2; } return; }
     for (let i = 0; i < 7; i++) { const t = gc(tr, 0.31, 0.31, 0.21, tyre, 0, y, -0.84 + i * 0.28, 24); t.rotation.x = Math.PI / 2; const r = gc(tr, 0.18, 0.18, 0.215, rimM, 0, y, -0.84 + i * 0.28, 16); r.rotation.x = Math.PI / 2; } });
   const fx = GV(x0 + 0.08, 0.04, -4.05, 21.6, 'pop', 0.35); gc(fx, 0.08, 0.08, 0.5, mat(0xc4161c, 0.35, 0.1), 0, 1.0, 0, 16); gb(fx, 0.02, 0.3, 0.3, mat(0xc4161c, 0.5), -0.05, 1.85, 0);
 
@@ -763,6 +772,16 @@ function film2Van() {
   for (const sx of [-1, 1]) for (const z of [0.82, 4.35]) {
     const w = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.37, 0.26, 28), tyre); w.rotation.z = Math.PI / 2; w.position.set(sx * 0.9, 0.37, z); w.castShadow = true; v.add(w);
     const r = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.27, 20), rim); r.rotation.z = Math.PI / 2; r.position.copy(w.position); v.add(r);
+  }
+  if (BRANCHE === 'elektro') { // Dachträger mit Leiter, Blitz-Aufkleber
+    for (const z of [1.6, 3.2, 4.8]) b(1.9, 0.05, 0.06, dark, 0, 2.47, z);
+    for (const sx of [-0.28, 0.28]) b(0.05, 0.06, 4.2, mat(0xb9bec4, 0.35, 0.8), sx, 2.55, 3.15);
+    for (let i = 0; i < 12; i++) b(0.56, 0.03, 0.035, mat(0xb9bec4, 0.35, 0.8), 0, 2.55, 1.2 + i * 0.36);
+    const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 512; const g = cv.getContext('2d');
+    g.fillStyle = '#f2b31b'; g.beginPath(); [[300, 30], [120, 290], [250, 290], [180, 490], [420, 200], [290, 200], [380, 30]].forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.fill();
+    g.fillStyle = '#1b1d21'; g.font = '800 120px Inter, sans-serif'; g.fillText('ELEKTRO', 440, 250); g.font = '600 70px Inter, sans-serif'; g.fillText('TECHNIK', 446, 340);
+    const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; const dm = new THREE.MeshStandardMaterial({ map: tx, transparent: true, roughness: 0.5 });
+    for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.2), dm); p.position.set(sx * 1.004, 1.75, 3.2); p.rotation.y = sx * Math.PI / 2; if (sx < 0) p.scale.x = 1; v.add(p); }
   }
   F2.vanSpots = [];
   for (const sx of [-1, 1]) { const sp = new THREE.SpotLight(0xfff1dc, 0, 30, 0.5, 0.6, 1.4); sp.position.set(sx * 0.74, 1.04, -0.1); const tg = new THREE.Object3D(); tg.position.set(sx * 0.9, 0.2, -10); v.add(tg); sp.target = tg; v.add(sp); F2.vanSpots.push(sp); }
@@ -1074,7 +1093,12 @@ window.renderAt = function (t) {
   heroTor.set(doorOpen);
   heroKeypadLED.material.emissive.set(s.ledGreenAt !== undefined && lt > s.ledGreenAt ? 0x22ff55 : (s.doorOpen ? 0x22ff55 : 0xff2a1a));
   interior.visible = s.interior !== false;
-  if (FILM2 && DMOD) { applyAnims(999, 999); film2Light(999); film2Extras(0.5); }
+  if (FILM2 && DMOD) { applyAnims(999, 999); film2Light(999); film2Extras(0.5);
+    // Tagesfolgen: Transporter je Einstellung ({van: [zStart, zEnde], vanRy, vanEase}), Dach aufgeschnitten ({clip: Höhe})
+    if (s.van) { const vk = (s.vanEase || (x => x))(Math.min(1, Math.max(0, k))); F2.van.visible = true; F2.van.position.set(heroX0 + 4.3, 0.04, s.van[0] + (s.van[1] - s.van[0]) * vk); F2.van.rotation.y = s.vanRy || 0; F2.vanSpots.forEach(sp => sp.intensity = s.vanLights ? 60 : 0); }
+    else F2.van.visible = false;
+    renderer.clippingPlanes = s.clip ? [new THREE.Plane(new THREE.Vector3(0, -1, 0), s.clip)] : [];
+  }
   else if (FILM2) { const a = animTime2(t); applyAnims(a, t); film2Light(a); film2Extras(t); }
   grade.uniforms.time.value = t * 13.7;
   grade.uniforms.fade.value = 0; // kein Schwarz am Anfang: erstes Bild = Vorschaubild (Facebook)

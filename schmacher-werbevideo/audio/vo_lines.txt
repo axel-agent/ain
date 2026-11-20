@@ -30,3 +30,11 @@ d1_06|Und so könnte deine Halle aussehen. Unten Lager, oben Büro.
 d1_07|Sieben Hallen mit Büro. Rund hundertfünfzig Quadratmeter. Mit Fußbodenheizung.
 d1_08|Morgen, in Folge zwei: Wir richten eine Halle für einen Elektriker ein!
 d1_08b|Und jetzt die Frage: Welche der sieben Hallen wird deine?
+e01|Sechs Uhr achtundfünfzig. Was braucht ein Elektrobetrieb, um richtig durchzustarten?
+e02|Wir schauen rein – in eine Halle im Gewerbepark Klagenfurt-Ebenthal.
+e03|Unten: Platz für Kabeltrommeln, Material und Werkzeug.
+e04|Der Transporter fährt direkt in die Halle. Laden im Warmen – dank Fußbodenheizung.
+e05|Oben auf der Galerie: das Büro für Angebote und Pläne.
+e06|Sieben Uhr dreißig. Und los zum Kunden!
+e07|Halle, Lager und Büro, rund hundertfünfzig Quadratmeter. Sieben Einheiten in Klagenfurt-Ebenthal.
+e08|Elektriker, Installateur oder Onlineshop: Hier hat dein Betrieb Platz.
