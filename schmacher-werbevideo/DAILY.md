@@ -20,7 +20,8 @@ Jeden Tag **ein neues, anderes Video plus ein Werbebild**, jeweils in **zwei Var
 ## Startbild jedes Videos = Plakat (Wunsch Bauherr 20.11.)
 - **Jedes Video beginnt mit dem Plakat im Hochformat** (ca. 2,2 s stehend, 0,3 s Überblendung, erst dann startet das Video). Es dient als Vorschaubild auf Facebook und muss sofort sagen: **Halle + Büro + Lager zu vermieten · Klagenfurt-Ebenthal · Telefonnummer**.
 - Erzeugen: `V=1 node 3d/daily/poster.cjs <hero> "<Aufkleber>" "<Tageszeile>" 3d/out/coverV_<tag>` (optional `CUT=../out/<schnittbild>.jpg`), dann `3d/daily/prepend_cover.sh <cover.jpg> <video_ohneStartbild.mp4> <video.mp4>` für Schmacher und Russinov.
-- Das Plakat wechselt täglich mit dem Video (Hero-Bild, Aufkleber, Tageszeile), der Aufbau bleibt gleich.
+- **Startbild jeden Tag anders** (Wunsch Bauherr 20.11.): neues Hero-Bild (abwechselnd 3D-Render, echtes Foto, Luftbild, Detail), neuer Aufkleber, neue Tageszeile **und** ein anderes Design. Dafür `THEME=light|dark|orange|photo` reihum verwenden und bei Bedarf weitere Varianten in `poster.html` ergänzen, z. B. andere Farben, Hero groß bzw. klein oder Schnittbild links bzw. rechts. Gleich bleiben nur die Pflichtinhalte: „Halle + Büro + Lager zu vermieten“, Klagenfurt-Ebenthal, Fakten, Telefonnummer, Logo.
+- Verwendete Startbild-Designs (nicht direkt wiederholen): 19.11. light (echtes Foto) · 20.11. light (Elektro-Render) · **nächstes: dark**.
 
 ## Werbebild: sofort verständlich (Wunsch Bauherr 19.11.)
 - Wer das Bild auf Facebook sieht, muss in 1 Sekunde verstehen: **Halle mit Büro zu vermieten.** Das gehört groß und eindeutig aufs Bild, z. B. „ZU VERMIETEN · Halle + Lager + Büro“.

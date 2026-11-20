@@ -56,6 +56,16 @@ body.v .cta{height:160px;margin-top:26px}body.v .cta .t b{font-size:76px}body.v 
 body.v .foot{font-size:24px;height:70px}
 body.v .share{display:flex}
 .share{display:none;margin:10px 46px 0;height:70px;border-radius:18px;background:#0f182a;color:#fff;font-weight:800;font-size:28px;align-items:center;justify-content:center;gap:14px}
+
+.lb,.tag{color:var(--navy)}
+/* Design-Varianten (täglich wechseln): theme=light|dark|orange|photo */
+body.dark{--bg:#0f182a;color:#fff}body.dark .head{background:#0b1220;border-bottom-color:var(--or)}body.dark .head .loc b{color:#fff}body.dark .head .loc span{color:#aab3c2}
+body.dark .big{color:#fff}body.dark .facts{background:#18233a;border-color:#2a3650;color:#fff}body.dark .facts li{border-top-color:#2a3650}body.dark .line{color:#cfd6e2}body.dark .foot{color:#cfd6e2}
+body.dark .head img{filter:brightness(0) invert(1)}body.dark.rus .head img{filter:none;background:#fff;border-radius:10px;padding:6px}
+body.orange{--bg:#fff7f0}body.orange .head{background:var(--or);border-bottom-color:#0f182a}body.orange .head .loc b,body.orange .head .loc span{color:#fff}body.orange .head .sep{background:#fff}
+body.orange .head img{background:#fff;border-radius:12px;padding:6px 10px}body.orange .big .o{color:#0f182a;background:var(--or);padding:0 14px;border-radius:12px;color:#fff}
+body.photo .hero{clip-path:none}body.photo .hl{position:relative;margin-top:-210px;background:linear-gradient(rgba(15,24,42,0),rgba(15,24,42,.92) 38%);padding-top:60px;padding-bottom:16px;color:#fff}
+body.photo .hl .kick{color:#f2b31b}body.photo .big{color:#fff}
 </style></head><body>
 <div class="head"><img id="logo"><div class="sep"></div><div class="loc"><b>GEWERBEPARK KLAGENFURT-EBENTHAL</b><span>Josef-Madersperger-Str. 2 · 9065 Ebenthal bei Klagenfurt</span></div></div>
 <div class="hero" id="hero"><div class="tag" id="tag"><i></i><span></span></div></div>
@@ -74,7 +84,7 @@ body.v .share{display:flex}
 <div class="share"><span id="webv"></span></div>
 <div class="foot">Bezugsfertig voraussichtlich&nbsp;<span>Q1/Q2 2027</span>&nbsp;· Mietpreis auf Anfrage</div>
 <script>
-const q=new URLSearchParams(location.search), r=q.get('b')==='r'; if (q.get('v')) document.body.classList.add('v'); if (q.get('cut')) document.getElementById('cutimg').src = q.get('cut');
+const q=new URLSearchParams(location.search), r=q.get('b')==='r'; if (q.get('v')) document.body.classList.add('v'); if (q.get('theme')) document.body.classList.add(q.get('theme')); if (r) document.body.classList.add('rus'); if (q.get('cut')) document.getElementById('cutimg').src = q.get('cut');
 document.getElementById('logo').src = r ? '../russinov_logo.png' : '../logo.png';
 document.getElementById('hero').style.backgroundImage = `url(${q.get('hero')||'../out/d1_bild_real.jpg'})`;
 document.querySelector('#tag span').textContent = q.get('tag')||'Echtes Foto · Stand Nov. 2026';
