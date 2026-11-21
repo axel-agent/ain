@@ -1,0 +1,96 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Werbebild Vorlage</title>
+<!-- Feste Vorlage für die täglichen Werbebilder (4:5). Parameter per URL: b=s|r, hero=<bild>, tag=<Tagesaufkleber>, line=<Tageszeile> -->
+<style>
+:root{--navy:#0f182a;--or:#e07a2c;--or2:#c2602a;--bg:#f6f3ef;--line:#e7e1d9}
+html,body{margin:0;width:1080px;height:1350px;overflow:hidden;font-family:Inter,sans-serif;background:var(--bg);color:var(--navy)}
+.head{height:122px;background:#fff;display:flex;align-items:center;padding:0 46px;border-bottom:5px solid var(--or)}
+.head img{height:84px}.head .sep{width:3px;height:70px;background:var(--or);margin:0 30px}
+.head .loc b{display:block;font-weight:800;letter-spacing:.2em;font-size:25px}.head .loc span{font-size:21px;color:#5b6170;letter-spacing:.02em}
+.hero{position:relative;height:300px;background-size:cover;background-position:center;clip-path:polygon(0 0,100% 0,100% 84%,0 100%)}
+.tag{position:absolute;left:40px;top:28px;background:rgba(255,255,255,.95);font-weight:800;font-size:24px;padding:10px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;gap:10px;align-items:center}
+.tag i{width:12px;height:12px;border-radius:50%;background:#e2483b}
+.main{display:flex;gap:24px;padding:0 46px;margin-top:-4px;height:540px}
+.l{width:560px;flex:none;padding-top:4px}
+.kick{font-weight:800;color:var(--or2);letter-spacing:.14em;font-size:23px;text-transform:uppercase}
+.big{font-weight:900;font-size:76px;line-height:.98;white-space:nowrap;letter-spacing:-.02em;margin-top:12px;text-transform:uppercase}
+.big .o{color:var(--or)}
+.units{margin-top:16px;font-weight:800;font-size:38px}.units small{display:block;font-size:26px;font-weight:600;color:#5b6170;margin-top:4px}
+.line{margin-top:14px;font-size:23px;font-style:italic;color:#3a4252;border-left:5px solid var(--or);padding-left:16px;line-height:1.35}
+.r{position:relative;flex:1;height:500px}
+.r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:24px;box-shadow:0 14px 40px rgba(15,24,42,.18)}
+.lb{position:absolute;transform:translate(-50%,-50%);background:#fff;border:3px solid var(--or);border-radius:10px;font-weight:800;font-size:22px;padding:5px 12px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.icons{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding:0 46px;margin-top:16px}
+.ic{background:#fff;border-radius:16px;padding:14px 6px 12px;text-align:center;font-size:18px;font-weight:650;line-height:1.2;border:1px solid var(--line)}
+.ic svg{width:36px;height:36px;stroke:var(--or);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 8px}
+.cta{margin:16px 46px 0;height:118px;border-radius:22px;background:linear-gradient(90deg,var(--or),var(--or2));color:#fff;display:flex;align-items:center;padding:0 34px;box-shadow:0 12px 30px rgba(194,96,42,.35)}
+.cta .ph{width:64px;height:64px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin-right:22px}
+.cta .ph svg{width:36px;height:36px;fill:var(--or)}
+.cta .t small{white-space:nowrap;display:block;font-weight:800;letter-spacing:.16em;font-size:21px;text-transform:uppercase;opacity:.95}
+.cta .t b{white-space:nowrap;font-weight:900;font-size:62px;letter-spacing:.01em;line-height:1.05}
+.cta .w{margin-left:auto;text-align:right;font-weight:700;font-size:21px;line-height:1.45;white-space:nowrap}
+.foot{height:56px;margin-top:6px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:#3a4252;letter-spacing:.04em}
+.foot span{color:var(--or2)}
+
+.hl{padding:0 46px;margin-top:-2px}
+.hl .big{font-size:78px;white-space:nowrap;margin-top:8px}
+.row{display:flex;gap:22px;padding:0 46px;margin-top:18px;height:470px}
+.cut{position:relative;width:640px;height:470px;flex:none}
+.cut img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:22px;box-shadow:0 14px 40px rgba(15,24,42,.18)}
+.facts{flex:1;background:#fff;border-radius:22px;border:1px solid var(--line);padding:22px 22px 14px}
+.facts .units{margin:0 0 10px;font-size:34px;line-height:1.08}
+.facts ul{list-style:none;margin:0;padding:0}
+.facts li{font-size:19px;font-weight:650;padding:8px 0 8px 28px;position:relative;border-top:1px solid var(--line);line-height:1.2}
+.facts li:before{content:"";position:absolute;left:4px;top:13px;width:13px;height:13px;border-radius:50%;background:var(--or)}
+.line{margin:16px 46px 0;font-size:24px;font-style:italic;color:#3a4252;border-left:5px solid var(--or);padding-left:16px;line-height:1.3}
+
+/* Hochformat 9:16 (Startbild der Videos) */
+body.v{height:1920px}
+body.v .head{height:150px}body.v .head img{height:100px}body.v .head .loc b{font-size:25px;letter-spacing:.14em;white-space:nowrap}body.v .head .loc span{font-size:24px}
+body.v .hero{height:520px}
+body.v .tag{font-size:30px;top:36px}
+body.v .hl{margin-top:4px}body.v .hl .kick{font-size:27px}body.v .hl .big{font-size:84px}
+body.v .row{height:560px;margin-top:26px}body.v .cut{height:560px}
+body.v .facts .units{font-size:40px}body.v .facts li{font-size:21px;padding:9px 0 9px 30px}body.v .facts li:before{top:17px}
+body.v .line{font-size:28px;margin-top:22px}
+body.v .cta{height:160px;margin-top:26px}body.v .cta .t b{font-size:76px}body.v .cta .t small{font-size:24px}body.v .cta .w{display:none}body.v .cta{justify-content:center}
+body.v .foot{font-size:24px;height:70px}
+body.v .share{display:flex}
+.share{display:none;margin:10px 46px 0;height:70px;border-radius:18px;background:#0f182a;color:#fff;font-weight:800;font-size:28px;align-items:center;justify-content:center;gap:14px}
+
+.lb,.tag{color:var(--navy)}
+/* Design-Varianten (täglich wechseln): theme=light|dark|orange|photo */
+body.dark{--bg:#0f182a;color:#fff}body.dark .head{background:#0b1220;border-bottom-color:var(--or)}body.dark .head .loc b{color:#fff}body.dark .head .loc span{color:#aab3c2}
+body.dark .big{color:#fff}body.dark .facts{background:#18233a;border-color:#2a3650;color:#fff}body.dark .facts li{border-top-color:#2a3650}body.dark .line{color:#cfd6e2}body.dark .foot{color:#cfd6e2}
+body.dark .head img{filter:brightness(0) invert(1)}body.dark.rus .head img{filter:none;background:#fff;border-radius:10px;padding:6px}
+body.orange{--bg:#fff7f0}body.orange .head{background:var(--or);border-bottom-color:#0f182a}body.orange .head .loc b,body.orange .head .loc span{color:#fff}body.orange .head .sep{background:#fff}
+body.orange .head img{background:#fff;border-radius:12px;padding:6px 10px}body.orange .big .o{color:#0f182a;background:var(--or);padding:0 14px;border-radius:12px;color:#fff}
+body.photo .hero{clip-path:none}body.photo .hl{position:relative;margin-top:-210px;background:linear-gradient(rgba(15,24,42,0),rgba(15,24,42,.92) 38%);padding-top:60px;padding-bottom:16px;color:#fff}
+body.photo .hl .kick{color:#f2b31b}body.photo .big{color:#fff}
+</style></head><body>
+<div class="head"><img id="logo"><div class="sep"></div><div class="loc"><b>GEWERBEPARK KLAGENFURT-EBENTHAL</b><span>Josef-Madersperger-Str. 2 · 9065 Ebenthal bei Klagenfurt</span></div></div>
+<div class="hero" id="hero"><div class="tag" id="tag"><i></i><span></span></div></div>
+<div class="hl"><div class="kick">Neubau · 7 Hallen mit Büro · Klagenfurt-Ebenthal</div>
+ <div class="big">Halle + Büro + Lager<br><span class="o">zu vermieten</span></div></div>
+<div class="row">
+ <div class="cut"><img id="cutimg" src="../out/cut_side_poster.jpg">
+  <div class="lb" style="left:18%;top:31%">Büro</div><div class="lb" style="left:43%;top:13%">WC + Küche</div>
+  <div class="lb" style="left:70%;top:24%">Lager</div><div class="lb" style="left:52%;top:76%">Halle</div><div class="lb" style="left:85%;top:34%">Sektionaltor ▸</div></div>
+ <div class="facts"><div class="units">7 Einheiten<br>je ca. 150 m²</div>
+  <ul><li>Unten Halle &amp; Lager, oben Büro</li><li>Lagerbühne ca. 40–50&nbsp;m²</li><li>Großes Sektionaltor</li><li>Fußbodenheizung</li><li>WC &amp; Waschm.-Anschluss</li><li>Parkplätze je Einheit</li><li>Eigene Zähler je Einheit</li></ul></div>
+</div>
+<div class="line" id="line"></div>
+<div class="cta"><div class="ph"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></div>
+ <div class="t"><small id="ctak"></small><b id="phone"></b></div><div class="w" id="web"></div></div>
+<div class="share"><span id="webv"></span></div>
+<div class="foot">Bezugsfertig voraussichtlich&nbsp;<span>Q1/Q2 2027</span>&nbsp;· Mietpreis auf Anfrage</div>
+<script>
+const q=new URLSearchParams(location.search), r=q.get('b')==='r'; if (q.get('v')) document.body.classList.add('v'); if (q.get('theme')) document.body.classList.add(q.get('theme')); if (r) document.body.classList.add('rus'); if (q.get('cut')) document.getElementById('cutimg').src = q.get('cut');
+document.getElementById('logo').src = r ? '../russinov_logo.png' : '../logo.png';
+document.getElementById('hero').style.backgroundImage = `url(${q.get('hero')||'../out/d1_bild_real.jpg'})`;
+document.querySelector('#tag span').textContent = q.get('tag')||'Echtes Foto · Stand Nov. 2026';
+document.getElementById('line').textContent = q.get('line')||'';
+document.getElementById('ctak').textContent = r ? 'Ihr Makler · Halle jetzt mieten' : 'Jetzt anrufen & Halle mieten';
+document.getElementById('phone').textContent = r ? '0463 203520' : '0664 1200745';
+document.getElementById('webv').textContent = (r ? 'www.russinov.at' : 'www.gewerbepark-klagenfurt.at') + '  ·  📲 Bitte teilen!';
+document.getElementById('web').innerHTML = r ? 'Russinov Immobilien<br>www.russinov.at' : 'Schmacher Solutions GmbH<br>www.gewerbepark-klagenfurt.at';
+</script></body></html>

@@ -1,0 +1,101 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Titel 9:16</title>
+<style>
+html,body{margin:0;background:transparent;width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;color:#fff}
+.t{position:absolute;left:0;right:0;padding:0 80px;display:none}
+.t.on{display:block}
+.kicker{font-weight:600;letter-spacing:.28em;text-transform:uppercase;font-size:26px;color:#f0b27a;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.big{font-weight:300;font-size:84px;letter-spacing:-.02em;line-height:1.04;text-shadow:0 4px 40px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.35)}
+.big b{font-weight:700}
+.sub{font-weight:500;font-size:36px;line-height:1.3;margin-top:18px;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.rule{width:72px;height:4px;background:#c27a3e;margin-bottom:26px}
+.top{top:350px}.bot{bottom:400px}
+.scrim-top{position:absolute;left:0;right:0;top:-300px;height:950px;background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,0,0,.4) 38%,rgba(0,0,0,.3) 60%,rgba(0,0,0,0) 100%)}
+.scrim-bot{position:absolute;left:0;right:0;bottom:-330px;height:950px;background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,0,0,.3) 40%,rgba(0,0,0,.42) 65%,rgba(0,0,0,0) 100%)}
+#end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+ background:radial-gradient(ellipse at 50% 42%,#fbfbfc 0%,#eef0f3 70%,#e3e6ea 100%);color:#0f182a;text-align:center}
+#end.on{display:flex}
+#end .logo{width:700px;margin-bottom:40px}
+#end .claim{font-weight:300;font-size:64px;line-height:1.12;color:#2a3242}
+#end .claim b{font-weight:700;color:#0f182a}
+#end .small{font-size:32px;color:#808185;margin-top:22px;line-height:1.4}
+#end .line{width:120px;height:4px;background:#c27a3e;margin:40px 0 34px}
+#end .ph{font-weight:700;font-size:72px;letter-spacing:.03em}
+#end .web{font-weight:500;font-size:38px;color:#2a3242;margin-top:10px}
+#end .mail{font-size:32px;color:#808185;margin-top:6px}
+
+.pill{display:inline-block;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:28px;padding:14px 30px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#cover .big{font-size:132px;line-height:.98}
+#cover .sub{font-size:46px;font-weight:600;margin-top:28px}
+.card{position:absolute;left:80px;right:80px;background:#fff;border-radius:28px;box-shadow:0 12px 50px rgba(0,0,0,.45);display:flex;align-items:center;gap:34px;padding:26px 36px;color:#0f182a}
+.card img{width:330px}
+.card .r{flex:1;text-align:right}
+.card .k{font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:24px;color:#c27a3e}
+.card .p{font-weight:800;font-size:54px;letter-spacing:.02em;margin-top:4px}
+#end .cta{display:flex;flex-direction:column;align-items:center}
+#end .btn{display:flex;align-items:center;gap:16px;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:34px;padding:20px 48px;border-radius:999px;box-shadow:0 10px 30px rgba(194,122,62,.35);margin-bottom:26px}
+#end .btn svg{width:38px;height:38px}
+body.ctaonly #end{background:none} body.ctaonly #end > :not(.cta){visibility:hidden}
+body.nocta #end .cta, body.nocta #end2 .cta{visibility:hidden}
+
+#end2{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 42%,#fbfbfc 0%,#eef0f3 70%,#e3e6ea 100%);color:#0f182a;text-align:center}
+#end2.on{display:flex}
+#end2 .logo{width:700px;margin-bottom:40px}
+#end2 .claim{font-weight:300;font-size:64px;line-height:1.12;color:#2a3242}
+#end2 .claim b{font-weight:700;color:#0f182a}
+#end2 .small{font-size:32px;color:#808185;margin-top:22px;line-height:1.4}
+#end2 .line{width:120px;height:4px;background:#c27a3e;margin:40px 0 34px}
+#end2 .ph{font-weight:700;font-size:72px;letter-spacing:.03em}
+#end2 .web{font-weight:500;font-size:38px;color:#2a3242;margin-top:10px}
+#end2 .mail{font-size:32px;color:#808185;margin-top:6px}
+#end2 .cta{display:flex;flex-direction:column;align-items:center}
+#end2 .btn{display:flex;align-items:center;gap:16px;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:34px;padding:20px 48px;border-radius:999px;box-shadow:0 10px 30px rgba(194,122,62,.35);margin-bottom:26px}
+#end2 .btn svg{width:38px;height:38px}
+#end2 .cta{visibility:hidden}
+#end3{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#fbfbfc 0%,#eef0f3 70%,#e1e4e9 100%);color:#0f182a;text-align:center}
+#end3.on{display:flex}
+#end3 .logo{width:560px;margin-bottom:30px}
+#end3 .claim{font-weight:300;font-size:60px;line-height:1.1;color:#2a3242}
+#end3 .claim b{font-weight:700;color:#0f182a}
+#end3 .call{margin-top:70px;background:linear-gradient(180deg,#d2884a,#b86a2f);border-radius:36px;padding:40px 56px 46px;box-shadow:0 18px 50px rgba(184,106,47,.45);color:#fff;display:flex;flex-direction:column;align-items:center}
+#end3 .call .k{display:flex;align-items:center;gap:16px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:40px}
+#end3 .call svg{width:44px;height:44px}
+#end3 .call .n{white-space:nowrap;font-weight:800;font-size:112px;letter-spacing:.02em;line-height:1.02;margin-top:6px}
+#end3 .web{font-weight:600;font-size:46px;color:#0f182a;margin-top:50px}
+#end3 .mail{font-size:36px;color:#5d6068;margin-top:6px}
+body.nocta #end3 .cta{visibility:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);background:#fff;border:4px solid #c27a3e;border-radius:16px;padding:8px 22px;color:#0f182a;font-weight:800;white-space:nowrap;box-shadow:0 8px 24px rgba(15,24,42,.18)}
+.fact{display:inline-flex;align-items:center;gap:14px;background:#0f182a;color:#fff;font-weight:700;font-size:32px;padding:12px 24px 12px 18px;border-radius:999px}
+.fact:before{content:"";width:14px;height:14px;border-radius:50%;background:#e2a066}
+</style></head><body>
+<div class="t" id="cover" style="top:0;bottom:0;padding:0"><div style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.62) 0%,rgba(0,0,0,.35) 38%,rgba(0,0,0,0) 58%,rgba(0,0,0,0) 72%,rgba(0,0,0,.45) 100%)"></div>
+<div style="position:absolute;left:80px;right:80px;top:350px"><div class="pill">Neu in Ebenthal · Kärnten</div><div class="big" style="margin-top:34px">Gewerbepark<br><b>Ebenthal</b></div><div class="sub">7 Hallen mit Büro<br><span style="color:#f0b27a">Unten Lager. Oben Büro.</span></div></div>
+<div class="card" style="bottom:330px"><img src="logo.png"><div class="r"><div class="k">Jetzt anfragen</div><div class="p">0664 1200745</div></div></div></div>
+<div class="t" id="cover2" style="top:0;bottom:0;padding:0;background:#f1f2f4"><img src="cover/cutV.jpg" style="position:absolute;left:0;top:0;width:1080px;height:1920px"><svg width="1080" height="1920" style="position:absolute;left:0;top:0"><line x1="400" y1="1395" x2="539" y2="1254" stroke="#c27a3e" stroke-width="4"/><circle cx="539" cy="1254" r="10" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="150" y1="860" x2="324" y2="952" stroke="#c27a3e" stroke-width="4"/><circle cx="324" cy="952" r="10" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="180" y1="1300" x2="269" y2="1145" stroke="#c27a3e" stroke-width="4"/><circle cx="269" cy="1145" r="10" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="280" y1="560" x2="463" y2="677" stroke="#c27a3e" stroke-width="4"/><circle cx="463" cy="677" r="10" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="935" y1="1060" x2="734" y2="966" stroke="#c27a3e" stroke-width="4"/><circle cx="734" cy="966" r="10" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="850" y1="470" x2="661" y2="566" stroke="#c27a3e" stroke-width="4"/><circle cx="661" cy="566" r="10" fill="#c27a3e" stroke="#fff" stroke-width="4"/></svg><div class="lab" style="left:400px;top:1395px;font-size:40px">Büro</div><div class="lab" style="left:150px;top:860px;font-size:40px">WC</div><div class="lab" style="left:180px;top:1300px;font-size:40px">Kaffeeküche</div><div class="lab" style="left:280px;top:560px;font-size:40px">Lager</div><div class="lab" style="left:935px;top:1060px;font-size:40px">Halle</div><div class="lab" style="left:850px;top:470px;font-size:40px">Sektionaltor</div><div style="position:absolute;left:0;right:0;top:70px;text-align:center"><div class="pill">Neu in Ebenthal · Kärnten</div>
+<div style="font-weight:800;font-size:104px;line-height:1;color:#0f182a;letter-spacing:-.02em;margin-top:26px">Gewerbepark<br>Ebenthal</div>
+<div style="font-weight:600;font-size:42px;color:#2a3242;margin-top:18px">7 Hallen mit Büro · <span style="color:#c27a3e">Unten Lager. Oben Büro.</span></div></div>
+<div style="position:absolute;left:50px;right:50px;bottom:262px;display:flex;flex-wrap:wrap;justify-content:center;gap:14px"><div class="fact">ca. 150 m² Nutzfläche</div><div class="fact">Fußbodenheizung</div><div class="fact">Großes Sektionaltor</div><div class="fact">Büro · WC · Kaffeeküche</div></div>
+<div class="card" style="left:90px;right:90px;bottom:50px;padding:18px 34px"><img src="logo.png" style="width:240px"><div class="r"><div class="k">Jetzt anfragen</div><div class="p">0664 1200745</div></div></div></div>
+<div class="t top" id="hook"><div class="scrim-top"></div><div style="position:relative"><div class="kicker">Gewerbepark Ebenthal · Schmacher Solutions</div><div class="big" style="margin-top:18px">Dein Business wächst.<br><b>Dein Zuhause nicht?</b></div></div></div>
+<div class="t top" id="slogan"><div class="scrim-top"></div><div style="position:relative"><div class="rule"></div><div class="big">Raus aus der Garage.<br><b>Rein in den Gewerbepark.</b></div></div></div>
+<div class="t top" id="code"><div class="scrim-top"></div><div style="position:relative"><div class="kicker">Tore</div><div class="big" style="margin-top:14px">Elektrische Tore.<br><b>Einfach reinfahren.</b></div></div></div>
+<div class="t bot" id="lager"><div class="scrim-bot"></div><div style="position:relative"><div class="kicker">Halle</div><div class="big" style="margin-top:14px">Unten: <b>dein Lager.</b></div><div class="sub">Mit dem Transporter direkt durchs Tor</div></div></div>
+<div class="t bot" id="hoehe"><div class="scrim-bot"></div><div style="position:relative"><div class="big">Bis zu <b>7 m</b><br>Raumhöhe.</div><div class="sub">Mit Fußbodenheizung · Platz für Ware, Material &amp; Maschinen</div></div></div>
+<div class="t bot" id="buero"><div class="scrim-bot"></div><div style="position:relative"><div class="kicker">Galerie</div><div class="big" style="margin-top:14px">Oben: <b>dein Büro.</b></div><div class="sub">Mit WC · Küchenanschluss optional</div></div></div>
+<div class="t top" id="hallen"><div class="scrim-top"></div><div style="position:relative;text-align:center"><div class="big"><b>7 Hallen</b> mit Büro</div><div class="sub">Nur 7 Einheiten · Gewerbepark Ebenthal</div></div></div>
+<div class="t top" id="stell"><div class="scrim-top"></div><div style="position:relative;text-align:center"><div class="big" style="font-size:96px">Stell dir vor …</div></div></div>
+<div class="t top" id="deins"><div class="scrim-top"></div><div style="position:relative;text-align:center"><div class="big" style="font-size:96px">… das hier<br><b>ist deins.</b></div></div></div>
+<div class="t bot" id="lager2"><div class="scrim-bot"></div><div style="position:relative"><div class="kicker">Halle</div><div class="big" style="margin-top:14px">Unten: <b>dein Lager.</b></div><div class="sub">Bis zu 7 m Raumhöhe · mit Fußbodenheizung</div></div></div>
+<div class="t top" id="buero2"><div class="scrim-top"></div><div style="position:relative"><div class="kicker">Galerie</div><div class="big" style="margin-top:14px">Oben: <b>dein Büro.</b></div><div class="sub">Arbeitsplätze, Besprechung, Lounge</div></div></div>
+<div class="t bot" id="kueche"><div class="scrim-bot"></div><div style="position:relative"><div class="big">Mit <b>WC</b><br>&amp; <b>Kaffeeküche.</b></div><div class="sub">Küchenanschluss optional</div></div></div>
+<div class="t top" id="hallen2"><div class="scrim-top"></div><div style="position:relative;text-align:center"><div class="kicker">Gewerbepark Ebenthal</div><div class="big" style="margin-top:14px"><b>7 Hallen</b> mit Büro</div></div></div>
+<div class="t bot" id="lager3"><div class="scrim-bot"></div><div style="position:relative"><div class="kicker">Platz für alles</div><div class="big" style="margin-top:14px">Werkbank, Stapler,<br><b>Regale.</b></div><div class="sub">Lager, Werkstatt, Ausstellung –<br>du entscheidest</div></div></div>
+<div class="t top" id="tor"><div class="scrim-top"></div><div style="position:relative"><div class="kicker">Einfahrt</div><div class="big" style="margin-top:14px">Großes Sektionaltor.<br><b>Direkt reinfahren.</b></div><div class="sub">Elektrisches Sektionaltor</div></div></div>
+<div id="end3"><img class="logo" src="logo.png"><div class="claim">Licht an –<br><b>für dein Business.</b></div>
+<div class="cta" style="display:flex;flex-direction:column;align-items:center"><div class="call"><div class="k"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Jetzt anrufen</div><div class="n">0664 1200745</div></div><div class="web">www.gewerbepark-klagenfurt.at</div><div class="mail">office@gewerbepark-klagenfurt.at</div></div></div>
+<div id="end2" class="endx"><img class="logo" src="logo.png"><div class="claim">Licht an –<br><b>für dein Business.</b></div>
+<div class="small">Unten Lager. Oben Büro.<br>7 Hallen mit Büro · Gewerbepark Ebenthal</div><div class="line"></div>
+<div class="cta"><div class="btn"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Jetzt anrufen</div><div class="ph">0664 1200745</div><div class="web">www.gewerbepark-klagenfurt.at</div><div class="mail">office@gewerbepark-klagenfurt.at</div></div></div>
+<div id="end"><img class="logo" src="logo.png"><div class="claim">Raus aus der Garage.<br><b>Rein in den Gewerbepark.</b></div>
+<div class="small">Unten Lager. Oben Büro.<br>7 Hallen mit Büro · Gewerbepark Ebenthal</div><div class="line"></div>
+<div class="cta"><div class="btn"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Jetzt anrufen</div><div class="ph">0664 1200745</div><div class="web">www.gewerbepark-klagenfurt.at</div><div class="mail">office@gewerbepark-klagenfurt.at</div></div></div>
+</body></html>

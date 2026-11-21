@@ -1,0 +1,16 @@
+Fehler: Mobiles Menü (Burger oben rechts) öffnet sich nicht sichtbar – gewerbepark-klagenfurt.at
+
+Ursache:
+Der Header hat in /assets/css/style.css "backdrop-filter: blur(8px)".
+Ein Element mit backdrop-filter wird zum Bezugsrahmen für "position: fixed"-Kinder.
+Das Menü (.nav, position:fixed; inset:72px 0 0 0) wird dadurch nur innerhalb des 72 px hohen
+Headers aufgespannt und ist praktisch 0 px hoch → unsichtbar. Das JavaScript funktioniert (body.menu-open wird gesetzt).
+
+Lösung (am Ende von /assets/css/style.css einfügen):
+
+@media (max-width:1320px){
+  .header{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
+}
+
+Getestet am Handy (Pixel-7-Emulation): Menü öffnet sich danach über den ganzen Bildschirm mit allen Punkten.
+Danach Cache-Version im HTML erhöhen (style.css?v=...), damit Handys die neue Datei laden.
