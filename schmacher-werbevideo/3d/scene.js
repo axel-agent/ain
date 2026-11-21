@@ -17,7 +17,8 @@ const params = new URLSearchParams(location.search);
 const W = parseInt(params.get('w') || '1920'), H = parseInt(params.get('h') || '1080');
 const PORTRAIT = H > W, NOTITLES = params.get('notitles') === '1';
 const FILM2 = params.get('film') === '2'; // Film 2: „Licht an.“
-const BRANCHE = params.get('branche') || ''; // tägliche Videos: Halle für eine Branche eingerichtet (z. B. elektro)
+const BRANCHE = params.get('branche') || '';
+const WINTER = params.get('winter') === '1'; // tägliche Videos: Schnee // tägliche Videos: Halle für eine Branche eingerichtet (z. B. elektro)
 if (PORTRAIT) { const st = document.getElementById('stage'); st.style.width = W + 'px'; st.style.height = H + 'px'; }
 if (NOTITLES) document.getElementById('ov').style.display = 'none';
 const SCALE = parseFloat(params.get('scale') || '1');
@@ -314,7 +315,7 @@ const B1 = { x0: 0, x1: 48.5, z0: -15, z1: 0, h: 7.1, units: 7 };
 const UW = (B1.x1 - B1.x0) / B1.units;
 const HERO = 4; // Einheit 4 wird geöffnet und innen gezeigt
 const heroX0 = B1.x1 - HERO * UW, heroX1 = heroX0 + UW, heroXC = (heroX0 + heroX1) / 2;
-let heroTor = null, heroKeypadLED = null;
+let heroTor = null, heroKeypadLED = null, heatPipes = null;
 
 function buildB1() {
   // Front (Nummern) – Blick aus -z: links = +x
@@ -425,7 +426,14 @@ function buildInterior() {
   const w = x1 - x0, d = z1 - z0, xc = (x0 + x1) / 2;
   // Boden
   const fg = new THREE.PlaneGeometry(w, d); const fuv = fg.attributes.uv; for (let i = 0; i < fuv.count; i++) fuv.setXY(i, fuv.getX(i) * w / 6, fuv.getY(i) * d / 6);
-  const floor = new THREE.Mesh(fg, M.concrete); floor.rotation.x = -Math.PI / 2; floor.position.set(xc, 0.04, (z0 + z1) / 2); floor.receiveShadow = true; interior.add(floor);
+  M.hallFloor = M.concrete.clone(); const floor = new THREE.Mesh(fg, M.hallFloor); floor.rotation.x = -Math.PI / 2; floor.position.set(xc, 0.04, (z0 + z1) / 2); floor.receiveShadow = true; interior.add(floor);
+  // Fußbodenheizung (nur sichtbar, wenn eine Einstellung den Boden durchsichtig macht: {floorx: [von, bis]})
+  heatPipes = new THREE.Group(); heatPipes.visible = false; interior.add(heatPipes);
+  const slab = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color: 0x2a2f36, roughness: 1 })); slab.rotation.x = -Math.PI / 2; slab.position.set(xc, -0.03, (z0 + z1) / 2); heatPipes.add(slab);
+  const pm = new THREE.MeshStandardMaterial({ color: 0xff6a1a, emissive: 0xff5a10, emissiveIntensity: 2.2, roughness: 0.4 });
+  const pts = []; const nx = Math.floor((w - 0.6) / 0.3); for (let i = 0; i <= nx; i++) { const x = x0 + 0.3 + i * 0.3, za = z0 + 0.3, zb = z1 - 0.3; if (i % 2) pts.push(new THREE.Vector3(x, 0, zb), new THREE.Vector3(x, 0, za)); else pts.push(new THREE.Vector3(x, 0, za), new THREE.Vector3(x, 0, zb)); }
+  const curve = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.05); const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, nx * 60, 0.03, 8, false), pm); heatPipes.add(tube);
+  heatPipes.userData.mat = pm;
   // Seitenwände (Trennwände) innen
   const wallMat = M.panelWhite;
   const side = (x, dir) => { const g = new THREE.PlaneGeometry(d, ceil); const uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * d * .5, uv.getY(i) * ceil * .5); const m = new THREE.Mesh(g, wallMat); m.rotation.y = dir * Math.PI / 2; m.position.set(x, ceil / 2, (z0 + z1) / 2); m.receiveShadow = true; m.castShadow = true; interior.add(m); };
@@ -1018,6 +1026,19 @@ const grade = new ShaderPass({
 
 // ---------------------------------------------------------------- Aufbau
 buildB1(); buildInterior(); buildSite(); setupLampLights(); if (FILM2) film2LitWindows(); // Bauteil 2 vorerst nicht gebaut
+let snow = null;
+if (WINTER) {
+  for (const [m, c] of [[M.grass, 0xf3f6f9], [M.leaf, 0xe3eaef], [M.fields, 0xeef2f6]]) { m.map = null; m.color.set(c); m.needsUpdate = true; }
+  M.asphalt.color.set(0xd2d8de); M.asphalt.needsUpdate = true; M.paver.color.set(0xdfe4e9); // Schneematsch auf dem Asphalt
+  const N = 14000, g = new THREE.BufferGeometry(), a = new Float32Array(N * 3); let sd = 7;
+  const rnd = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+  for (let i = 0; i < N; i++) { a[i * 3] = -20 + rnd() * 90; a[i * 3 + 1] = rnd() * 32; a[i * 3 + 2] = -50 + rnd() * 75; }
+  g.setAttribute('position', new THREE.BufferAttribute(a, 3)); snow = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: 0.07, transparent: true, opacity: 0.9, depthWrite: false }));
+  snow.userData.base = a.slice(); scene.add(snow);
+}
+function snowAt(t) { if (!snow) return; const p = snow.geometry.attributes.position.array, b = snow.userData.base;
+  for (let i = 0; i < p.length; i += 3) { p[i + 1] = ((b[i + 1] - t * 1.1) % 32 + 32) % 32; p[i] = b[i] + Math.sin(t * 0.7 + i) * 0.25; }
+  snow.geometry.attributes.position.needsUpdate = true; }
 scene.traverse(o => { if (o.isMesh && o.material && o.material.map) { /* ok */ } });
 
 // ---------------------------------------------------------------- Kamera-/Zeitachse
@@ -1098,6 +1119,9 @@ window.renderAt = function (t) {
     if (s.van) { const vk = (s.vanEase || (x => x))(Math.min(1, Math.max(0, k))); F2.van.visible = true; F2.van.position.set(heroX0 + 4.3, 0.04, s.van[0] + (s.van[1] - s.van[0]) * vk); F2.van.rotation.y = s.vanRy || 0; F2.vanSpots.forEach(sp => sp.intensity = s.vanLights ? 60 : 0); }
     else F2.van.visible = false;
     renderer.clippingPlanes = s.clip ? [new THREE.Plane(new THREE.Vector3(0, -1, 0), s.clip)] : [];
+    if (s.floorx) { const o = s.floorx[0] + (s.floorx[1] - s.floorx[0]) * Math.min(1, Math.max(0, (k - 0.15) / 0.55)); heatPipes.visible = true; M.hallFloor.transparent = true; M.hallFloor.opacity = o; M.hallFloor.depthWrite = o > 0.95; heatPipes.userData.mat.emissiveIntensity = 1.2 + 1.6 * (1 - o); }
+    else { heatPipes.visible = false; M.hallFloor.transparent = false; M.hallFloor.opacity = 1; M.hallFloor.depthWrite = true; }
+    if (snow) { snow.visible = s.snow !== false; snowAt(t); }
   }
   else if (FILM2) { const a = animTime2(t); applyAnims(a, t); film2Light(a); film2Extras(t); }
   grade.uniforms.time.value = t * 13.7;

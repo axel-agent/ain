@@ -38,3 +38,10 @@ e05|Oben auf der Galerie: das Büro für Angebote und Pläne.
 e06|Sieben Uhr dreißig. Und los zum Kunden!
 e07|Halle, Lager und Büro, rund hundertfünfzig Quadratmeter. Sieben Einheiten in Klagenfurt-Ebenthal.
 e08|Elektriker, Installateur oder Onlineshop: Hier hat dein Betrieb Platz.
+w01|Klagenfurt-Ebenthal. Minus fünf Grad. Draußen schneit es.
+w02|Und drinnen? Tor auf – angenehm warm.
+w03|Denn unter dem Boden steckt die Fußbodenheizung – mit Luft-Wärmepumpe.
+w04|Auch oben im Büro: warme Füße, klarer Kopf.
+w05|Sieben Hallen mit Büro, rund hundertfünfzig Quadratmeter – im Gewerbepark Klagenfurt-Ebenthal.
+w06|Unten Lager, oben Büro, großes Sektionaltor. Bezugsfertig voraussichtlich im ersten Halbjahr 2027.
+w07|Warm arbeiten – auch im tiefsten Winter. Ruf an und vereinbare eine Besichtigung!
