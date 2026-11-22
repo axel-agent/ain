@@ -12,6 +12,7 @@ Jedes Video steht für sich (keine Folgennummern) und kann einzeln gepostet werd
 | 2026-11-19_EchtJetzt_9x16.mp4 | 51 s | Startbild „Halle + Büro + Lager zu vermieten“, dann „Echt jetzt.“: echte Baustellenfotos (Stand Nov. 2026) gegen das 3D-Modell, Vergleichsschieber Plan/Realität, eingerichtete Halle, Fakten – „Welche der 7 Hallen wird deine?“ |
 | 2026-11-20_ElektroMorgen_9x16.mp4 | 53 s | Startbild „Halle + Büro + Lager zu vermieten“, dann „06:58 – Ein Morgen im Elektrobetrieb“: Röntgenblick von oben, Sturzflug in die Halle, Kabeltrommeln, Transporter mit Dachleiter, Büro, Uhr + Checkliste – Halle + Büro + Lager zu vermieten. |
 | 2026-11-21_WinterWarm_9x16.mp4 | 52 s | Startbild „zu vermieten“, dann Winter-Special „Draußen −5 °C. Drinnen: Fußbodenheizung.“: Schnee, Tor öffnet sich ins Warme, durchsichtiger Boden mit glühenden Heizschleifen, Büro, Fakten. |
+| 2026-11-22_7Gruende_9x16.mp4 | 49 s | Startbild „zu vermieten“, dann Countdown „7 Hallen. 7 Gründe.“: Fahrt an den Hausnummern 7→1 mit je einem Grund, Luftbild, Innen, Tore – „7 Gründe. 1 Anruf.“ |
 
 Neue tägliche Videos werden hier als `JJJJ-MM-TT_<Titel>_9x16.mp4` ergänzt und in dieser Liste eingetragen.
 

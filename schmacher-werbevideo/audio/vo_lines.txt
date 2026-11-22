@@ -45,3 +45,15 @@ w04|Auch oben im Büro: warme Füße, klarer Kopf.
 w05|Sieben Hallen mit Büro, rund hundertfünfzig Quadratmeter – im Gewerbepark Klagenfurt-Ebenthal.
 w06|Unten Lager, oben Büro, großes Sektionaltor. Bezugsfertig voraussichtlich im ersten Halbjahr 2027.
 w07|Warm arbeiten – auch im tiefsten Winter. Ruf an und vereinbare eine Besichtigung!
+g00|Sieben Hallen. Sieben Gründe.
+g7|Sieben: rund hundertfünfzig Quadratmeter.
+g6|Sechs: unten Halle, oben Büro.
+g5|Fünf: das große Sektionaltor.
+g4|Vier: Fußbodenheizung.
+g3|Drei: eigene Zähler.
+g2|Zwei: Parkplätze vor der Tür.
+g1|Und eins: direkt an der Stadtgrenze von Klagenfurt.
+g8|Gewerbepark Klagenfurt-Ebenthal. Bezugsfertig voraussichtlich im ersten Halbjahr 2027.
+g9|Innen: hohe Halle, Lagerbühne – und oben dein Büro mit WC.
+g10|Halle, Büro und Lager – zu vermieten.
+g11|Sieben Gründe. Ein Anruf.
