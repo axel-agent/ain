@@ -615,7 +615,7 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
     [0.15, 0.75, 1.35, 1.95].forEach(y => gb(g, 0.5, 0.025, 1.0, mGreyS, 0, y, 0));
     const gB = G(x0 + 0.3, 0.04, zc, 13.0 + i * 0.2, 'pop', 0.4); [0.17, 0.77, 1.37].forEach((y, k) => { for (let j = 0; j < 2; j++) gb(gB, 0.42, 0.3 + ((i + k + j) % 2) * 0.1, 0.42, (i + j) % 2 ? mCard : mCard2, 0, y + 0.18 + ((i + k + j) % 2) * 0.05, -0.24 + j * 0.48); }); }
   // Hubwagen + Palettenstapel in der Halle
-  const hw = G(xc - 1.55, 0.04, -1.25, 14.0, 'pop', 0.45, 2.2);
+  const hw = G(xc - 1.55, 0.04, -1.25, 14.0, 'pop', 0.45, 2.2); if (BRANCHE === 'versand') hw.userData.hide = true;
   for (const dx of [-0.2, 0.2]) gb(hw, 0.16, 0.08, 1.15, mOrange, dx, 0.06, 0); gb(hw, 0.56, 0.35, 0.2, mOrange, 0, 0.25, -0.62);
   const hd = gb(hw, 0.05, 1.1, 0.05, mBlack, 0, 0.85, -0.9); hd.rotation.x = -0.35; gb(hw, 0.36, 0.05, 0.05, mBlack, 0, 1.36, -1.08);
   if (BRANCHE === 'elektro') { // große Kabeltrommeln auf dem Boden
@@ -623,6 +623,16 @@ function buildFilm2(x0, x1, z0, z1, xc, gz1, oy, ceil, w) {
       for (const sx of [-0.24, 0.24]) { const f = gc(g, r, r, 0.05, mPal, sx, r, 0, 28); f.rotation.z = Math.PI / 2; }
       const core = gc(g, r * 0.82, r * 0.82, 0.44, mat(c, 0.55), 0, r, 0, 28); core.rotation.z = Math.PI / 2;
       for (let j = 0; j < 4; j++) { const sp = gb(g, 0.48, 0.05, 0.05, mPal, 0, r + Math.cos(j * 1.57) * r * 0.9, Math.sin(j * 1.57) * r * 0.9); } });
+  } else if (BRANCHE === 'versand') { // Onlineshop: zwei Packtische mit Kartons, Klebeband, Waage, Paketturm auf Palette
+    const mTab = mat(0xe9e4da, 0.55), mBox = [mCard, mCard2, mat(0xc89a6a, 0.85)];
+    [-3.3, -5.4].forEach((tz, k) => { const g = G(22.95, 0.04, tz, 14.2 + k * 0.1, 'pop', 0.45);
+      gb(g, 0.85, 0.05, 1.8, mTab, 0, 0.9, 0); for (const dx of [-0.38, 0.38]) for (const dz of [-0.85, 0.85]) gb(g, 0.05, 0.88, 0.05, mGreyS, dx, 0.44, dz);
+      gb(g, 0.8, 0.03, 1.7, mGreyS, 0, 0.25, 0); gb(g, 0.04, 0.9, 1.8, mat(0x6e7378, 0.5, 0.4), -0.42, 1.38, 0);
+      for (let i = 0; i < 3; i++) gb(g, 0.3 + (i % 2) * 0.1, 0.2 + (i % 3) * 0.06, 0.34, mBox[(i + k) % 3], 0.05, 0.925 + 0.1 + (i % 3) * 0.03, -0.55 + i * 0.5);
+      gb(g, 0.26, 0.05, 0.26, mBlack, 0.12, 0.95, 0.72); gc(g, 0.07, 0.07, 0.05, mOrange, -0.25, 0.95, 0.65, 16); // Waage, Klebeband
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) gb(g, 0.35, 0.28, 0.35, mBox[(i + j) % 3], 0.0, 0.4 + j * 0.0 + 0.14 * 0, -0.6 + i * 0.6).position.y = 0.4 + j * 0.29; });
+    const pt = G(22.9, 0.04, -1.6, 14.4, 'pop', 0.45); gb(pt, 1.2, 0.144, 0.8, mPal, 0, 0.072, 0);
+    for (let iy = 0; iy < 5; iy++) for (let ix = 0; ix < 3; ix++) for (let iz = 0; iz < 2; iz++) gb(pt, 0.38, 0.3, 0.38, mBox[(ix + iy + iz) % 3], -0.4 + ix * 0.4, 0.3 + iy * 0.31, -0.2 + iz * 0.4);
   } else { const ps = G(xc - 1.35, 0.04, -2.9, 14.2, 'pop', 0.45, 0.15); for (let i = 0; i < 6; i++) gb(ps, 1.2, 0.144, 0.8, mPal, 0, 0.072 + i * 0.146, 0); }
   // Werkbank unter der Lagerbühne an der rechten Wand (x1), Lochwand mit Werkzeug – Tür vorne bleibt frei
   const wb = GV(x1 - 0.4, 0.04, -11.7, 18.55, 'pop', 0.45, Math.PI);
@@ -790,6 +800,13 @@ function film2Van() {
     g.fillStyle = '#1b1d21'; g.font = '800 120px Inter, sans-serif'; g.fillText('ELEKTRO', 440, 250); g.font = '600 70px Inter, sans-serif'; g.fillText('TECHNIK', 446, 340);
     const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; const dm = new THREE.MeshStandardMaterial({ map: tx, transparent: true, roughness: 0.5 });
     for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.2), dm); p.position.set(sx * 1.004, 1.75, 3.2); p.rotation.y = sx * Math.PI / 2; if (sx < 0) p.scale.x = 1; v.add(p); }
+  }
+  if (BRANCHE === 'versand') {
+    const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 512; const g = cv.getContext('2d');
+    g.fillStyle = '#c2602a'; g.fillRect(60, 120, 260, 220); g.fillStyle = '#e8a46a'; g.fillRect(60, 120, 260, 50); g.fillStyle = '#7a3a16'; g.fillRect(175, 120, 30, 220);
+    g.fillStyle = '#1b1d21'; g.font = '800 120px Inter, sans-serif'; g.fillText('VERSAND', 360, 250); g.font = '600 64px Inter, sans-serif'; g.fillText('schnell & sicher', 366, 335);
+    const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; const dm = new THREE.MeshStandardMaterial({ map: tx, transparent: true, roughness: 0.5 });
+    for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.2), dm); p.position.set(sx * 1.004, 1.75, 3.2); p.rotation.y = sx * Math.PI / 2; v.add(p); }
   }
   F2.vanSpots = [];
   for (const sx of [-1, 1]) { const sp = new THREE.SpotLight(0xfff1dc, 0, 30, 0.5, 0.6, 1.4); sp.position.set(sx * 0.74, 1.04, -0.1); const tg = new THREE.Object3D(); tg.position.set(sx * 0.9, 0.2, -10); v.add(tg); sp.target = tg; v.add(sp); F2.vanSpots.push(sp); }

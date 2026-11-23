@@ -57,3 +57,10 @@ g8|Gewerbepark Klagenfurt-Ebenthal. Bezugsfertig voraussichtlich im ersten Halbj
 g9|Innen: hohe Halle, Lagerbühne – und oben dein Büro mit WC.
 g10|Halle, Büro und Lager – zu vermieten.
 g11|Sieben Gründe. Ein Anruf.
+v01|Pling! Neue Bestellung.
+v02|Dein Onlineshop wächst – und das Wohnzimmer ist längst zu klein?
+v03|Hier hast du Packplätze, Regale und Platz für jede Menge Pakete.
+v04|Der Transporter wird direkt in der Halle beladen.
+v05|Und ab zur Zustellung!
+v06|Halle, Lager und Büro – rund hundertfünfzig Quadratmeter im Gewerbepark Klagenfurt-Ebenthal.
+v07|Mehr Platz für deinen Shop. Ruf an!
