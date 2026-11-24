@@ -1108,7 +1108,7 @@ window.renderAt = function (t) {
     if (gtao) gtao.blendIntensity = 0.9; grade.uniforms.fade.value = 0; composer.render(); return true;
   }
   const { s, lt, k } = shotAt(t);
-  applyLook(s.look);
+  applyLook(s.lookFn ? s.lookFn(k) : s.look); // lookFn: Lichtstimmung innerhalb der Einstellung animieren (Zeitraffer)
   const kk = (s.ease || easeIO)(k);
   camera.position.copy(evalPath(s.pos, kk));
   let tgt; if (s.yaw) { const y = THREE.MathUtils.degToRad(s.yaw[0] + (s.yaw[1] - s.yaw[0]) * kk), pt = THREE.MathUtils.degToRad(s.pitch[0] + (s.pitch[1] - s.pitch[0]) * kk);

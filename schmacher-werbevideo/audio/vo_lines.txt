@@ -64,3 +64,11 @@ v04|Der Transporter wird direkt in der Halle beladen.
 v05|Und ab zur Zustellung!
 v06|Halle, Lager und Büro – rund hundertfünfzig Quadratmeter im Gewerbepark Klagenfurt-Ebenthal.
 v07|Mehr Platz für deinen Shop. Ruf an!
+z01|Ein Tag im Gewerbepark Klagenfurt-Ebenthal – in dreißig Sekunden.
+z02|Morgens: Material holen, Transporter laden.
+z03|Mittags: Platz für Lager, Werkstatt und Büro.
+z04|Abends gehen die Lichter an.
+z05|Oben im Büro: Angebote schreiben, den nächsten Tag planen.
+z06|Und morgen? Geht's wieder los.
+z07|Halle, Büro und Lager: sieben Einheiten, rund hundertfünfzig Quadratmeter, mit Fußbodenheizung und eigenen Zählern.
+z08|Dein Betrieb. Dein Tag. Deine Halle.
