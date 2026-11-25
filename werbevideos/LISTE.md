@@ -15,6 +15,7 @@ Jedes Video steht für sich (keine Folgennummern) und kann einzeln gepostet werd
 | 2026-11-22_7Gruende_9x16.mp4 | 49 s | Startbild „zu vermieten“, dann Countdown „7 Hallen. 7 Gründe.“: Fahrt an den Hausnummern 7→1 mit je einem Grund, Luftbild, Innen, Tore – „7 Gründe. 1 Anruf.“ |
 | 2026-11-23_PaketFuerDich_9x16.mp4 | 48 s | Startbild „zu vermieten“, dann Onlineshop-Video „Paket für dich!“: Bestellung, Packtische, Transporter wird in der Halle beladen, Zustellung – „Mehr Platz für deinen Shop“. |
 | 2026-11-24_EinTag_9x16.mp4 | 51 s | Startbild „zu vermieten“, dann Zeitraffer „Ein Tag. 30 Sekunden.“: Sonne wandert vom Morgen bis zur Nacht, Lichter gehen an, Büro bei Nacht – „Dein Betrieb. Dein Tag. Deine Halle.“ |
+| 2026-11-25_Quiz_9x16.mp4 | 48 s | Startbild „zu vermieten“, dann Quiz „Was passt in eine Halle?“ A Transporter · B Werkstatt · C Büro · D Alles – Auflösung im Röntgenblick, „Und was stellst du hinein?“ |
 
 Neue tägliche Videos werden hier als `JJJJ-MM-TT_<Titel>_9x16.mp4` ergänzt und in dieser Liste eingetragen.
 

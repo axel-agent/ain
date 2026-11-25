@@ -72,3 +72,10 @@ z05|Oben im Büro: Angebote schreiben, den nächsten Tag planen.
 z06|Und morgen? Geht's wieder los.
 z07|Halle, Büro und Lager: sieben Einheiten, rund hundertfünfzig Quadratmeter, mit Fußbodenheizung und eigenen Zählern.
 z08|Dein Betrieb. Dein Tag. Deine Halle.
+q01|Quizfrage! Was passt in eine Halle im Gewerbepark Klagenfurt-Ebenthal?
+q02|A: Ein Transporter? Passt – durchs große Sektionaltor.
+q03|B: Eine Werkstatt? Passt auch.
+q04|C: Ein Büro? Passt – oben auf der Galerie.
+q05|Die richtige Antwort ist: D – alles zusammen!
+q06|Halle, Lager und Büro – rund hundertfünfzig Quadratmeter, sieben Einheiten.
+q07|Und was stellst du hinein? Ruf an!
