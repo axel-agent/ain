@@ -79,3 +79,10 @@ q04|C: Ein Büro? Passt – oben auf der Galerie.
 q05|Die richtige Antwort ist: D – alles zusammen!
 q06|Halle, Lager und Büro – rund hundertfünfzig Quadratmeter, sieben Einheiten.
 q07|Und was stellst du hinein? Ruf an!
+t01|Sieht aus wie eine Modelleisenbahn?
+t02|Ist aber echt geplant – der Gewerbepark Klagenfurt-Ebenthal.
+t03|Sieben Hallen mit Büro, in Reih und Glied.
+t04|Von oben reingeschaut: unten Halle und Lager, oben Büro mit WC.
+t05|Und raus geht's zum Kunden.
+t06|Klein sieht es nur von oben aus: rund hundertfünfzig Quadratmeter pro Einheit.
+t07|Groß genug für deinen Betrieb. Ruf an!
