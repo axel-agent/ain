@@ -66,6 +66,9 @@ body.orange{--bg:#fff7f0}body.orange .head{background:var(--or);border-bottom-co
 body.orange .head img{background:#fff;border-radius:12px;padding:6px 10px}body.orange .big .o{color:#0f182a;background:var(--or);padding:0 14px;border-radius:12px;color:#fff}
 body.photo .hero{clip-path:none}body.photo .hl{position:relative;margin-top:-210px;background:linear-gradient(rgba(15,24,42,0),rgba(15,24,42,.92) 38%);padding-top:60px;padding-bottom:16px;color:#fff}
 body.photo .hl .kick{color:#f2b31b}body.photo .big{color:#fff}
+/* Variante swap: Fakten links, Schnittbild rechts; Anruf-Leiste navy mit oranger Nummer */
+body.photo:not(.v) .hero{height:370px;background-position:center 62%}
+body.swap .row{flex-direction:row-reverse}body.swap .cta{background:linear-gradient(90deg,#0f182a,#1c2a46);box-shadow:0 12px 30px rgba(15,24,42,.35)}body.swap .cta .t b{color:#ffb15c}body.swap .cta .ph svg{fill:#0f182a}body.swap .share{background:var(--or)}
 </style></head><body>
 <div class="head"><img id="logo"><div class="sep"></div><div class="loc"><b>GEWERBEPARK KLAGENFURT-EBENTHAL</b><span>Josef-Madersperger-Str. 2 · 9065 Ebenthal bei Klagenfurt</span></div></div>
 <div class="hero" id="hero"><div class="tag" id="tag"><i></i><span></span></div></div>
@@ -84,7 +87,7 @@ body.photo .hl .kick{color:#f2b31b}body.photo .big{color:#fff}
 <div class="share"><span id="webv"></span></div>
 <div class="foot">Bezugsfertig voraussichtlich&nbsp;<span>Q1/Q2 2027</span>&nbsp;· Mietpreis auf Anfrage</div>
 <script>
-const q=new URLSearchParams(location.search), r=q.get('b')==='r'; if (q.get('v')) document.body.classList.add('v'); if (q.get('theme')) document.body.classList.add(q.get('theme')); if (r) document.body.classList.add('rus'); if (q.get('cut')) document.getElementById('cutimg').src = q.get('cut');
+const q=new URLSearchParams(location.search), r=q.get('b')==='r'; if (q.get('v')) document.body.classList.add('v'); if (q.get('theme')) q.get('theme').split(/[ ,]+/).forEach(c => c && document.body.classList.add(c)); if (r) document.body.classList.add('rus'); if (q.get('cut')) document.getElementById('cutimg').src = q.get('cut');
 document.getElementById('logo').src = r ? '../russinov_logo.png' : '../logo.png';
 document.getElementById('hero').style.backgroundImage = `url(${q.get('hero')||'../out/d1_bild_real.jpg'})`;
 document.querySelector('#tag span').textContent = q.get('tag')||'Echtes Foto · Stand Nov. 2026';

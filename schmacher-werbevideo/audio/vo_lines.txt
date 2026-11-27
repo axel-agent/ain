@@ -86,3 +86,11 @@ t04|Von oben reingeschaut: unten Halle und Lager, oben Büro mit WC.
 t05|Und raus geht's zum Kunden.
 t06|Klein sieht es nur von oben aus: rund hundertfünfzig Quadratmeter pro Einheit.
 t07|Groß genug für deinen Betrieb. Ruf an!
+u02|Tor auf. Und rein mit dem Transporter.
+u03|Endlich Platz. Bis zu sieben Meter Raumhöhe.
+u04|Die Stiege rauf – zu deinem Büro.
+u05|Dein Schreibtisch. Dein Fensterband. Und unten wartet die Halle.
+u06|Gewerbepark Klagenfurt-Ebenthal: sieben Hallen mit Büro, je rund hundertfünfzig Quadratmeter.
+u07|Halle, Büro und Lager – zu vermieten. Mit Fußbodenheizung und großem Sektionaltor.
+u08|Wann ist dein erster Tag? Ruf an!
+u01|POV: Dein erster Tag in deiner eigenen Halle.
