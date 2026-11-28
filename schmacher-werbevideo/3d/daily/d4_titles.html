@@ -1,0 +1,59 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Countdown Titel</title>
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:transparent;font-family:Inter,sans-serif;color:#fff}
+.t{position:absolute;inset:0;display:none}.t.on{display:block}
+.box{position:absolute;left:80px;right:80px}
+.kick{display:inline-block;background:#f2b31b;color:#0f182a;font-weight:900;letter-spacing:.16em;text-transform:uppercase;font-size:30px;padding:14px 28px;border-radius:999px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.big{font-weight:300;font-size:104px;line-height:1.0;letter-spacing:-.025em;text-shadow:0 6px 40px rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.45);margin-top:26px}
+.big b{font-weight:900}
+.scrimB{position:absolute;left:0;right:0;bottom:0;height:900px;background:linear-gradient(rgba(5,10,20,0),rgba(5,10,20,.5) 45%,rgba(5,10,20,.8))}
+.scrimT{position:absolute;left:0;right:0;top:0;height:800px;background:linear-gradient(rgba(5,10,20,.7),rgba(5,10,20,.35) 55%,rgba(5,10,20,0))}
+.item{display:flex;align-items:center;gap:26px;background:rgba(255,255,255,.96);color:#0f182a;border-radius:30px;padding:26px 34px;box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.item .ck{width:76px;height:76px;border-radius:50%;background:#2fae4e;color:#fff;font-size:50px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none}
+.item b{display:block;font-size:48px;font-weight:900;line-height:1.05}.item span{display:block;font-size:30px;font-weight:600;color:#4a5263;margin-top:6px}
+.facts{position:absolute;left:70px;right:70px;top:360px;background:rgba(255,255,255,.97);border-radius:40px;padding:54px 56px 44px;color:#0f182a;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.facts .k{font-weight:900;letter-spacing:.14em;color:#c2602a;font-size:28px;text-transform:uppercase}
+.facts h2{margin:12px 0 26px;font-size:80px;line-height:1.0;font-weight:900;letter-spacing:-.02em}.facts h2 span{color:#e07a2c}
+.facts li{list-style:none;font-size:42px;font-weight:700;padding:18px 0;border-top:2px solid #e8eaee;display:flex;gap:20px;align-items:center}
+.facts li i{font-style:normal;width:52px;height:52px;border-radius:50%;background:#2fae4e;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;flex:none}
+.facts ul{margin:0;padding:0}
+.cl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 70px}
+.tags{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-bottom:46px}
+.tags div{background:#fff;color:#0f182a;font-weight:900;font-size:40px;padding:16px 30px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tags div:nth-child(1){background:#f2b31b}.tags div:nth-child(2){background:#5aa7ff;color:#fff}.tags div:nth-child(3){background:#e07a2c;color:#fff}
+.end{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#fbfbfc 0%,#eef0f3 65%,#dfe3e8 100%);color:#0f182a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 60px}
+.end img{width:500px}
+.end .zv{margin-top:46px;font-weight:900;font-size:76px;line-height:1.02;letter-spacing:-.02em;text-transform:uppercase}.end .zv span{color:#e07a2c}
+.end .sub{margin-top:18px;font-size:38px;font-weight:700;color:#3a4252}
+.end .call{margin-top:48px;background:linear-gradient(#e07a2c,#c2602a);color:#fff;border-radius:34px;padding:28px 60px 34px;box-shadow:0 18px 50px rgba(194,96,42,.45)}
+.end .call .k{font-weight:800;letter-spacing:.2em;font-size:30px;text-transform:uppercase}
+.end .call .n{font-weight:900;font-size:110px;line-height:1.05;white-space:nowrap}
+.end .web{font-weight:700;font-size:38px;margin-top:40px}.end .addr{font-size:30px;color:#6b7280;margin-top:8px}
+</style></head><body>
+
+<style>
+.rc{position:absolute;left:60px;right:60px;bottom:230px;display:flex;align-items:center;gap:30px;background:rgba(255,255,255,.97);border-radius:36px;padding:28px 34px;box-shadow:0 18px 50px rgba(0,0,0,.45);color:#0f182a}
+.rc .num{width:150px;height:150px;border-radius:50%;background:linear-gradient(#e88a3c,#c2602a);color:#fff;font-weight:900;font-size:110px;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 8px 24px rgba(194,96,42,.5)}
+.rc b{display:block;font-size:56px;font-weight:900;line-height:1.02;letter-spacing:-.01em}.rc span{display:block;font-size:32px;font-weight:600;color:#4a5263;margin-top:8px}
+.cnt{position:absolute;top:150px;left:80px;font-weight:900;font-size:34px;letter-spacing:.18em;color:#fff;background:rgba(15,24,42,.85);padding:14px 26px;border-radius:999px}
+.cnt i{font-style:normal;color:#f2b31b}
+</style><div class="t" id="g0"><div class="scrimT"></div><div class="box" style="top:260px"><div class="kick" style="background:#e07a2c;color:#fff">Gewerbepark Klagenfurt-Ebenthal</div><div class="big" style="font-size:120px">7 Hallen.<br><b>7 Gründe.</b></div></div></div>
+<div class="t" id="r7"><div class="cnt">GRUND <i>1</i> / 7</div><div class="rc"><div class="num">7</div><div><b>ca. 150 m²</b><span>Nutzfläche je Einheit</span></div></div></div>
+<div class="t" id="r6"><div class="cnt">GRUND <i>2</i> / 7</div><div class="rc"><div class="num">6</div><div><b>Unten Halle, oben Büro</b><span>mit WC auf der Galerie</span></div></div></div>
+<div class="t" id="r5"><div class="cnt">GRUND <i>3</i> / 7</div><div class="rc"><div class="num">5</div><div><b>Großes Sektionaltor</b><span>elektrisch – direkt reinfahren</span></div></div></div>
+<div class="t" id="r4"><div class="cnt">GRUND <i>4</i> / 7</div><div class="rc"><div class="num">4</div><div><b>Fußbodenheizung</b><span>mit Luft-Wärmepumpe</span></div></div></div>
+<div class="t" id="r3"><div class="cnt">GRUND <i>5</i> / 7</div><div class="rc"><div class="num">3</div><div><b>Eigene Zähler</b><span>Strom, Wasser, Heizung</span></div></div></div>
+<div class="t" id="r2"><div class="cnt">GRUND <i>6</i> / 7</div><div class="rc"><div class="num">2</div><div><b>Parkplätze</b><span>direkt vor der Tür</span></div></div></div>
+<div class="t" id="r1"><div class="cnt">GRUND <i>7</i> / 7</div><div class="rc"><div class="num">1</div><div><b>Stadtgrenze Klagenfurt</b><span>Ebenthal – kurze Wege</span></div></div></div>
+<div class="t" id="tc"><div class="scrimB"></div><div class="box" style="bottom:300px"><div class="kick" style="background:#e07a2c;color:#fff">Neubau · Ebenthal bei Klagenfurt</div><div class="big" style="font-size:92px">Halle + Büro + Lager<br><b>zu vermieten.</b></div></div></div>
+<div class="t" id="td"><div class="box" style="bottom:240px"><div class="item"><div class="ck" style="background:#e07a2c">↓</div><div><b>Innen</b><span>Hohe Halle · Lagerbühne · Büro mit WC</span></div></div></div></div>
+<div class="t" id="te"><div class="box" style="bottom:240px"><div class="item"><div class="ck" style="background:#e07a2c">✓</div><div><b>7 Einheiten je ca. 150 m²</b><span>Bezugsfertig voraussichtlich Q1/Q2 2027</span></div></div></div></div>
+<div class="t" id="tz"><div class="cl"><div class="big" style="margin:0;font-size:150px">7 Gründe.</div><div class="big" style="margin-top:10px;font-size:150px;color:#f2b31b"><b>1 Anruf.</b></div></div></div>
+
+<div class="t" id="end_s"><div class="end"><img src="../logo.png"><div class="zv">Halle + Büro + Lager<br><span>zu vermieten</span></div><div class="sub">7 Einheiten je ca. 150 m² · Klagenfurt-Ebenthal</div>
+<div class="call"><div class="k">Jetzt anrufen</div><div class="n">0664 1200745</div></div><div class="web">www.gewerbepark-klagenfurt.at</div><div class="addr">Josef-Madersperger-Str. 2 · 9065 Ebenthal</div></div></div>
+<div class="t" id="end_r"><div class="end"><img src="../russinov_logo.png" style="width:440px"><div class="zv">Halle + Büro + Lager<br><span>zu vermieten</span></div><div class="sub">7 Einheiten je ca. 150 m² · Klagenfurt-Ebenthal</div>
+<div class="call"><div class="k">Ihr Makler · Jetzt anrufen</div><div class="n">0463 203520</div></div><div class="web">www.russinov.at</div><div class="addr">Josef-Madersperger-Str. 2 · 9065 Ebenthal</div></div></div>
+
+<script>const id=new URLSearchParams(location.search).get('s');if(id)document.getElementById(id).classList.add('on');</script>
+</body></html>

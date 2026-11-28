@@ -1,0 +1,75 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Makler Titel 9:16</title>
+<style>
+html,body{margin:0;background:transparent;width:1080px;height:1350px;overflow:hidden;font-family:Inter,sans-serif;color:#fff}
+.t{position:absolute;left:0;right:0;padding:0 80px;display:none}
+.t.on{display:block}
+.kicker{font-weight:600;letter-spacing:.28em;text-transform:uppercase;font-size:26px;color:#f0b27a;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.big{font-weight:300;font-size:84px;letter-spacing:-.02em;line-height:1.04;text-shadow:0 4px 40px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.35)}
+.big b{font-weight:700}
+.sub{font-weight:500;font-size:36px;line-height:1.3;margin-top:18px;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.rule{width:72px;height:4px;background:#c27a3e;margin-bottom:26px}
+.top{top:350px}.bot{bottom:400px}
+.scrim-top{position:absolute;left:0;right:0;top:-300px;height:950px;background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,0,0,.4) 38%,rgba(0,0,0,.3) 60%,rgba(0,0,0,0) 100%)}
+.scrim-bot{position:absolute;left:0;right:0;bottom:-330px;height:950px;background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,0,0,.3) 40%,rgba(0,0,0,.42) 65%,rgba(0,0,0,0) 100%)}
+#end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+ background:radial-gradient(ellipse at 50% 42%,#fbfbfc 0%,#eef0f3 70%,#e3e6ea 100%);color:#0f182a;text-align:center}
+#end.on{display:flex}
+#end .logo{width:560px;margin-bottom:40px}
+#end .claim{font-weight:300;font-size:64px;line-height:1.12;color:#2a3242}
+#end .claim b{font-weight:700;color:#0f182a}
+#end .small{font-size:32px;color:#808185;margin-top:22px;line-height:1.4}
+#end .line{width:120px;height:4px;background:#c27a3e;margin:40px 0 34px}
+#end .ph{font-weight:700;font-size:72px;letter-spacing:.03em}
+#end .web{font-weight:500;font-size:38px;color:#2a3242;margin-top:10px}
+#end .mail{font-size:32px;color:#808185;margin-top:6px}
+
+.pill{display:inline-block;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:28px;padding:14px 30px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#cover .big{font-size:132px;line-height:.98}
+#cover .sub{font-size:46px;font-weight:600;margin-top:28px}
+.card{position:absolute;left:80px;right:80px;background:#fff;border-radius:28px;box-shadow:0 12px 50px rgba(0,0,0,.45);display:flex;align-items:center;gap:34px;padding:26px 36px;color:#0f182a}
+.card img{width:346px}
+.card .r{flex:1;text-align:right}
+.card .k{white-space:nowrap;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:24px;color:#c27a3e}
+.card .p{font-weight:800;font-size:54px;letter-spacing:.02em;margin-top:4px}
+#end .cta{display:flex;flex-direction:column;align-items:center}
+#end .btn{display:flex;align-items:center;gap:16px;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:34px;padding:20px 48px;border-radius:999px;box-shadow:0 10px 30px rgba(194,122,62,.35);margin-bottom:26px}
+#end .btn svg{width:38px;height:38px}
+body.ctaonly #end{background:none} body.ctaonly #end > :not(.cta){visibility:hidden}
+body.nocta #end .cta, body.nocta #end2 .cta{visibility:hidden}
+
+#end2{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 42%,#fbfbfc 0%,#eef0f3 70%,#e3e6ea 100%);color:#0f182a;text-align:center}
+#end2.on{display:flex}
+#end2 .logo{width:560px;margin-bottom:40px}
+#end2 .claim{font-weight:300;font-size:64px;line-height:1.12;color:#2a3242}
+#end2 .claim b{font-weight:700;color:#0f182a}
+#end2 .small{font-size:32px;color:#808185;margin-top:22px;line-height:1.4}
+#end2 .line{width:120px;height:4px;background:#c27a3e;margin:40px 0 34px}
+#end2 .ph{font-weight:700;font-size:72px;letter-spacing:.03em}
+#end2 .web{font-weight:500;font-size:38px;color:#2a3242;margin-top:10px}
+#end2 .mail{font-size:32px;color:#808185;margin-top:6px}
+#end2 .cta{display:flex;flex-direction:column;align-items:center}
+#end2 .btn{display:flex;align-items:center;gap:16px;background:#c27a3e;color:#fff;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:34px;padding:20px 48px;border-radius:999px;box-shadow:0 10px 30px rgba(194,122,62,.35);margin-bottom:26px}
+#end2 .btn svg{width:38px;height:38px}
+#end2 .cta{visibility:hidden}
+#end3{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#fbfbfc 0%,#eef0f3 70%,#e1e4e9 100%);color:#0f182a;text-align:center}
+#end3.on{display:flex}
+#end3 .logo{width:448px;margin-bottom:30px}
+#end3 .claim{font-weight:300;font-size:60px;line-height:1.1;color:#2a3242}
+#end3 .claim b{font-weight:700;color:#0f182a}
+#end3 .call{margin-top:70px;background:linear-gradient(180deg,#d2884a,#b86a2f);border-radius:36px;padding:40px 56px 46px;box-shadow:0 18px 50px rgba(184,106,47,.45);color:#fff;display:flex;flex-direction:column;align-items:center}
+#end3 .call .k{display:flex;align-items:center;gap:16px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:40px}
+#end3 .call svg{width:44px;height:44px}
+#end3 .call .n{white-space:nowrap;font-weight:800;font-size:112px;letter-spacing:.02em;line-height:1.02;margin-top:6px}
+#end3 .web{font-weight:600;font-size:46px;color:#0f182a;margin-top:50px}
+#end3 .mail{font-size:36px;color:#5d6068;margin-top:6px}
+body.nocta #end3 .cta{visibility:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);background:#fff;border:4px solid #c27a3e;border-radius:16px;padding:8px 22px;color:#0f182a;font-weight:800;white-space:nowrap;box-shadow:0 8px 24px rgba(15,24,42,.18)}
+.fact{display:inline-flex;align-items:center;gap:14px;background:#0f182a;color:#fff;font-weight:700;font-size:32px;padding:12px 24px 12px 18px;border-radius:999px}
+.fact:before{content:"";width:14px;height:14px;border-radius:50%;background:#e2a066}
+</style>
+</head><body><div class="t on" id="cover2" style="top:0;bottom:0;padding:0;background:#f1f2f4"><img src="cover/cut45.jpg" style="position:absolute;left:0;top:0;width:1080px;height:1350px"><svg width="1080" height="1350" style="position:absolute;left:0;top:0"><line x1="400" y1="1000" x2="534" y2="898" stroke="#c27a3e" stroke-width="4"/><circle cx="534" cy="898" r="9" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="190" y1="640" x2="393" y2="700" stroke="#c27a3e" stroke-width="4"/><circle cx="393" cy="700" r="9" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="180" y1="860" x2="357" y2="827" stroke="#c27a3e" stroke-width="4"/><circle cx="357" cy="827" r="9" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="280" y1="440" x2="483" y2="519" stroke="#c27a3e" stroke-width="4"/><circle cx="483" cy="519" r="9" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="900" y1="780" x2="661" y2="708" stroke="#c27a3e" stroke-width="4"/><circle cx="661" cy="708" r="9" fill="#c27a3e" stroke="#fff" stroke-width="4"/><line x1="880" y1="340" x2="612" y2="446" stroke="#c27a3e" stroke-width="4"/><circle cx="612" cy="446" r="9" fill="#c27a3e" stroke="#fff" stroke-width="4"/></svg><div class="lab" style="left:400px;top:1000px;font-size:34px">Büro</div><div class="lab" style="left:190px;top:640px;font-size:34px">WC</div><div class="lab" style="left:180px;top:860px;font-size:34px">Kaffeeküche</div><div class="lab" style="left:280px;top:440px;font-size:34px">Lager</div><div class="lab" style="left:900px;top:780px;font-size:34px">Halle</div><div class="lab" style="left:880px;top:340px;font-size:34px">Sektionaltor</div>
+<div style="position:absolute;left:0;right:0;top:36px;text-align:center"><div class="pill" style="font-size:24px;padding:10px 26px">Neu in Ebenthal · Kärnten</div>
+<div style="font-weight:800;font-size:92px;line-height:1;color:#0f182a;letter-spacing:-.02em;margin-top:18px">Gewerbepark Ebenthal</div>
+<div style="font-weight:600;font-size:38px;color:#2a3242;margin-top:12px">7 Hallen mit Büro · <span style="color:#c27a3e">Unten Lager. Oben Büro.</span></div></div>
+<div style="position:absolute;left:40px;right:40px;bottom:178px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px"><div class="fact" style="font-size:28px">ca. 150 m² Nutzfläche</div><div class="fact" style="font-size:28px">Fußbodenheizung</div><div class="fact" style="font-size:28px">Großes Sektionaltor</div><div class="fact" style="font-size:28px">Büro · WC · Kaffeeküche</div></div>
+<div class="card" style="left:110px;right:110px;bottom:30px;padding:12px 30px;border-radius:22px"><img src="russinov_logo.png" style="width:189px"><div class="r"><div class="k" style="font-size:20px">Ihr Makler · Jetzt anfragen</div><div class="p" style="font-size:46px">0463 203520</div></div></div></div></body></html>
