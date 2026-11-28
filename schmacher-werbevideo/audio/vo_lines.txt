@@ -63,7 +63,6 @@ v03|Hier hast du Packplätze, Regale und Platz für jede Menge Pakete.
 v04|Der Transporter wird direkt in der Halle beladen.
 v05|Und ab zur Zustellung!
 v06|Halle, Lager und Büro – rund hundertfünfzig Quadratmeter im Gewerbepark Klagenfurt-Ebenthal.
-v07|Mehr Platz für deinen Shop. Ruf an!
 z01|Ein Tag im Gewerbepark Klagenfurt-Ebenthal – in dreißig Sekunden.
 z02|Morgens: Material holen, Transporter laden.
 z03|Mittags: Platz für Lager, Werkstatt und Büro.
@@ -94,3 +93,11 @@ u06|Gewerbepark Klagenfurt-Ebenthal: sieben Hallen mit Büro, je rund hundertfü
 u07|Halle, Büro und Lager – zu vermieten. Mit Fußbodenheizung und großem Sektionaltor.
 u08|Wann ist dein erster Tag? Ruf an!
 u01|POV: Dein erster Tag in deiner eigenen Halle.
+v01|In einer Welt, in der die Garage zu klein wird …
+v02|… wagt ein Betrieb den großen Schritt.
+v03|Sieben Hallen. Jede mit eigenem Büro.
+v04|Ein Tor, so groß wie deine Pläne.
+v05|Unten Halle und Lager. Oben dein Büro.
+v06|Gewerbepark Klagenfurt-Ebenthal.
+v08|Die Hauptrolle? Spielt dein Betrieb. Ruf an!
+v07|Rund hundertfünfzig Quadratmeter pro Einheit. Bezug voraussichtlich zweitausendsiebenundzwanzig.
